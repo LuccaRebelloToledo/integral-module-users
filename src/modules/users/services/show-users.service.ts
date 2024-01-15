@@ -18,7 +18,7 @@ export default class ShowUsersService {
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
-      throw new AppError('404', AppErrorTypes.users.notFound);
+      throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
     return {

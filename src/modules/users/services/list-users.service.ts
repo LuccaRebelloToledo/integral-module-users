@@ -18,7 +18,7 @@ export default class ListUsersService {
     const users = await this.userRepository.findAll();
 
     if (!users || users.length === 0) {
-      throw new AppError('404', AppErrorTypes.users.notFound);
+      throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
     return users.map((user) => ({

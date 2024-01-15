@@ -28,7 +28,7 @@ export default class UpdateUsersService {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
-      throw new AppError('404', AppErrorTypes.users.notFound);
+      throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
     if (user.name !== name.trim()) {
@@ -39,7 +39,7 @@ export default class UpdateUsersService {
       const userWithEmail = await this.userRepository.findByEmail(email);
 
       if (userWithEmail) {
-        throw new AppError('400', AppErrorTypes.users.emailAlreadyInUse);
+        throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
       }
 
       user.email = email.toLocaleLowerCase().trim();

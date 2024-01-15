@@ -26,7 +26,7 @@ export default class AuthenticateUsersService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError('400', AppErrorTypes.sessions.invalidCredentials);
+      throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
     const passwordMatch = await this.bcryptHashProvider.compareHash(
@@ -35,7 +35,7 @@ export default class AuthenticateUsersService {
     );
 
     if (!passwordMatch) {
-      throw new AppError('400', AppErrorTypes.sessions.invalidCredentials);
+      throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
     return {
