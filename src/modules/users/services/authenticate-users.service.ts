@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
 import AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
+import AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
 
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
 import UserRepositoryInterface from '../repositories/user.repository.interface';
@@ -8,7 +9,9 @@ import UserRepositoryInterface from '../repositories/user.repository.interface';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import ListUsersDTO from '../dtos/list-users.dto';
+import authConfig from '@config/auth.config';
+
+import { sign } from 'jsonwebtoken';
 
 @injectable()
 export default class AuthenticateUsersService {
@@ -22,7 +25,7 @@ export default class AuthenticateUsersService {
   public async execute({
     email,
     password,
-  }: AuthenticateUsersDTO): Promise<ListUsersDTO> {
+  }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
@@ -38,10 +41,22 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
+    const { secret, expiresIn } = authConfig.jwt;
+
+    const token = sign(
+      {
+        id: user.id,
+      },
+      secret,
+      {
+        subject: user.id,
+        expiresIn,
+        algorithm: 'HS512',
+      },
+    );
+
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
+      token: token,
     };
   }
 }

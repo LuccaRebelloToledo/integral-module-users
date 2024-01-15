@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
+import sessionRoutes from '@modules/users/infra/http/routes/session.routes';
+
 const routes = Router();
 
-routes.get('/', (req, res, next) => {
-  res.json({ message: 'Hello World!' });
-});
+routes.use('/sessions', sessionRoutes);
 
 export default routes;
