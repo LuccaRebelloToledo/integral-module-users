@@ -12,6 +12,7 @@ const sessionConfig = session({
     expires: addDays(new Date(), 1),
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
+    signed: true,
     secure: true,
     sameSite: true,
   },
