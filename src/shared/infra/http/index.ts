@@ -4,6 +4,7 @@ import '@shared/container';
 import express from 'express';
 import 'express-async-errors';
 
+import cookieParserConfig from '@config/cookie-parser.config';
 import sessionConfig from '@config/session.config';
 
 import routes from './routes';
@@ -18,6 +19,7 @@ AppDataSource.initialize().then(async () => {
 
   app.use(express.json());
 
+  app.use(cookieParserConfig);
   app.use(sessionConfig);
 
   app.use('/api', routes);
