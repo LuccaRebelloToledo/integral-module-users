@@ -8,7 +8,7 @@ import {
 
 @Entity('users')
 export default class User {
-  @PrimaryColumn({ type: 'varchar', length: 50 })
+  @PrimaryColumn({ type: 'varchar', length: 21 })
   id: string;
 
   @Column({ type: 'varchar', length: 100 })
