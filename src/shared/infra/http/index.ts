@@ -5,14 +5,27 @@ import 'express-async-errors';
 
 import '@shared/container';
 
+import routes from './routes';
+
+import AppError from '@shared/errors/app-error';
+
+import globalErrorHandler from './middlewares/global-error-handler.middleware';
+
 AppDataSource.initialize().then(async () => {
   console.log('🚀 Database connected');
 
   const express = Express();
 
-  express.listen({
-    port: 4000,
+  express.use('/api', routes);
+  express.all('*', async (_req, _res, _next) => {
+    throw new AppError('Something is wrong');
   });
 
-  console.log('🚀 HTTP Server listening on port 4000');
+  express.use(globalErrorHandler);
+
+  express.listen({
+    port: process.env.PORT ?? 4000,
+  });
+
+  console.log(`🚀 HTTP Server listening on port ${process.env.PORT}`);
 });
