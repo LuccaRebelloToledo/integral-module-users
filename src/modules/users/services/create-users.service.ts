@@ -30,7 +30,7 @@ export default class CreateUsersService {
     const user = await this.userRepository.findByEmail(email);
 
     if (user) {
-      throw new AppError('400', AppErrorTypes.users.emailAlreadyInUse);
+      throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
     }
 
     const createdUser = await this.userRepository.create({
