@@ -18,7 +18,7 @@ export default function ensureAuthenticated(
   _response: Response,
   next: NextFunction,
 ): void {
-  const token = request.signedCookies.token;
+  const token = request.cookies.token;
 
   if (!token) {
     throw new AppError(AppErrorTypes.sessions.tokenNotFound, 401);
@@ -30,6 +30,10 @@ export default function ensureAuthenticated(
     if (!decoded || !decoded.sub || !decoded.exp || !decoded.iat) {
       throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
     }
+
+    request.session.user = {
+      id: decoded.sub,
+    };
 
     return next();
   } catch (err: unknown) {

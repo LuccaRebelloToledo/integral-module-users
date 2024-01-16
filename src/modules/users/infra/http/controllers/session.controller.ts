@@ -30,8 +30,12 @@ export default class SessionController {
     const authenticateUsersService = container.resolve(
       AuthenticateUsersService,
     );
-    const token = await authenticateUsersService.execute({ email, password });
+    const { token } = await authenticateUsersService.execute({
+      email,
+      password,
+    });
 
+    response.clearCookie('token');
     return response.cookie('token', token).status(204).json();
   }
 }

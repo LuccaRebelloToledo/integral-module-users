@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import http from 'http';
+import AppError from '@shared/errors/app-error';
 
 export default function globalErrorHandler(
   err: Error,
@@ -24,8 +25,8 @@ export default function globalErrorHandler(
 
   console.error(errorData);
 
-  if (errorData.error instanceof Error) {
-    const statusCode = Number(errorData.statusCode) || 400;
+  if (errorData.error instanceof AppError) {
+    const statusCode = Number(errorData.error.statusCode) || 400;
 
     return response.status(statusCode).json({
       statusCode: statusCode,
