@@ -31,8 +31,10 @@ export default class UpdateUsersService {
       throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
-    if (user.name !== name.trim()) {
-      user.name = name.trim();
+    if (name) {
+      if (user.name !== name.trim()) {
+        user.name = name.trim();
+      }
     }
 
     if (email) {
