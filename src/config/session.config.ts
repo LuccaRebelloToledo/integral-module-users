@@ -1,21 +1,19 @@
 import session from 'express-session';
 
-import { addDays } from 'date-fns';
+const sessionSecret = String(process.env.SESSION_SECRET!);
+const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+import { isProduction } from '@shared/infra/http/data-source';
 
 const sessionConfig = session({
-  secret: process.env.SESSION_SECRET!,
-  name: 'token',
-  saveUninitialized: false,
-  resave: false,
+  secret: sessionSecret,
   cookie: {
-    path: '/api',
-    expires: addDays(new Date(), 1),
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: oneDayInMilliseconds,
     httpOnly: true,
-    signed: true,
-    secure: true,
+    secure: isProduction,
     sameSite: true,
   },
+  resave: false,
+  saveUninitialized: false,
 });
 
 export default sessionConfig;
