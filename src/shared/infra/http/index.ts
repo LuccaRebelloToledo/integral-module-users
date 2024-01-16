@@ -4,7 +4,11 @@ import '@shared/container';
 import express from 'express';
 import 'express-async-errors';
 
-import cookieParserConfig from '@config/cookie-parser.config';
+import compression from 'compression';
+import helmet from 'helmet';
+
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import sessionConfig from '@config/session.config';
 
 import routes from './routes';
@@ -17,10 +21,23 @@ AppDataSource.initialize().then(async () => {
 
   const app = express();
 
-  app.use(express.json());
-
-  app.use(cookieParserConfig);
+  app.use(compression());
+  app.use(
+    helmet({
+      hidePoweredBy: true,
+    }),
+  );
+  app.use(
+    cors({
+      credentials: true,
+      origin: process.env.CORS_ORIGIN ?? '*',
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    }),
+  );
+  app.use(cookieParser());
   app.use(sessionConfig);
+
+  app.use(express.json());
 
   app.use('/api', routes);
   app.all('*', async (_req, _res, _next) => {
@@ -29,9 +46,10 @@ AppDataSource.initialize().then(async () => {
 
   app.use(globalErrorHandler);
 
+  const port = process.env.PORT ?? 4000;
   app.listen({
-    port: process.env.PORT ?? 4000,
+    port: port,
   });
 
-  console.log(`🚀 HTTP Server listening on port ${process.env.PORT}`);
+  console.log(`🚀 HTTP Server listening on port ${port}`);
 });
