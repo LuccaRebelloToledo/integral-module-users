@@ -8,7 +8,7 @@ import UserController from '../controllers/user.controller';
 const userRoutes = Router();
 const userController = new UserController();
 
-userRoutes.get('/', celebrate({}), ensureAuthenticated, userController.show);
+userRoutes.get('/', ensureAuthenticated, userController.show);
 
 userRoutes.get(
   '/:userId',
@@ -25,8 +25,8 @@ userRoutes.post(
   '/',
   celebrate({
     [Segments.BODY]: Joi.object({
-      email: Joi.string().email().required().max(100),
-      name: Joi.string().required().max(100),
+      name: Joi.string().max(100).required(),
+      email: Joi.string().email().max(100).required(),
       password: Joi.string().required(),
     }),
   }),
@@ -41,8 +41,8 @@ userRoutes.put(
       userId: Joi.string().required(),
     }),
     [Segments.BODY]: Joi.object({
-      email: Joi.string().email().max(100),
       name: Joi.string().max(100),
+      email: Joi.string().email().max(100),
       password: Joi.string(),
     }),
   }),
