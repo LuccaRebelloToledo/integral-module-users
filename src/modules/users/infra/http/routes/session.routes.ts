@@ -16,7 +16,6 @@ sessionRoutes.post(
     }),
   }),
   sessionController.signUp,
-  sessionController.signIn,
 );
 
 sessionRoutes.post(

@@ -5,19 +5,20 @@ import { container } from 'tsyringe';
 import CreateUsersService from '@modules/users/services/create-users.service';
 import AuthenticateUsersService from '@modules/users/services/authenticate-users.service';
 
+import cookiesConfig from '@config/cookie.config';
+
 export default class SessionController {
   public async signUp(
     request: Request,
-    _response: Response,
-    next: NextFunction,
-  ): Promise<void> {
+    response: Response,
+    _next: NextFunction,
+  ): Promise<Response> {
     const { name, email, password } = request.body;
-    console.log(request.body);
 
     const createUsersService = container.resolve(CreateUsersService);
-    await createUsersService.execute({ name, email, password });
+    const user = await createUsersService.execute({ name, email, password });
 
-    next();
+    return response.status(201).json(user);
   }
 
   public async signIn(
@@ -35,7 +36,6 @@ export default class SessionController {
       password,
     });
 
-    response.clearCookie('token');
-    return response.cookie('token', token).status(204).json();
+    return response.cookie('token', token, cookiesConfig).status(204).json();
   }
 }
