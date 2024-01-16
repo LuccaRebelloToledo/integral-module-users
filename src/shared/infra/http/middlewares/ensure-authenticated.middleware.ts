@@ -31,7 +31,7 @@ export default function ensureAuthenticated(
       throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
     }
 
-    request.session.user = {
+    request.user = {
       id: decoded.sub,
     };
 

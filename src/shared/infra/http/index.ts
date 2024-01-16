@@ -9,7 +9,6 @@ import helmet from 'helmet';
 
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import sessionConfig from '@config/session.config';
 
 import routes from './routes';
 
@@ -35,7 +34,6 @@ AppDataSource.initialize().then(async () => {
     }),
   );
   app.use(cookieParser());
-  app.use(sessionConfig);
 
   app.use(express.json());
 
