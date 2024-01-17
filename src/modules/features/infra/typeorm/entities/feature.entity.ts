@@ -25,7 +25,6 @@ export default class Feature {
   @ManyToMany(() => FeatureGroup, (featureGroup) => featureGroup.features, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
-    nullable: true,
   })
   featureGroups: FeatureGroup[];
 

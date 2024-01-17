@@ -26,17 +26,16 @@ export default class User {
   @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ type: 'varchar', length: 21, nullable: true })
+  @Column({ type: 'varchar', length: 21 })
   featureGroupId: string;
 
   @ManyToOne(() => FeatureGroup, (featureGroup) => featureGroup.users, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
     eager: true,
-    nullable: true,
   })
   @JoinColumn({ name: 'featureGroupId' })
-  featureGroup?: FeatureGroup;
+  featureGroup: FeatureGroup;
 
   @ManyToMany(() => Feature, (feature) => feature.userFeatures, {
     onUpdate: 'CASCADE',
