@@ -8,7 +8,9 @@ import UserController from '../controllers/user.controller';
 const userRoutes = Router();
 const userController = new UserController();
 
-userRoutes.get('/', ensureAuthenticated, userController.show);
+userRoutes.use(ensureAuthenticated);
+
+userRoutes.get('/', userController.show);
 
 userRoutes.get(
   '/:userId',
@@ -17,7 +19,6 @@ userRoutes.get(
       userId: Joi.string().required(),
     }),
   }),
-  ensureAuthenticated,
   userController.index,
 );
 
@@ -30,7 +31,6 @@ userRoutes.post(
       password: Joi.string().required(),
     }),
   }),
-  ensureAuthenticated,
   userController.create,
 );
 
@@ -46,7 +46,6 @@ userRoutes.put(
       password: Joi.string(),
     }),
   }),
-  ensureAuthenticated,
   userController.update,
 );
 
@@ -57,7 +56,6 @@ userRoutes.delete(
       userId: Joi.string().required(),
     }),
   }),
-  ensureAuthenticated,
   userController.delete,
 );
 
