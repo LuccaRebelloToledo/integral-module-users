@@ -15,15 +15,6 @@ export default class FeatureGroupRepository
   constructor() {
     this.featureGroupRepository = AppDataSource.getRepository(FeatureGroup);
   }
-  findByKey(featureGroupKey: string): Promise<FeatureGroup | null> {
-    throw new Error('Method not implemented.');
-  }
-  listByKeyOrName({
-    key,
-    name,
-  }: FindFeatureGroupsByKeyOrNameDTO): Promise<FeatureGroup[]> {
-    throw new Error('Method not implemented.');
-  }
 
   public async findAll(): Promise<FeatureGroup[]> {
     return await this.featureGroupRepository.find();
