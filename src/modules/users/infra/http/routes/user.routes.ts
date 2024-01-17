@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { Joi, Segments, celebrate } from 'celebrate';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
+import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
 
 import UserController from '../controllers/user.controller';
 
@@ -10,7 +11,7 @@ const userController = new UserController();
 
 userRoutes.use(ensureAuthenticated);
 
-userRoutes.get('/', userController.show);
+userRoutes.get('/', ensureAuthorized(['test']), userController.show);
 
 userRoutes.get(
   '/:userId',

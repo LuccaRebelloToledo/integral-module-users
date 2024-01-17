@@ -37,7 +37,7 @@ AppDataSource.initialize().then(async () => {
 
   app.use(express.json());
 
-  app.use('/api', routes);
+  app.use(routes);
   app.all('*', async (_req, _res, _next) => {
     throw new AppError('Something is wrong');
   });
