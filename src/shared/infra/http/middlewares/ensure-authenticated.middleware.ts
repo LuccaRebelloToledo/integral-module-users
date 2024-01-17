@@ -7,10 +7,29 @@ import { verify } from 'jsonwebtoken';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
+type SessionFeature = {
+  key: string;
+  name: string;
+};
+
+type SessionFeatureGroup = {
+  key: string;
+  name: string;
+  features: SessionFeature[];
+};
+
+export type SessionUser = {
+  id: string;
+  featureGroup: SessionFeatureGroup;
+  features: SessionFeature[];
+};
+
 interface ITokenPayload {
   sub: string;
   exp: number;
   iat: number;
+  featureGroup: SessionFeatureGroup;
+  features: SessionFeature[];
 }
 
 export default function ensureAuthenticated(
@@ -25,14 +44,22 @@ export default function ensureAuthenticated(
   }
 
   try {
-    const decoded = verify(token, authConfig.jwt.secret) as ITokenPayload;
+    const decoded = verify(token, authConfig.jwt.secret);
 
-    if (!decoded || !decoded.sub || !decoded.exp || !decoded.iat) {
+    if (!decoded) {
+      throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
+    }
+
+    const { sub, featureGroup, features } = decoded as ITokenPayload;
+
+    if (!sub || !featureGroup || !features) {
       throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
     }
 
     request.user = {
-      id: decoded.sub,
+      id: sub,
+      featureGroup: featureGroup,
+      features: features,
     };
 
     return next();

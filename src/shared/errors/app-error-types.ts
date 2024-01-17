@@ -3,6 +3,8 @@ const AppErrorTypes = {
     invalidCredentials: 'Your credentials are invalid!',
     tokenNotFound: 'Token was not found!',
     invalidToken: 'Token is invalid!',
+    insufficientPrivilege:
+      'You do not have enough privilege to access this resource!',
   },
   users: {
     emailAlreadyInUse: 'The email provided is already in use!',
