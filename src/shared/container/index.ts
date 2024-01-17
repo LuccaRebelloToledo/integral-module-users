@@ -9,7 +9,7 @@ import BCryptHashProvider from '@modules/users/providers/hash-provider/implement
 import FeatureRepositoryInterface from '@modules/features/repositories/feature.repository.interface';
 import FeatureRepository from '@modules/features/infra/typeorm/repositories/feature.repository';
 
-import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository';
+import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 
 container.registerSingleton<UserRepositoryInterface>(
