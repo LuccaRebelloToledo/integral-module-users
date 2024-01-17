@@ -10,6 +10,9 @@ const AppErrorTypes = {
     emailAlreadyInUse: 'The email provided is already in use!',
     notFound: 'User was not found!',
   },
+  features: {
+    notFound: 'Feature was not found!',
+  },
 };
 
 export default AppErrorTypes;
