@@ -8,6 +8,7 @@
     "build": "tsc",
     "dev": "nodemon --exec ts-node ./src/shared/infra/http/index.ts",
     "migration:generate": "typeorm-ts-node-commonjs -d ./src/shared/infra/http/data-source.ts migration:generate ./src/shared/infra/typeorm/migrations/default",
+    "migration:revert": "typeorm-ts-node-commonjs -d ./src/shared/infra/http/data-source.ts migration:revert",
     "migration:run": "typeorm-ts-node-commonjs -d ./src/shared/infra/http/data-source.ts migration:run"
   },
   "repository": {

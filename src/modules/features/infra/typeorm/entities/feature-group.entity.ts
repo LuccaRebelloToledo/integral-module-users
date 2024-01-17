@@ -28,7 +28,11 @@ export default class FeatureGroup {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
-  @JoinTable({ name: 'grouped_features' })
+  @JoinTable({
+    name: 'grouped_features',
+    joinColumn: { name: 'featureGroupId' },
+    inverseJoinColumn: { name: 'featureId' },
+  })
   features: Feature[];
 
   @OneToMany(() => User, (user) => user.featureGroup, {
