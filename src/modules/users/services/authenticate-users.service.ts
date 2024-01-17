@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
 import AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
@@ -9,8 +9,9 @@ import UserRepositoryInterface from '../repositories/user.repository.interface';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import authConfig from '@config/auth.config';
+import ShowFeaturesByFeatureGroupIdService from '@modules/features/services/show-features-by-feature-group-id.service';
 
+import authConfig from '@config/auth.config';
 import { sign } from 'jsonwebtoken';
 
 @injectable()
@@ -45,9 +46,14 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
     }
 
-    const { secret, expiresIn } = authConfig.jwt;
+    const showFeaturesByFeatureGroupIdService = container.resolve(
+      ShowFeaturesByFeatureGroupIdService,
+    );
 
-    const featuresFromFeatureGroup = user.featureGroup.features.map(
+    const featuresFromFeatureGroup =
+      await showFeaturesByFeatureGroupIdService.execute(user.featureGroupId);
+
+    const mappedFeaturesFromFeatureGroup = featuresFromFeatureGroup.map(
       (feature) => ({
         key: feature.key,
         name: feature.name,
@@ -61,12 +67,14 @@ export default class AuthenticateUsersService {
         }))
       : [];
 
+    const { secret, expiresIn } = authConfig.jwt;
+
     const token = sign(
       {
         featureGroup: {
           key: user.featureGroup.key,
           name: user.featureGroup.name,
-          features: featuresFromFeatureGroup,
+          features: mappedFeaturesFromFeatureGroup,
         },
         standaloneFeatures,
       },

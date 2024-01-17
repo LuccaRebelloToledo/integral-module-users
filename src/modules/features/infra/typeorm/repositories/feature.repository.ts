@@ -27,6 +27,16 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
       .getMany();
   }
 
+  public async findAllFeaturesByFeatureGroupId(
+    featureGroupId: string,
+  ): Promise<Feature[]> {
+    return await this.featureRepository
+      .createQueryBuilder('features')
+      .innerJoin('grouped_features', 'gf', 'features.id = gf.featureId')
+      .where('gf.featureGroupId = :featureGroupId', { featureGroupId })
+      .getMany();
+  }
+
   public async findById(featureId: string): Promise<Feature | null> {
     return await this.featureRepository.findOne({
       where: {

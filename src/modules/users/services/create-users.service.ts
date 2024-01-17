@@ -26,6 +26,7 @@ export default class CreateUsersService {
     name,
     email,
     password,
+    featureGroupId = 'FWwq9ec55ZQUYpIKsCBUk',
   }: CreateUsersDTO): Promise<ListUsersDTO> {
     const user = await this.userRepository.findByEmail(email);
 
@@ -38,6 +39,7 @@ export default class CreateUsersService {
       name: String(name).trim(),
       email: String(email).trim().toLowerCase(),
       password: await this.bcryptHashProvider.generateHash(password),
+      featureGroupId,
     });
 
     return {
