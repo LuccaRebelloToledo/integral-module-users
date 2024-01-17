@@ -4,11 +4,13 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import Feature from './feature.entity';
+import User from '@modules/users/infra/typeorm/entities/user.entity';
 
 @Entity('feature_groups')
 export default class FeatureGroup {
@@ -29,6 +31,11 @@ export default class FeatureGroup {
   })
   @JoinTable({ name: 'grouped_features' })
   features: Feature[];
+
+  @OneToMany(() => User, (user) => user.featureGroup, {
+    cascade: true,
+  })
+  users: User[];
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt: Date;
