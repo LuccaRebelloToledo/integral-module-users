@@ -1,10 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 
 import FeatureRepositoryInterface from '../repositories/feature.repository.interface';
-import Feature from '../infra/typeorm/entities/feature.entity';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+
+import Feature from '../infra/typeorm/entities/feature.entity';
 
 @injectable()
 export default class ShowFeaturesService {
