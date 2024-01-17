@@ -16,8 +16,8 @@ export default class UserController {
   ): Promise<Response> {
     const { id: userId } = request.params;
 
-    const showUsersService = container.resolve(ShowUsersService);
-    const user = await showUsersService.execute(userId);
+    const listUsersService = container.resolve(ListUsersService);
+    const user = await listUsersService.execute(userId);
 
     return response.json(user);
   }
@@ -27,8 +27,8 @@ export default class UserController {
     response: Response,
     _next: NextFunction,
   ): Promise<Response> {
-    const listUsersService = container.resolve(ListUsersService);
-    const users = await listUsersService.execute();
+    const showUsersService = container.resolve(ShowUsersService);
+    const users = await showUsersService.execute();
 
     return response.json(users);
   }
