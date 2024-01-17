@@ -15,10 +15,10 @@ export default function ensureAuthorized(
     _response: Response,
     next: NextFunction,
   ): void {
-    const { featureGroup, features } = request.user;
+    const { featureGroup, standaloneFeatures } = request.user;
 
     if (
-      ![...featureGroup.features, ...features].some((userFeature) =>
+      ![...featureGroup.features, ...standaloneFeatures].some((userFeature) =>
         requiredFeatures.includes(userFeature.key),
       )
     ) {

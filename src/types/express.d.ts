@@ -13,7 +13,7 @@ declare namespace Express {
   type SessionUser = {
     id: string;
     featureGroup: SessionFeatureGroup;
-    features: SessionFeature[];
+    standaloneFeatures: SessionFeature[];
   };
   export interface Request {
     user: SessionUser;

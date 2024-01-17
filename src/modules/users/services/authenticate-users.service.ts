@@ -41,11 +41,34 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
+    if (!user.featureGroup) {
+      throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
+    }
+
     const { secret, expiresIn } = authConfig.jwt;
+
+    const featuresFromFeatureGroup = user.featureGroup.features.map(
+      (feature) => ({
+        key: feature.key,
+        name: feature.name,
+      }),
+    );
+
+    const standaloneFeatures = user.features
+      ? user.features.map((feature) => ({
+          key: feature.key,
+          name: feature.name,
+        }))
+      : [];
 
     const token = sign(
       {
-        id: user.id,
+        featureGroup: {
+          key: user.featureGroup.key,
+          name: user.featureGroup.name,
+          features: featuresFromFeatureGroup,
+        },
+        standaloneFeatures,
       },
       secret,
       {

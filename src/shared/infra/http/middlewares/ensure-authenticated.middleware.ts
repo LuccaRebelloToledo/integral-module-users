@@ -21,7 +21,7 @@ type SessionFeatureGroup = {
 export type SessionUser = {
   id: string;
   featureGroup: SessionFeatureGroup;
-  features: SessionFeature[];
+  standaloneFeatures: SessionFeature[];
 };
 
 interface ITokenPayload {
@@ -29,7 +29,7 @@ interface ITokenPayload {
   exp: number;
   iat: number;
   featureGroup: SessionFeatureGroup;
-  features: SessionFeature[];
+  standaloneFeatures: SessionFeature[];
 }
 
 export default function ensureAuthenticated(
@@ -50,16 +50,16 @@ export default function ensureAuthenticated(
       throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
     }
 
-    const { sub, featureGroup, features } = decoded as ITokenPayload;
+    const { sub, featureGroup, standaloneFeatures } = decoded as ITokenPayload;
 
-    if (!sub || !featureGroup || !features) {
+    if (!sub || !featureGroup || !standaloneFeatures) {
       throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
     }
 
     request.user = {
       id: sub,
-      featureGroup: featureGroup,
-      features: features,
+      featureGroup,
+      standaloneFeatures,
     };
 
     return next();

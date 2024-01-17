@@ -5,6 +5,7 @@ const AppErrorTypes = {
     invalidToken: 'Token is invalid!',
     insufficientPrivilege:
       'You do not have enough privilege to access this resource!',
+    missingUserFeatureGroup: 'User does not have a feature group!',
   },
   users: {
     emailAlreadyInUse: 'The email provided is already in use!',
