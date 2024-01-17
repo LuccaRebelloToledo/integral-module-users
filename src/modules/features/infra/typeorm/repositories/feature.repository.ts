@@ -35,7 +35,7 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
     });
   }
 
-  public async findByOrKeyOrName({
+  public async findByKeyOrName({
     key,
     name,
   }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]> {

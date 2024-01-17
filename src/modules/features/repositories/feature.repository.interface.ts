@@ -6,7 +6,7 @@ export default interface FeatureRepositoryInterface {
   findAll(): Promise<Feature[]>;
   findAllByUserId(userId: string): Promise<Feature[]>;
   findById(featureId: string): Promise<Feature | null>;
-  findByOrKeyOrName({
+  findByKeyOrName({
     key,
     name,
   }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]>;
