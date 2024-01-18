@@ -1,7 +1,7 @@
 export default interface CreateUsersDTO {
-  id?: string;
+  id: string;
   name: string;
   email: string;
   password: string;
-  featureGroupId?: string;
+  featureGroupId: string;
 }
