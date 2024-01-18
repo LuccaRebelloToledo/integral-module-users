@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 
 import http from 'http';
+
 import AppError from '@shared/errors/app-error';
+
+import { isCelebrateError } from 'celebrate';
+
+import EscapeHtml from 'escape-html';
 
 export default function globalErrorHandler(
   err: Error,
@@ -25,13 +30,42 @@ export default function globalErrorHandler(
 
   console.error(errorData);
 
-  if (errorData.error instanceof AppError) {
-    const statusCode = Number(errorData.error.statusCode) || 400;
+  if (isCelebrateError(err)) {
+    const validation: Record<string, unknown> = {};
+
+    for (const [segment, joiError] of err.details.entries()) {
+      validation[segment] = {
+        source: segment,
+        keys: JSON.stringify(
+          joiError.details.map((detail) => EscapeHtml(detail.path.join('.'))),
+        ),
+        message: joiError.message,
+      };
+    }
+
+    return response.status(400).json({
+      statusCode: 400,
+      error: http.STATUS_CODES[400],
+      message: err.message,
+      validation,
+    });
+  }
+
+  if (err instanceof AppError) {
+    const statusCode = Number(err.statusCode) || 400;
 
     return response.status(statusCode).json({
       statusCode: statusCode,
       error: http.STATUS_CODES[statusCode],
-      message: errorData.message,
+      message: err.message,
+    });
+  }
+
+  if (err instanceof Error) {
+    return response.status(400).json({
+      statusCode: 400,
+      error: http.STATUS_CODES[400],
+      message: err.message,
     });
   }
 
