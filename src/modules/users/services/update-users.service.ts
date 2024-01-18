@@ -113,23 +113,18 @@ export default class UpdateUsersService {
 
       const combinedFeatures = [...groupedFeatures, ...featuresByUserId];
 
-      const featureMap = new Map();
-
-      combinedFeatures.forEach((feature) => {
-        featureMap.set(feature.id, feature);
-      });
-
-      const uniqueFeatures: Feature[] = Array.from(featureMap.values());
-
-      const newFeatures = uniqueFeatures.filter(
-        (feature) => !features.some((f) => f.id === feature.id),
+      const uniqueFeatures = features.filter(
+        (feature) =>
+          !combinedFeatures.some(
+            (combinedFeature) => combinedFeature.id === feature.id,
+          ),
       );
 
-      if (!newFeatures.length) {
+      if (!uniqueFeatures.length) {
         throw new AppError(AppErrorTypes.features.repeatedFeatures);
       }
 
-      user.features = [...featuresByUserId, ...newFeatures];
+      user.features = [...featuresByUserId, ...uniqueFeatures];
     }
 
     const updatedUser = await this.userRepository.save(user);
