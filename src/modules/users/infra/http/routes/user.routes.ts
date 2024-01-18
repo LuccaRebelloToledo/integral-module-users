@@ -1,6 +1,11 @@
 import { Router } from 'express';
-import { Joi, Segments, celebrate } from 'celebrate';
-import { idSchema, signUpSchema } from '@shared/schemas/validation.schemas';
+import { Segments, celebrate } from 'celebrate';
+
+import {
+  createUsersSchema,
+  updateUsersSchema,
+} from '@shared/schemas/user-related.schemas';
+import { idParamSchema } from '@shared/schemas/global.schemas';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
@@ -17,9 +22,7 @@ userRoutes.get('/', ensureAuthorized(['test']), userController.show);
 userRoutes.get(
   '/:userId',
   celebrate({
-    [Segments.PARAMS]: Joi.object({
-      userId: idSchema,
-    }),
+    [Segments.PARAMS]: idParamSchema,
   }),
   userController.index,
 );
@@ -27,7 +30,7 @@ userRoutes.get(
 userRoutes.post(
   '/',
   celebrate({
-    [Segments.BODY]: signUpSchema,
+    [Segments.BODY]: createUsersSchema,
   }),
   userController.create,
 );
@@ -35,18 +38,8 @@ userRoutes.post(
 userRoutes.put(
   '/:userId',
   celebrate({
-    [Segments.PARAMS]: Joi.object({
-      userId: idSchema,
-    }),
-    [Segments.BODY]: Joi.object({
-      name: Joi.string().trim().max(100),
-      email: Joi.string().email().trim().lowercase().max(100),
-      password: Joi.string().trim(),
-      featureGroupId: Joi.string().trim().max(21),
-      featureIds: Joi.array()
-        .items(Joi.string().trim().max(21).required())
-        .unique(),
-    }),
+    [Segments.PARAMS]: idParamSchema,
+    [Segments.BODY]: updateUsersSchema,
   }),
   userController.update,
 );
@@ -54,9 +47,7 @@ userRoutes.put(
 userRoutes.delete(
   '/:userId',
   celebrate({
-    [Segments.PARAMS]: Joi.object({
-      userId: idSchema,
-    }),
+    [Segments.PARAMS]: idParamSchema,
   }),
   userController.delete,
 );

@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { Segments, celebrate } from 'celebrate';
-import { signInSchema, signUpSchema } from '@shared/schemas/validation.schemas';
+import {
+  signInSchema,
+  signUpSchema,
+} from '@shared/schemas/user-related.schemas';
 
 import SessionController from '../controllers/session.controller';
 
