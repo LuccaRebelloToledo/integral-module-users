@@ -1,5 +1,6 @@
-import { Joi, Segments, celebrate } from 'celebrate';
 import { Router } from 'express';
+import { Segments, celebrate } from 'celebrate';
+import { signInSchema, signUpSchema } from '@shared/schemas/validation.schemas';
 
 import SessionController from '../controllers/session.controller';
 
@@ -9,11 +10,7 @@ const sessionController = new SessionController();
 sessionRoutes.post(
   '/sign-up',
   celebrate({
-    [Segments.BODY]: Joi.object({
-      email: Joi.string().email().required().max(100),
-      name: Joi.string().required().max(100),
-      password: Joi.string().required(),
-    }),
+    [Segments.BODY]: signUpSchema,
   }),
   sessionController.signUp,
 );
@@ -21,10 +18,7 @@ sessionRoutes.post(
 sessionRoutes.post(
   '/sign-in',
   celebrate({
-    [Segments.BODY]: Joi.object({
-      email: Joi.string().email().required().max(100),
-      password: Joi.string().required(),
-    }),
+    [Segments.BODY]: signInSchema,
   }),
   sessionController.signIn,
 );
