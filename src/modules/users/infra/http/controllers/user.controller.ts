@@ -52,7 +52,7 @@ export default class UserController {
     _next: NextFunction,
   ): Promise<Response> {
     const { id: userId } = request.params;
-    const { name, email, password } = request.body;
+    const { name, email, password, featureGroupId, featureIds } = request.body;
 
     const updateUsersService = container.resolve(UpdateUsersService);
     const user = await updateUsersService.execute({
@@ -60,6 +60,8 @@ export default class UserController {
       name,
       email,
       password,
+      featureGroupId,
+      featureIds,
     });
 
     return response.json(user);

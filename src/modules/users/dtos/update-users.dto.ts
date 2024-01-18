@@ -3,4 +3,6 @@ export default interface UpdateUsersDTO {
   name?: string;
   email?: string;
   password?: string;
+  featureGroupId?: string;
+  featureIds?: string[];
 }

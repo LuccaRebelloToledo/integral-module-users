@@ -15,15 +15,29 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   }
 
   public async findAll(): Promise<Feature[]> {
-    return await this.featureRepository.find();
+    return await this.featureRepository.find({
+      select: {
+        id: true,
+        key: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   public async findAllByUserId(userId: string): Promise<Feature[]> {
     return await this.featureRepository
-      .createQueryBuilder('feature')
-      .innerJoinAndSelect('feature.userFeatures', 'user', 'user.id = :userId', {
-        userId,
-      })
+      .createQueryBuilder('features')
+      .select([
+        'features.id',
+        'features.key',
+        'features.name',
+        'features.createdAt',
+        'features.updatedAt',
+      ])
+      .innerJoin('features.userFeatures', 'user')
+      .where('user.id = :userId', { userId })
       .getMany();
   }
 
@@ -32,11 +46,14 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   ): Promise<Feature[]> {
     return await this.featureRepository
       .createQueryBuilder('features')
-      .innerJoinAndSelect(
-        'grouped_features',
-        'gf',
-        'features.id = gf.featureId',
-      )
+      .select([
+        'features.id',
+        'features.key',
+        'features.name',
+        'features.createdAt',
+        'features.updatedAt',
+      ])
+      .innerJoin('grouped_features', 'gf', 'features.id = gf.featureId')
       .where('gf.featureGroupId = :featureGroupId', { featureGroupId })
       .getMany();
   }

@@ -31,7 +31,7 @@ export default class CreateUsersService {
     name,
     email,
     password,
-    featureGroupId = 'FWwq9ec55ZQUYpIKsCBUk',
+    featureGroupId = 'TO DO GROUP MEMBER ID',
   }: CreateUsersServiceDTO): Promise<ListUsersDTO> {
     const user = await this.userRepository.findByEmail(email);
 
