@@ -15,7 +15,9 @@ export default class ListFeaturesService {
   ) {}
 
   public async execute(featureId: string): Promise<Feature> {
-    const feature = await this.featureRepository.findById(featureId);
+    const featureIdInput = featureId.trim();
+
+    const feature = await this.featureRepository.findById(featureIdInput);
 
     if (!feature) {
       throw new AppError(AppErrorTypes.features.notFound);

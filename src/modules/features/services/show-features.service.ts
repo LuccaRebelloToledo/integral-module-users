@@ -17,7 +17,7 @@ export default class ShowFeaturesService {
   public async execute(): Promise<Feature[]> {
     const features = await this.featureRepository.findAll();
 
-    if (!features || features.length === 0) {
+    if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 

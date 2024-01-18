@@ -15,14 +15,14 @@ export default class ShowFeaturesByFeatureGroupIdService {
   ) {}
 
   public async execute(featureGroupId: string): Promise<Feature[]> {
+    const featureGroupIdInput = featureGroupId.trim();
+
     const features =
       await this.featureRepository.findAllFeaturesByFeatureGroupId(
-        featureGroupId,
+        featureGroupIdInput,
       );
 
-    console.error(features);
-
-    if (!features || features.length === 0) {
+    if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 

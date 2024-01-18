@@ -17,7 +17,7 @@ export default class ShowFeatureGroupsService {
   public async execute(): Promise<FeatureGroup[]> {
     const featureGroups = await this.featureGroupRepository.findAll();
 
-    if (!featureGroups || featureGroups.length === 0) {
+    if (!featureGroups.length) {
       throw new AppError(AppErrorTypes.featureGroups.notFound);
     }
 

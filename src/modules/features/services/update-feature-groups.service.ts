@@ -32,8 +32,10 @@ export default class UpdateFeatureGroupsService {
     name,
     featureIds,
   }: UpdateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
+    const featureGroupIdInput = featureGroupId.trim();
+
     const featureGroup = await this.featureGroupRepository.findById(
-      featureGroupId,
+      featureGroupIdInput,
     );
 
     if (!featureGroup) {
@@ -41,39 +43,45 @@ export default class UpdateFeatureGroupsService {
     }
 
     if (key || name) {
+      const keyInput = key?.trim();
+      const nameInput = name?.trim();
+
       const checkFeatureGroupsExists =
         await this.featureGroupRepository.findByKeyOrName({
-          key,
-          name,
+          key: keyInput,
+          name: nameInput,
         });
 
-      if (checkFeatureGroupsExists.length > 0) {
-        const featureExists = checkFeatureGroupsExists.find(
-          (feature) => feature.key === key,
+      if (!checkFeatureGroupsExists.length) {
+        const featureExistsByKey = checkFeatureGroupsExists.find(
+          (feature) => feature.key === keyInput,
         );
 
-        if (featureExists) {
+        if (featureExistsByKey) {
           throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
         }
+
         throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
       }
 
-      featureGroup.key = key || featureGroup.key;
-      featureGroup.name = name || featureGroup.name;
+      featureGroup.key = keyInput || featureGroup.key;
+      featureGroup.name = nameInput || featureGroup.name;
     }
 
     if (featureIds) {
       let features: Feature[] = [];
 
       for (let featureId of featureIds) {
-        const feature = await this.featureRepository.findById(featureId);
+        const featureIdInput = featureId.trim();
+
+        const feature = await this.featureRepository.findById(featureIdInput);
 
         if (feature) {
           features.push(feature);
         }
       }
 
-      if (features.length === 0) {
+      if (!features.length) {
         throw new AppError(AppErrorTypes.features.notFound);
       }
 

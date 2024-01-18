@@ -15,8 +15,10 @@ export default class ListFeatureGroupsService {
   ) {}
 
   public async execute(featureGroupId: string): Promise<FeatureGroup> {
+    const featureGroupIdInput = featureGroupId.trim();
+
     const featureGroup = await this.featureGroupRepository.findById(
-      featureGroupId,
+      featureGroupIdInput,
     );
 
     if (!featureGroup) {

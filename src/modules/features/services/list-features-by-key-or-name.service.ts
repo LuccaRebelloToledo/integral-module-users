@@ -20,12 +20,15 @@ export default class ListFeaturesByKeyOrNameService {
     key,
     name,
   }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]> {
+    const keyInput = key?.trim();
+    const nameInput = name?.trim();
+
     const features = await this.featureRepository.findByKeyOrName({
-      key,
-      name,
+      key: keyInput,
+      name: nameInput,
     });
 
-    if (!features || features.length === 0) {
+    if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 
