@@ -1,6 +1,5 @@
 import { inject, injectable } from 'tsyringe';
 
-import CreateUsersDTO from '../dtos/create-users.dto';
 import ListUsersDTO from '../dtos/list-users.dto';
 
 import UserRepositoryInterface from '../repositories/user.repository.interface';
@@ -10,6 +9,13 @@ import generateNanoId from '@shared/utils/generate-nanoid.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+
+interface CreateUsersServiceDTO {
+  email: string;
+  password: string;
+  name: string;
+  featureGroupId?: string;
+}
 
 @injectable()
 export default class CreateUsersService {
@@ -22,23 +28,32 @@ export default class CreateUsersService {
   ) {}
 
   public async execute({
-    id = generateNanoId(),
     name,
     email,
     password,
     featureGroupId = 'FWwq9ec55ZQUYpIKsCBUk',
-  }: CreateUsersDTO): Promise<ListUsersDTO> {
-    const user = await this.userRepository.findByEmail(email);
+  }: CreateUsersServiceDTO): Promise<ListUsersDTO> {
+    const emailInput = String(email).trim().toLowerCase();
+
+    const user = await this.userRepository.findByEmail(emailInput);
 
     if (user) {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
     }
 
+    const generatedNanoId = generateNanoId();
+    const nameInput = String(name).trim();
+
+    const passwordInput = String(password).trim();
+    const encryptedPassword = await this.bcryptHashProvider.generateHash(
+      passwordInput,
+    );
+
     const createdUser = await this.userRepository.create({
-      id,
-      name: String(name).trim(),
-      email: String(email).trim().toLowerCase(),
-      password: await this.bcryptHashProvider.generateHash(password),
+      id: generatedNanoId,
+      name: nameInput,
+      email: emailInput,
+      password: encryptedPassword,
       featureGroupId,
     });
 

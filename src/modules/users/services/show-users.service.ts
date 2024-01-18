@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
-import UserRepositoryInterface from '../repositories/user.repository.interface';
-
 import ListUsersDTO from '../dtos/list-users.dto';
+
+import UserRepositoryInterface from '../repositories/user.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';

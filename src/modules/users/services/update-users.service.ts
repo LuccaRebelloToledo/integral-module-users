@@ -32,23 +32,33 @@ export default class UpdateUsersService {
     }
 
     if (name) {
-      if (user.name !== name.trim()) {
-        user.name = name.trim();
+      const nameInput = String(name).trim();
+
+      if (user.name !== nameInput) {
+        user.name = nameInput;
       }
     }
 
     if (email) {
-      const userWithEmail = await this.userRepository.findByEmail(email);
+      const emailInput = String(email).trim().toLocaleLowerCase();
+
+      const userWithEmail = await this.userRepository.findByEmail(emailInput);
 
       if (userWithEmail) {
         throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
       }
 
-      user.email = email.toLocaleLowerCase().trim();
+      user.email = emailInput;
     }
 
     if (password) {
-      user.password = await this.bcryptHashProvider.generateHash(password);
+      const passwordInput = String(password).trim();
+
+      const encryptedPassword = await this.bcryptHashProvider.generateHash(
+        passwordInput,
+      );
+
+      user.password = encryptedPassword;
     }
 
     const updatedUser = await this.userRepository.save(user);
