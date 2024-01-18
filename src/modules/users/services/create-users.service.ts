@@ -33,26 +33,21 @@ export default class CreateUsersService {
     password,
     featureGroupId = 'FWwq9ec55ZQUYpIKsCBUk',
   }: CreateUsersServiceDTO): Promise<ListUsersDTO> {
-    const emailInput = email.trim().toLowerCase();
-
-    const user = await this.userRepository.findByEmail(emailInput);
+    const user = await this.userRepository.findByEmail(email);
 
     if (user) {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
     }
 
     const generatedNanoId = generateNanoId();
-    const nameInput = name.trim();
-
-    const passwordInput = password.trim();
     const encryptedPassword = await this.bcryptHashProvider.generateHash(
-      passwordInput,
+      password,
     );
 
     const createdUser = await this.userRepository.create({
       id: generatedNanoId,
-      name: nameInput,
-      email: emailInput,
+      name,
+      email,
       password: encryptedPassword,
       featureGroupId,
     });

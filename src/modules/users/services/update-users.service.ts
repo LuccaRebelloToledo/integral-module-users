@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import UpdateUsersDTO from '../dtos/update-users.dto';
 import ListUsersDTO from '../dtos/list-users.dto';
@@ -8,6 +8,13 @@ import HashProviderInterface from '../providers/hash-provider/models/hash.provid
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+
+import ListFeatureGroupsService from '@modules/features/services/list-feature-groups.service';
+import ListFeaturesService from '@modules/features/services/list-features.service';
+import ShowFeaturesByFeatureGroupIdService from '@modules/features/services/show-features-by-feature-group-id.service';
+import ShowFeaturesByUserIdService from '@modules/features/services/show-features-by-user-id.service';
+
+import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 
 @injectable()
 export default class UpdateUsersService {
@@ -24,43 +31,105 @@ export default class UpdateUsersService {
     name,
     email,
     password,
+    featureGroupId,
+    featureIds,
   }: UpdateUsersDTO): Promise<ListUsersDTO> {
-    const userIdInput = id.trim();
-
-    const user = await this.userRepository.findById(userIdInput);
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
     if (name) {
-      const nameInput = name.trim();
-
-      if (user.name !== nameInput) {
-        user.name = nameInput;
+      if (user.name !== name) {
+        user.name = name;
       }
     }
 
     if (email) {
-      const emailInput = email.trim().toLocaleLowerCase();
-
-      const userWithEmail = await this.userRepository.findByEmail(emailInput);
+      const userWithEmail = await this.userRepository.findByEmail(email);
 
       if (userWithEmail) {
         throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
       }
 
-      user.email = emailInput;
+      user.email = email;
     }
 
     if (password) {
-      const passwordInput = password.trim();
-
       const encryptedPassword = await this.bcryptHashProvider.generateHash(
-        passwordInput,
+        password,
       );
 
       user.password = encryptedPassword;
+    }
+
+    if (featureGroupId) {
+      const listFeatureGroupsService = container.resolve(
+        ListFeatureGroupsService,
+      );
+
+      const featureGroup = await listFeatureGroupsService.execute(
+        featureGroupId,
+      );
+
+      user.featureGroupId = featureGroup.id;
+      user.featureGroup = featureGroup;
+    }
+
+    if (featureIds) {
+      let features: Feature[] = [];
+      const listFeaturesService = container.resolve(ListFeaturesService);
+
+      for (let featureId of featureIds) {
+        try {
+          const feature = await listFeaturesService.execute(featureId);
+
+          features.push(feature);
+        } catch (err) {
+          continue;
+        }
+      }
+
+      if (!features.length) {
+        throw new AppError(AppErrorTypes.features.notFound);
+      }
+
+      const showFeaturesByFeatureGroupIdService = container.resolve(
+        ShowFeaturesByFeatureGroupIdService,
+      );
+
+      const groupedFeatures = await showFeaturesByFeatureGroupIdService.execute(
+        user.featureGroupId,
+      );
+
+      const showFeaturesByUserIdService = container.resolve(
+        ShowFeaturesByUserIdService,
+      );
+
+      const featuresByUserId = await showFeaturesByUserIdService.execute(
+        user.id,
+      );
+
+      const combinedFeatures = [...groupedFeatures, ...featuresByUserId];
+
+      const featureMap = new Map();
+
+      combinedFeatures.forEach((feature) => {
+        featureMap.set(feature.id, feature);
+      });
+
+      const uniqueFeatures: Feature[] = Array.from(featureMap.values());
+
+      const newFeatures = uniqueFeatures.filter(
+        (feature) => !features.some((f) => f.id === feature.id),
+      );
+
+      if (!newFeatures.length) {
+        throw new AppError(AppErrorTypes.features.repeatedFeatures);
+      }
+
+      user.features = [...featuresByUserId, ...newFeatures];
     }
 
     const updatedUser = await this.userRepository.save(user);

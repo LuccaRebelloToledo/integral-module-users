@@ -20,12 +20,9 @@ export default class ListFeatureGroupsByKeyOrNameService {
     key,
     name,
   }: FindFeatureGroupsByKeyOrNameDTO): Promise<FeatureGroup[]> {
-    const keyInput = key?.trim();
-    const nameInput = name?.trim();
-
     const featureGroups = await this.featureGroupRepository.findByKeyOrName({
-      key: keyInput,
-      name: nameInput,
+      key,
+      name,
     });
 
     if (!featureGroups.length) {

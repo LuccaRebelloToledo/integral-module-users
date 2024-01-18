@@ -32,10 +32,8 @@ export default class UpdateFeatureGroupsService {
     name,
     featureIds,
   }: UpdateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
-    const featureGroupIdInput = featureGroupId.trim();
-
     const featureGroup = await this.featureGroupRepository.findById(
-      featureGroupIdInput,
+      featureGroupId,
     );
 
     if (!featureGroup) {
@@ -43,18 +41,15 @@ export default class UpdateFeatureGroupsService {
     }
 
     if (key || name) {
-      const keyInput = key?.trim();
-      const nameInput = name?.trim();
-
       const checkFeatureGroupsExists =
         await this.featureGroupRepository.findByKeyOrName({
-          key: keyInput,
-          name: nameInput,
+          key,
+          name,
         });
 
       if (!checkFeatureGroupsExists.length) {
         const featureExistsByKey = checkFeatureGroupsExists.find(
-          (feature) => feature.key === keyInput,
+          (feature) => feature.key === key,
         );
 
         if (featureExistsByKey) {
@@ -64,17 +59,15 @@ export default class UpdateFeatureGroupsService {
         throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
       }
 
-      featureGroup.key = keyInput || featureGroup.key;
-      featureGroup.name = nameInput || featureGroup.name;
+      featureGroup.key = key || featureGroup.key;
+      featureGroup.name = name || featureGroup.name;
     }
 
     if (featureIds) {
       let features: Feature[] = [];
 
       for (let featureId of featureIds) {
-        const featureIdInput = featureId.trim();
-
-        const feature = await this.featureRepository.findById(featureIdInput);
+        const feature = await this.featureRepository.findById(featureId);
 
         if (feature) {
           features.push(feature);

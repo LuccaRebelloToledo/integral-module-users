@@ -15,9 +15,7 @@ export default class ShowFeaturesByUserIdService {
   ) {}
 
   public async execute(userId: string): Promise<Feature[]> {
-    const userIdInput = userId.trim();
-
-    const features = await this.featureRepository.findAllByUserId(userIdInput);
+    const features = await this.featureRepository.findAllByUserId(userId);
 
     if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);

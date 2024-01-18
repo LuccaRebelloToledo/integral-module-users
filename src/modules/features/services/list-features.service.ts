@@ -6,7 +6,6 @@ import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import Feature from '../infra/typeorm/entities/feature.entity';
-
 @injectable()
 export default class ListFeaturesService {
   constructor(
@@ -15,9 +14,7 @@ export default class ListFeaturesService {
   ) {}
 
   public async execute(featureId: string): Promise<Feature> {
-    const featureIdInput = featureId.trim();
-
-    const feature = await this.featureRepository.findById(featureIdInput);
+    const feature = await this.featureRepository.findById(featureId);
 
     if (!feature) {
       throw new AppError(AppErrorTypes.features.notFound);

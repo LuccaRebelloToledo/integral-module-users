@@ -13,10 +13,8 @@ export default class DeleteFeatureGroupsService {
   ) {}
 
   public async execute(featureGroupId: string): Promise<void> {
-    const featureGroupIdInput = featureGroupId.trim();
-
     const featureGroup = await this.featureGroupRepository.findById(
-      featureGroupIdInput,
+      featureGroupId,
     );
 
     if (!featureGroup) {

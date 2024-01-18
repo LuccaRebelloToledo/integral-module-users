@@ -30,18 +30,15 @@ export default class CreateFeatureGroupsService {
     name,
     featureIds,
   }: CreateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
-    const keyInput = key.trim();
-    const nameInput = name.trim();
-
     const checkFeatureGroupsExists =
       await this.featureGroupRepository.findByKeyOrName({
-        key: keyInput,
-        name: nameInput,
+        key,
+        name,
       });
 
     if (checkFeatureGroupsExists.length > 0) {
       const featureExists = checkFeatureGroupsExists.find(
-        (feature) => feature.key === keyInput,
+        (feature) => feature.key === key,
       );
 
       if (featureExists) {
@@ -53,22 +50,20 @@ export default class CreateFeatureGroupsService {
     let features: Feature[] = [];
 
     for (let featureId of featureIds) {
-      const featureIdInput = featureId.trim();
-
-      const feature = await this.featureRepository.findById(featureIdInput);
+      const feature = await this.featureRepository.findById(featureId);
 
       if (feature) {
         features.push(feature);
       }
     }
 
-    if (features.length === 0) {
+    if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 
     const featureGroup = await this.featureGroupRepository.create({
-      key: keyInput,
-      name: nameInput,
+      key,
+      name,
       features,
     });
 

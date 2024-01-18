@@ -13,9 +13,7 @@ export default class DeleteUsersService {
   ) {}
 
   public async execute(userId: string): Promise<void> {
-    const userIdInput = userId.trim();
-
-    const user = await this.userRepository.findById(userIdInput);
+    const user = await this.userRepository.findById(userId);
 
     if (!user) {
       throw new AppError(AppErrorTypes.users.notFound, 404);
