@@ -50,15 +50,14 @@ export default class AuthenticateUsersService {
       ShowFeaturesByFeatureGroupIdService,
     );
 
-    const featuresFromFeatureGroup =
-      await showFeaturesByFeatureGroupIdService.execute(user.featureGroupId);
-
-    const mappedFeaturesFromFeatureGroup = featuresFromFeatureGroup.map(
-      (feature) => ({
-        key: feature.key,
-        name: feature.name,
-      }),
+    const groupedFeatures = await showFeaturesByFeatureGroupIdService.execute(
+      user.featureGroupId,
     );
+
+    const mappedGroupedFeatures = groupedFeatures.map((feature) => ({
+      key: feature.key,
+      name: feature.name,
+    }));
 
     const standaloneFeatures = user.features
       ? user.features.map((feature) => ({
@@ -74,7 +73,7 @@ export default class AuthenticateUsersService {
         featureGroup: {
           key: user.featureGroup.key,
           name: user.featureGroup.name,
-          features: mappedFeaturesFromFeatureGroup,
+          features: mappedGroupedFeatures,
         },
         standaloneFeatures,
       },
