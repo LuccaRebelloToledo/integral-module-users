@@ -15,7 +15,7 @@ export default class ListUsersService {
   ) {}
 
   public async execute(userId: string): Promise<ListUsersDTO> {
-    const userIdInput = String(userId).trim();
+    const userIdInput = userId.trim();
 
     const user = await this.userRepository.findById(userIdInput);
 

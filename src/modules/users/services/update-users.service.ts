@@ -25,7 +25,7 @@ export default class UpdateUsersService {
     email,
     password,
   }: UpdateUsersDTO): Promise<ListUsersDTO> {
-    const userIdInput = String(id).trim();
+    const userIdInput = id.trim();
 
     const user = await this.userRepository.findById(userIdInput);
 
@@ -34,7 +34,7 @@ export default class UpdateUsersService {
     }
 
     if (name) {
-      const nameInput = String(name).trim();
+      const nameInput = name.trim();
 
       if (user.name !== nameInput) {
         user.name = nameInput;
@@ -42,7 +42,7 @@ export default class UpdateUsersService {
     }
 
     if (email) {
-      const emailInput = String(email).trim().toLocaleLowerCase();
+      const emailInput = email.trim().toLocaleLowerCase();
 
       const userWithEmail = await this.userRepository.findByEmail(emailInput);
 
@@ -54,7 +54,7 @@ export default class UpdateUsersService {
     }
 
     if (password) {
-      const passwordInput = String(password).trim();
+      const passwordInput = password.trim();
 
       const encryptedPassword = await this.bcryptHashProvider.generateHash(
         passwordInput,

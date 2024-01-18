@@ -33,7 +33,7 @@ export default class CreateUsersService {
     password,
     featureGroupId = 'FWwq9ec55ZQUYpIKsCBUk',
   }: CreateUsersServiceDTO): Promise<ListUsersDTO> {
-    const emailInput = String(email).trim().toLowerCase();
+    const emailInput = email.trim().toLowerCase();
 
     const user = await this.userRepository.findByEmail(emailInput);
 
@@ -42,9 +42,9 @@ export default class CreateUsersService {
     }
 
     const generatedNanoId = generateNanoId();
-    const nameInput = String(name).trim();
+    const nameInput = name.trim();
 
-    const passwordInput = String(password).trim();
+    const passwordInput = password.trim();
     const encryptedPassword = await this.bcryptHashProvider.generateHash(
       passwordInput,
     );

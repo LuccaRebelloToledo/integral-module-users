@@ -17,7 +17,7 @@ export default class ShowUsersService {
   public async execute(): Promise<ListUsersDTO[]> {
     const users = await this.userRepository.findAll();
 
-    if (!users || users.length === 0) {
+    if (!users.length) {
       throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 

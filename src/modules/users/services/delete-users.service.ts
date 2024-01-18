@@ -13,7 +13,7 @@ export default class DeleteUsersService {
   ) {}
 
   public async execute(userId: string): Promise<void> {
-    const userIdInput = String(userId).trim();
+    const userIdInput = userId.trim();
 
     const user = await this.userRepository.findById(userIdInput);
 

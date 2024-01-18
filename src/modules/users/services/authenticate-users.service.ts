@@ -27,7 +27,7 @@ export default class AuthenticateUsersService {
     email,
     password,
   }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
-    const emailInput = String(email).trim().toLowerCase();
+    const emailInput = email.trim().toLowerCase();
 
     const user = await this.userRepository.findByEmail(emailInput);
 
@@ -35,7 +35,11 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
-    const passwordInput = String(password).trim();
+    if (!user.featureGroup) {
+      throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
+    }
+
+    const passwordInput = password.trim();
 
     const passwordMatch = await this.bcryptHashProvider.compareHash(
       passwordInput,
@@ -44,10 +48,6 @@ export default class AuthenticateUsersService {
 
     if (!passwordMatch) {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
-    }
-
-    if (!user.featureGroup) {
-      throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
     }
 
     const showFeaturesByFeatureGroupIdService = container.resolve(
