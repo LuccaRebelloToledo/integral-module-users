@@ -25,7 +25,9 @@ export default class UpdateUsersService {
     email,
     password,
   }: UpdateUsersDTO): Promise<ListUsersDTO> {
-    const user = await this.userRepository.findById(id);
+    const userIdInput = String(id).trim();
+
+    const user = await this.userRepository.findById(userIdInput);
 
     if (!user) {
       throw new AppError(AppErrorTypes.users.notFound, 404);

@@ -27,14 +27,18 @@ export default class AuthenticateUsersService {
     email,
     password,
   }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
-    const user = await this.userRepository.findByEmail(email);
+    const emailInput = String(email).trim().toLowerCase();
+
+    const user = await this.userRepository.findByEmail(emailInput);
 
     if (!user) {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
+    const passwordInput = String(password).trim();
+
     const passwordMatch = await this.bcryptHashProvider.compareHash(
-      password,
+      passwordInput,
       user.password,
     );
 
