@@ -1,10 +1,10 @@
 import { container, inject, injectable } from 'tsyringe';
 
 import UpdateUsersDTO from '../dtos/update-users.dto';
-import ListUsersDTO from '../dtos/list-users.dto';
 
 import UserRepositoryInterface from '../repositories/user.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
+import User from '../infra/typeorm/entities/user.entity';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -33,7 +33,7 @@ export default class UpdateUsersService {
     password,
     featureGroupId,
     featureIds,
-  }: UpdateUsersDTO): Promise<ListUsersDTO> {
+  }: UpdateUsersDTO): Promise<User> {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
@@ -129,10 +129,6 @@ export default class UpdateUsersService {
 
     const updatedUser = await this.userRepository.save(user);
 
-    return {
-      id: updatedUser.id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-    };
+    return updatedUser;
   }
 }

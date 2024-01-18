@@ -22,8 +22,7 @@ export const signInSchema = Joi.object({
 
 // Users
 
-export const createUsersSchema = Joi.object({
-  signUpSchema,
+export const createUsersSchema = signUpSchema.keys({
   featureGroupId: idSchema.required(),
 });
 

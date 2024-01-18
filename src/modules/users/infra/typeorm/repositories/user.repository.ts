@@ -15,7 +15,10 @@ export default class UserRepository implements UserRepositoryInterface {
   }
 
   public async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({
+      select: ['id', 'name', 'email', 'featureGroupId', 'features'],
+      relations: ['featureGroup', 'features'],
+    });
   }
 
   public async findById(id: string): Promise<User | null> {
@@ -23,6 +26,8 @@ export default class UserRepository implements UserRepositoryInterface {
       where: {
         id: id,
       },
+      select: ['id', 'name', 'email', 'featureGroupId', 'features'],
+      relations: ['featureGroup', 'features'],
     });
   }
 
