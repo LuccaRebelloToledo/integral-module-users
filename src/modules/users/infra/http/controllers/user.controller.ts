@@ -38,10 +38,15 @@ export default class UserController {
     response: Response,
     _next: NextFunction,
   ): Promise<Response> {
-    const { name, email, password } = request.body;
+    const { name, email, password, featureGroupId } = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
-    const user = await createUsersService.execute({ name, email, password });
+    const user = await createUsersService.execute({
+      name,
+      email,
+      password,
+      featureGroupId,
+    });
 
     return response.status(201).json(user);
   }
