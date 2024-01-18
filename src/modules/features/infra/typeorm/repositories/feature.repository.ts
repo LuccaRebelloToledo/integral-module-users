@@ -32,7 +32,11 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   ): Promise<Feature[]> {
     return await this.featureRepository
       .createQueryBuilder('features')
-      .innerJoin('grouped_features', 'gf', 'features.id = gf.featureId')
+      .innerJoinAndSelect(
+        'grouped_features',
+        'gf',
+        'features.id = gf.featureId',
+      )
       .where('gf.featureGroupId = :featureGroupId', { featureGroupId })
       .getMany();
   }
