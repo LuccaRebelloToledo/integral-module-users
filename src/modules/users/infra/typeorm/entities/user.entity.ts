@@ -32,7 +32,6 @@ export default class User {
   @ManyToOne(() => FeatureGroup, (featureGroup) => featureGroup.users, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
-    eager: true,
   })
   @JoinColumn({ name: 'featureGroupId' })
   featureGroup: FeatureGroup;
@@ -40,7 +39,6 @@ export default class User {
   @ManyToMany(() => Feature, (feature) => feature.userFeatures, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
-    eager: true,
     nullable: true,
   })
   features?: Feature[];
