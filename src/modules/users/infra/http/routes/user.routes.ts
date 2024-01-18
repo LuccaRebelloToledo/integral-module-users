@@ -20,7 +20,7 @@ userRoutes.use(ensureAuthenticated);
 userRoutes.get('/', ensureAuthorized(['test']), userController.show);
 
 userRoutes.get(
-  '/:userId',
+  '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
@@ -36,7 +36,7 @@ userRoutes.post(
 );
 
 userRoutes.put(
-  '/:userId',
+  '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
     [Segments.BODY]: updateUsersSchema,
@@ -45,7 +45,7 @@ userRoutes.put(
 );
 
 userRoutes.delete(
-  '/:userId',
+  '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
