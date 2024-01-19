@@ -17,14 +17,19 @@ const userController = new UserController();
 
 userRoutes.use(ensureAuthenticated);
 
-userRoutes.get('/', ensureAuthorized(['test']), userController.show);
+userRoutes.get(
+  '/',
+  ensureAuthorized(['full:users, list:users']),
+  userController.list,
+);
 
 userRoutes.get(
   '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
-  userController.index,
+  ensureAuthorized(['full:users, show:users']),
+  userController.show,
 );
 
 userRoutes.post(
@@ -32,6 +37,7 @@ userRoutes.post(
   celebrate({
     [Segments.BODY]: createUsersSchema,
   }),
+  ensureAuthorized(['full:users, create:users']),
   userController.create,
 );
 
@@ -41,6 +47,7 @@ userRoutes.put(
     [Segments.PARAMS]: idParamSchema,
     [Segments.BODY]: updateUsersSchema,
   }),
+  ensureAuthorized(['full:users, update:users']),
   userController.update,
 );
 
@@ -49,6 +56,7 @@ userRoutes.delete(
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
+  ensureAuthorized(['full:users, delete:users']),
   userController.delete,
 );
 
