@@ -124,7 +124,7 @@ export default class UpdateUsersService {
         throw new AppError(AppErrorTypes.features.repeatedFeatures);
       }
 
-      user.features = [...featuresByUserId, ...uniqueFeatures];
+      user.standaloneFeatures = [...featuresByUserId, ...uniqueFeatures];
     }
 
     const updatedUser = await this.userRepository.save(user);

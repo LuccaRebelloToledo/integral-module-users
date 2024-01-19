@@ -59,8 +59,8 @@ export default class AuthenticateUsersService {
       name: feature.name,
     }));
 
-    const standaloneFeatures = user.features
-      ? user.features.map((feature) => ({
+    const standaloneFeatures = user.standaloneFeatures
+      ? user.standaloneFeatures.map((feature) => ({
           key: feature.key,
           name: feature.name,
         }))
