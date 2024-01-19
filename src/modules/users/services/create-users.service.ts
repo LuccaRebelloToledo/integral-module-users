@@ -18,6 +18,8 @@ interface CreateUsersServiceDTO {
   featureGroupId?: string;
 }
 
+const featureGroupMemberId = '6P8s76YxCtSMgmKDx49dV';
+
 @injectable()
 export default class CreateUsersService {
   constructor(
@@ -58,7 +60,7 @@ export default class CreateUsersService {
       name,
       email,
       password: encryptedPassword,
-      featureGroupId: featureGroupId ? featureGroupId : 'FWwq9ec55ZQUYpIKsCBUk',
+      featureGroupId: featureGroupId ? featureGroupId : featureGroupMemberId,
     });
   }
 }

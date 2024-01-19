@@ -16,7 +16,7 @@ export default class UserRepository implements UserRepositoryInterface {
 
   public async findAll(): Promise<User[]> {
     return await this.userRepository.find({
-      relations: ['featureGroup', 'features'],
+      relations: ['featureGroup', 'standaloneFeatures'],
     });
   }
 
@@ -25,7 +25,7 @@ export default class UserRepository implements UserRepositoryInterface {
       where: {
         id: id,
       },
-      relations: ['featureGroup', 'features'],
+      relations: ['featureGroup', 'standaloneFeatures'],
     });
   }
 
@@ -34,7 +34,16 @@ export default class UserRepository implements UserRepositoryInterface {
       where: {
         email: email,
       },
-      relations: ['featureGroup', 'features'],
+      select: [
+        'id',
+        'name',
+        'email',
+        'password',
+        'featureGroupId',
+        'featureGroup',
+        'standaloneFeatures',
+      ],
+      relations: ['featureGroup', 'standaloneFeatures'],
     });
   }
 
