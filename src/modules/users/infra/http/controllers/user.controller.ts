@@ -82,6 +82,6 @@ export default class UserController {
     const deleteUsersService = container.resolve(DeleteUsersService);
     await deleteUsersService.execute(userId);
 
-    return response.status(204);
+    return response.status(204).json();
   }
 }
