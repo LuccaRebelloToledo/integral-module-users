@@ -9,28 +9,28 @@ import UpdateUsersService from '@modules/users/services/update-users.service';
 import DeleteUsersService from '@modules/users/services/delete-users.service';
 
 export default class UserController {
-  public async index(
+  public async show(
     request: Request,
     response: Response,
     _next: NextFunction,
   ): Promise<Response> {
     const { id: userId } = request.params;
 
-    const listUsersService = container.resolve(ListUsersService);
-    const user = await listUsersService.execute(userId);
+    const showUsersService = container.resolve(ShowUsersService);
+    const users = await showUsersService.execute(userId);
 
-    return response.json(user);
+    return response.json(users);
   }
 
-  public async show(
+  public async list(
     _request: Request,
     response: Response,
     _next: NextFunction,
   ): Promise<Response> {
-    const showUsersService = container.resolve(ShowUsersService);
-    const users = await showUsersService.execute();
+    const listUsersService = container.resolve(ListUsersService);
+    const user = await listUsersService.execute();
 
-    return response.json(users);
+    return response.json(user);
   }
 
   public async create(
