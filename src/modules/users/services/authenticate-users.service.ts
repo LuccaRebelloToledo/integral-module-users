@@ -9,7 +9,7 @@ import UserRepositoryInterface from '../repositories/user.repository.interface';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import ShowFeaturesByFeatureGroupIdService from '@modules/features/services/show-features-by-feature-group-id.service';
+import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list-features-by-feature-group-id.service';
 
 import authConfig from '@config/auth.config';
 import { sign } from 'jsonwebtoken';
@@ -46,11 +46,11 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
-    const showFeaturesByFeatureGroupIdService = container.resolve(
-      ShowFeaturesByFeatureGroupIdService,
+    const listFeaturesByFeatureGroupIdService = container.resolve(
+      ListFeaturesByFeatureGroupIdService,
     );
 
-    const groupedFeatures = await showFeaturesByFeatureGroupIdService.execute(
+    const groupedFeatures = await listFeaturesByFeatureGroupIdService.execute(
       user.featureGroupId,
     );
 

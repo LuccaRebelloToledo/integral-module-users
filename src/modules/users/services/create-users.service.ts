@@ -6,9 +6,10 @@ import User from '../infra/typeorm/entities/user.entity';
 
 import generateNanoId from '@shared/utils/generate-nanoid.utils';
 
+import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
+
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
-import ListFeatureGroupsService from '@modules/features/services/list-feature-groups.service';
 
 interface CreateUsersServiceDTO {
   email: string;
@@ -40,11 +41,11 @@ export default class CreateUsersService {
     }
 
     if (featureGroupId) {
-      const listFeatureGroupsService = container.resolve(
-        ListFeatureGroupsService,
+      const showFeatureGroupsService = container.resolve(
+        ShowFeatureGroupsService,
       );
 
-      await listFeatureGroupsService.execute(featureGroupId);
+      await showFeatureGroupsService.execute(featureGroupId);
     }
 
     const generatedNanoId = generateNanoId();
