@@ -9,10 +9,10 @@ import User from '../infra/typeorm/entities/user.entity';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import ListFeatureGroupsService from '@modules/features/services/list-feature-groups.service';
-import ListFeaturesService from '@modules/features/services/list-features.service';
-import ShowFeaturesByFeatureGroupIdService from '@modules/features/services/show-features-by-feature-group-id.service';
-import ShowFeaturesByUserIdService from '@modules/features/services/show-features-by-user-id.service';
+import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
+import ShowFeaturesService from '@modules/features/services/show-features.service';
+import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list-features-by-feature-group-id.service';
+import ListFeaturesByUserIdService from '@modules/features/services/list-features-by-user-id.service';
 
 import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 
@@ -65,11 +65,11 @@ export default class UpdateUsersService {
     }
 
     if (featureGroupId) {
-      const listFeatureGroupsService = container.resolve(
-        ListFeatureGroupsService,
+      const showFeatureGroupsService = container.resolve(
+        ShowFeatureGroupsService,
       );
 
-      const featureGroup = await listFeatureGroupsService.execute(
+      const featureGroup = await showFeatureGroupsService.execute(
         featureGroupId,
       );
 
@@ -79,11 +79,11 @@ export default class UpdateUsersService {
 
     if (featureIds) {
       let features: Feature[] = [];
-      const listFeaturesService = container.resolve(ListFeaturesService);
+      const showFeaturesService = container.resolve(ShowFeaturesService);
 
       for (let featureId of featureIds) {
         try {
-          const feature = await listFeaturesService.execute(featureId);
+          const feature = await showFeaturesService.execute(featureId);
 
           features.push(feature);
         } catch (err) {
@@ -95,19 +95,19 @@ export default class UpdateUsersService {
         throw new AppError(AppErrorTypes.features.notFound);
       }
 
-      const showFeaturesByFeatureGroupIdService = container.resolve(
-        ShowFeaturesByFeatureGroupIdService,
+      const listFeaturesByFeatureGroupIdService = container.resolve(
+        ListFeaturesByFeatureGroupIdService,
       );
 
-      const groupedFeatures = await showFeaturesByFeatureGroupIdService.execute(
+      const groupedFeatures = await listFeaturesByFeatureGroupIdService.execute(
         user.featureGroupId,
       );
 
-      const showFeaturesByUserIdService = container.resolve(
-        ShowFeaturesByUserIdService,
+      const listFeaturesByUserIdService = container.resolve(
+        ListFeaturesByUserIdService,
       );
 
-      const featuresByUserId = await showFeaturesByUserIdService.execute(
+      const featuresByUserId = await listFeaturesByUserIdService.execute(
         user.id,
       );
 
