@@ -41,14 +41,14 @@ export default class UserController {
     const { name, email, password, featureGroupId } = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
-    const user = await createUsersService.execute({
+    await createUsersService.execute({
       name,
       email,
       password,
       featureGroupId,
     });
 
-    return response.status(201).json(user);
+    return response.status(201).json();
   }
 
   public async update(

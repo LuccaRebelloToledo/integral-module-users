@@ -33,7 +33,7 @@ export default class CreateUsersService {
     email,
     password,
     featureGroupId,
-  }: CreateUsersServiceDTO): Promise<User> {
+  }: CreateUsersServiceDTO): Promise<void> {
     const user = await this.userRepository.findByEmail(email);
 
     if (user) {
@@ -53,14 +53,12 @@ export default class CreateUsersService {
       password,
     );
 
-    const createdUser = await this.userRepository.create({
+    await this.userRepository.create({
       id: generatedNanoId,
       name,
       email,
       password: encryptedPassword,
-      featureGroupId: featureGroupId ? featureGroupId : 'TO DO BETTER',
+      featureGroupId: featureGroupId ? featureGroupId : 'FWwq9ec55ZQUYpIKsCBUk',
     });
-
-    return createdUser;
   }
 }
