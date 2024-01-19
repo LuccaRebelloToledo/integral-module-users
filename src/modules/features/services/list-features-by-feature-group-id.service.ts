@@ -8,7 +8,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 import Feature from '../infra/typeorm/entities/feature.entity';
 
 @injectable()
-export default class ShowFeaturesByFeatureGroupIdService {
+export default class ListFeaturesByFeatureGroupIdService {
   constructor(
     @inject('FeatureRepository')
     private featureRepository: FeatureRepositoryInterface,

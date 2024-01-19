@@ -5,7 +5,7 @@ import FeatureRepositoryInterface from '../repositories/feature.repository.inter
 import Feature from '../infra/typeorm/entities/feature.entity';
 
 @injectable()
-export default class ShowFeaturesByUserIdService {
+export default class ListFeaturesByUserIdService {
   constructor(
     @inject('FeatureRepository')
     private featureRepository: FeatureRepositoryInterface,

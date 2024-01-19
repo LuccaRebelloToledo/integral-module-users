@@ -14,15 +14,13 @@ export default class ListFeatureGroupsService {
     private featureGroupRepository: FeatureGroupRepositoryInterface,
   ) {}
 
-  public async execute(featureGroupId: string): Promise<FeatureGroup> {
-    const featureGroup = await this.featureGroupRepository.findById(
-      featureGroupId,
-    );
+  public async execute(): Promise<FeatureGroup[]> {
+    const featureGroups = await this.featureGroupRepository.findAll();
 
-    if (!featureGroup) {
+    if (!featureGroups.length) {
       throw new AppError(AppErrorTypes.featureGroups.notFound);
     }
 
-    return featureGroup;
+    return featureGroups;
   }
 }

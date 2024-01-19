@@ -13,13 +13,13 @@ export default class ShowUsersService {
     private userRepository: UserRepositoryInterface,
   ) {}
 
-  public async execute(): Promise<User[]> {
-    const users = await this.userRepository.findAll();
+  public async execute(userId: string): Promise<User> {
+    const user = await this.userRepository.findById(userId);
 
-    if (!users.length) {
+    if (!user) {
       throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
-    return users;
+    return user;
   }
 }

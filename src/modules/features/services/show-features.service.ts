@@ -6,7 +6,6 @@ import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import Feature from '../infra/typeorm/entities/feature.entity';
-
 @injectable()
 export default class ShowFeaturesService {
   constructor(
@@ -14,13 +13,13 @@ export default class ShowFeaturesService {
     private featureRepository: FeatureRepositoryInterface,
   ) {}
 
-  public async execute(): Promise<Feature[]> {
-    const features = await this.featureRepository.findAll();
+  public async execute(featureId: string): Promise<Feature> {
+    const feature = await this.featureRepository.findById(featureId);
 
-    if (!features.length) {
+    if (!feature) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 
-    return features;
+    return feature;
   }
 }
