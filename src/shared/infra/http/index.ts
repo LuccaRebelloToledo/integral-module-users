@@ -8,12 +8,17 @@ import compression from 'compression';
 import helmet from 'helmet';
 
 import cors from 'cors';
+import corsConfig from '@config/cors.config';
+
 import cookieParser from 'cookie-parser';
 
 import routes from './routes';
 
 import AppError from '@shared/errors/app-error';
+
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
+
+import { env } from './env';
 
 AppDataSource.initialize().then(async () => {
   console.log('🚀 Database connected');
@@ -26,13 +31,7 @@ AppDataSource.initialize().then(async () => {
       hidePoweredBy: true,
     }),
   );
-  app.use(
-    cors({
-      credentials: true,
-      origin: process.env.CORS_ORIGIN ?? '*',
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    }),
-  );
+  app.use(cors(corsConfig));
   app.use(cookieParser());
 
   app.use(express.json());
@@ -44,7 +43,7 @@ AppDataSource.initialize().then(async () => {
 
   app.use(globalErrorHandler);
 
-  const port = process.env.PORT ?? 4000;
+  const port = env.PORT ?? 4000;
   app.listen({
     port: port,
   });

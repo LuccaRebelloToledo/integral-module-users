@@ -1,18 +1,18 @@
 import 'reflect-metadata';
 import 'tsconfig-paths/register';
-import 'dotenv/config';
 
+import { env } from './env';
 import { DataSource } from 'typeorm';
 
-export const isProduction = process.env.NODE_ENV === 'production';
+export const isProduction = env.NODE_ENV === 'production';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.PG_HOST,
-  port: Number(process.env.PG_PORT),
-  username: process.env.PG_USER,
-  password: process.env.PG_PASS,
-  database: process.env.PG_DB,
+  host: env.PG_HOST,
+  port: Number(env.PG_PORT),
+  username: env.PG_USER,
+  password: env.PG_PASS,
+  database: env.PG_DB,
   entities: [
     isProduction
       ? `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.js`
