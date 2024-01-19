@@ -17,8 +17,10 @@ export default function ensureAuthorized(
   ): void {
     const { featureGroup, standaloneFeatures } = request.user;
 
+    const combinedFeatures = [...featureGroup.features, ...standaloneFeatures];
+
     if (
-      ![...featureGroup.features, ...standaloneFeatures].some((userFeature) =>
+      !combinedFeatures.find((userFeature) =>
         requiredFeatures.includes(userFeature.key),
       )
     ) {
