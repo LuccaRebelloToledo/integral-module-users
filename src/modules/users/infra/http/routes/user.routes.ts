@@ -19,7 +19,7 @@ userRoutes.use(ensureAuthenticated);
 
 userRoutes.get(
   '/',
-  ensureAuthorized(['full:users, list:users']),
+  ensureAuthorized(['full:users', 'list:users']),
   userController.list,
 );
 
@@ -28,7 +28,7 @@ userRoutes.get(
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
-  ensureAuthorized(['full:users, show:users']),
+  ensureAuthorized(['full:users', 'show:users']),
   userController.show,
 );
 
@@ -37,7 +37,7 @@ userRoutes.post(
   celebrate({
     [Segments.BODY]: createUsersSchema,
   }),
-  ensureAuthorized(['full:users, create:users']),
+  ensureAuthorized(['full:users', 'create:users']),
   userController.create,
 );
 
@@ -47,7 +47,7 @@ userRoutes.put(
     [Segments.PARAMS]: idParamSchema,
     [Segments.BODY]: updateUsersSchema,
   }),
-  ensureAuthorized(['full:users, update:users']),
+  ensureAuthorized(['full:users', 'update:users']),
   userController.update,
 );
 
@@ -56,7 +56,7 @@ userRoutes.delete(
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
-  ensureAuthorized(['full:users, delete:users']),
+  ensureAuthorized(['full:users', 'delete:users']),
   userController.delete,
 );
 
