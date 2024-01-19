@@ -2,13 +2,24 @@ import { Request, Response, NextFunction } from 'express';
 
 import { container } from 'tsyringe';
 
-import ShowUsersService from '@modules/users/services/show-users.service';
 import ListUsersService from '@modules/users/services/list-users.service';
+import ShowUsersService from '@modules/users/services/show-users.service';
 import CreateUsersService from '@modules/users/services/create-users.service';
 import UpdateUsersService from '@modules/users/services/update-users.service';
 import DeleteUsersService from '@modules/users/services/delete-users.service';
 
 export default class UserController {
+  public async list(
+    _request: Request,
+    response: Response,
+    _next: NextFunction,
+  ): Promise<Response> {
+    const listUsersService = container.resolve(ListUsersService);
+    const user = await listUsersService.execute();
+
+    return response.json(user);
+  }
+
   public async show(
     request: Request,
     response: Response,
@@ -20,17 +31,6 @@ export default class UserController {
     const users = await showUsersService.execute(userId);
 
     return response.json(users);
-  }
-
-  public async list(
-    _request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
-    const listUsersService = container.resolve(ListUsersService);
-    const user = await listUsersService.execute();
-
-    return response.json(user);
   }
 
   public async create(
