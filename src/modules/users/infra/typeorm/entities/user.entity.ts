@@ -23,7 +23,7 @@ export default class User {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', select: false })
   password: string;
 
   @Column({ type: 'varchar', length: 21 })
@@ -41,11 +41,11 @@ export default class User {
     onDelete: 'CASCADE',
     nullable: true,
   })
-  features?: Feature[];
+  standaloneFeatures?: Feature[];
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamp with time zone', select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone', select: false })
   updatedAt: Date;
 }

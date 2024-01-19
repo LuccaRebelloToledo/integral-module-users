@@ -16,10 +16,10 @@ export default class Feature {
   @PrimaryColumn({ type: 'varchar', length: 21 })
   id: string;
 
-  @Column('varchar', { unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   key: string;
 
-  @Column('varchar', { unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   name: string;
 
   @ManyToMany(() => FeatureGroup, (featureGroup) => featureGroup.features, {
@@ -28,9 +28,10 @@ export default class Feature {
   })
   featureGroups: FeatureGroup[];
 
-  @ManyToMany(() => User, (user) => user.features, {
+  @ManyToMany(() => User, (user) => user.standaloneFeatures, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
+    eager: false,
     nullable: true,
   })
   @JoinTable({
@@ -40,9 +41,9 @@ export default class Feature {
   })
   userFeatures: User[];
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamp with time zone', select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone', select: false })
   updatedAt: Date;
 }

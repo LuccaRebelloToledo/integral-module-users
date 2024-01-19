@@ -17,16 +17,17 @@ export default class FeatureGroup {
   @PrimaryColumn({ type: 'varchar', length: 21 })
   id: string;
 
-  @Column('varchar', { unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   key: string;
 
-  @Column('varchar', { unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   name: string;
 
   @ManyToMany(() => Feature, (feature) => feature.featureGroups, {
     cascade: true,
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinTable({
     name: 'grouped_features',
@@ -40,9 +41,9 @@ export default class FeatureGroup {
   })
   users: User[];
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamp with time zone', select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamp with time zone', select: false })
   updatedAt: Date;
 }
