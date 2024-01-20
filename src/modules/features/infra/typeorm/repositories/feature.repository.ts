@@ -1,6 +1,6 @@
 import { AppDataSource } from '@shared/infra/http/data-source';
 
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 import FeatureRepositoryInterface from '@modules/features/repositories/feature.repository.interface';
 import Feature from '../entities/feature.entity';
@@ -71,7 +71,7 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
     name,
   }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]> {
     return await this.featureRepository.find({
-      where: [{ key }, { name }],
+      where: [{ key: Like(`%${key}%`) }, { name: Like(`%${name}%`) }],
     });
   }
 }

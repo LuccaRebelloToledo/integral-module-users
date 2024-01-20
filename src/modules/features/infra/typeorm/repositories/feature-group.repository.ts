@@ -1,5 +1,5 @@
 import { AppDataSource } from '@shared/infra/http/data-source';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 import FeatureGroup from '../entities/feature-group.entity';
@@ -33,7 +33,7 @@ export default class FeatureGroupRepository
     name,
   }: FindFeatureGroupsByKeyOrNameDTO): Promise<FeatureGroup[]> {
     return await this.featureGroupRepository.find({
-      where: [{ key }, { name }],
+      where: [{ key: Like(`%${key}%`) }, { name: Like(`%${name}%`) }],
     });
   }
 
