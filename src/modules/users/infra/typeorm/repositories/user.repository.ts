@@ -15,6 +15,8 @@ export default class UserRepository implements UserRepositoryInterface {
   }
 
   public async findAll(): Promise<User[]> {
+    // TO DO Pagination
+
     return await this.userRepository.find({
       relations: ['featureGroup', 'standaloneFeatures'],
     });
