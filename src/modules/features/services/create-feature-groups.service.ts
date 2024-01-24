@@ -3,6 +3,8 @@ import { inject, injectable } from 'tsyringe';
 import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
 import FeatureRepositoryInterface from '../repositories/feature.repository.interface';
 
+import generateNanoId from '@shared/utils/generate-nanoid.utils';
+
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
@@ -61,7 +63,10 @@ export default class CreateFeatureGroupsService {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 
+    const generatedNanoId = generateNanoId();
+
     const featureGroup = await this.featureGroupRepository.create({
+      id: generatedNanoId,
       key,
       name,
       features,
