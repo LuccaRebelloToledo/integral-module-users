@@ -15,15 +15,7 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   }
 
   public async findAll(): Promise<Feature[]> {
-    return await this.featureRepository.find({
-      select: {
-        id: true,
-        key: true,
-        name: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    return await this.featureRepository.find();
   }
 
   public async findAllByUserId(userId: string): Promise<Feature[]> {
