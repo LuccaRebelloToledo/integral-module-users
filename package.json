@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./dist/shared/infra/http/index.js",
-    "build": "tsc",
-    "dev": "nodemon --exec ts-node ./src/shared/infra/http/index.ts",
+    "build": "tsc && tsc-alias",
+    "husky:prepare": "husky install",
+    "eslint": "eslint ./src --max-warnings 0 --fix",
+    "prettier": "prettier --check ./src",
+    "lint-staged": "lint-staged",
+    "dev": "nodemon --watch  'src/' --exec ts-node ./src/shared/infra/http/index.ts",
     "migration:generate": "typeorm-ts-node-commonjs -d ./src/shared/infra/http/data-source.ts migration:generate ./src/shared/infra/typeorm/migrations/default",
     "migration:revert": "typeorm-ts-node-commonjs -d ./src/shared/infra/http/data-source.ts migration:revert",
     "migration:run": "typeorm-ts-node-commonjs -d ./src/shared/infra/http/data-source.ts migration:run"
@@ -51,8 +55,17 @@
     "@types/express-session": "^1.17.10",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "git-commit-msg-linter": "^5.0.6",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "nodemon": "^3.0.2",
+    "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   }
