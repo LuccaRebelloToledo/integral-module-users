@@ -16,6 +16,7 @@ export default class SessionController {
     const { name, email, password } = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
+
     const user = await createUsersService.execute({ name, email, password });
 
     return response.status(201).json(user);
@@ -31,6 +32,7 @@ export default class SessionController {
     const authenticateUsersService = container.resolve(
       AuthenticateUsersService,
     );
+
     const { token } = await authenticateUsersService.execute({
       email,
       password,
