@@ -8,7 +8,7 @@ import sessionRoutes from '@modules/users/infra/http/routes/session.routes';
 const routes = Router();
 
 routes.use('/features', featuresRoutes);
-routes.use('feature-groups', featureGroupsRoutes);
+routes.use('/feature-groups', featureGroupsRoutes);
 routes.use('/users', userRoutes);
 routes.use('/sessions', sessionRoutes);
 
