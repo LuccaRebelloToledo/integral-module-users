@@ -8,6 +8,8 @@ import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list
 import ListFeaturesByKeyOrNameService from '@modules/features/services/list-features-by-key-or-name.service';
 import ShowFeaturesService from '@modules/features/services/show-features.service';
 
+import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
+
 export default class FeatureController {
   public async list(
     _request: Request,
@@ -15,6 +17,7 @@ export default class FeatureController {
     _next: NextFunction,
   ): Promise<Response> {
     const listFeaturesService = container.resolve(ListFeaturesService);
+
     const features = await listFeaturesService.execute();
 
     return response.json(features);
@@ -30,6 +33,7 @@ export default class FeatureController {
     const listFeaturesByUserIdService = container.resolve(
       ListFeaturesByUserIdService,
     );
+
     const features = await listFeaturesByUserIdService.execute(userId);
 
     return response.json(features);
@@ -45,6 +49,7 @@ export default class FeatureController {
     const listFeaturesByFeatureGroupIdService = container.resolve(
       ListFeaturesByFeatureGroupIdService,
     );
+
     const features = await listFeaturesByFeatureGroupIdService.execute(
       featureGroupId,
     );
@@ -57,11 +62,12 @@ export default class FeatureController {
     response: Response,
     _next: NextFunction,
   ): Promise<Response> {
-    const { key, name } = request.body;
+    const { key, name }: ListByKeyOrNameQueryDTO = request.query;
 
     const listFeaturesByKeyOrNameService = container.resolve(
       ListFeaturesByKeyOrNameService,
     );
+
     const features = await listFeaturesByKeyOrNameService.execute({
       key,
       name,
@@ -78,6 +84,7 @@ export default class FeatureController {
     const { id: featureId } = request.params;
 
     const showFeaturesService = container.resolve(ShowFeaturesService);
+
     const feature = await showFeaturesService.execute(featureId);
 
     return response.json(feature);
