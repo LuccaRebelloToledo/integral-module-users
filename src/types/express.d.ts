@@ -15,6 +15,7 @@ declare namespace Express {
     featureGroup: SessionFeatureGroup;
     standaloneFeatures: SessionFeature[];
   };
+
   export interface Request {
     user: SessionUser;
   }
