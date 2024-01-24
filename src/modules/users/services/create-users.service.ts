@@ -2,7 +2,6 @@ import { container, inject, injectable } from 'tsyringe';
 
 import UserRepositoryInterface from '../repositories/user.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
-import User from '../infra/typeorm/entities/user.entity';
 
 import generateNanoId from '@shared/utils/generate-nanoid.utils';
 
