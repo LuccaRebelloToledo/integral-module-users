@@ -25,7 +25,7 @@ export default class ListFeaturesByKeyOrNameService {
       name,
     });
 
-    if (!features.length) {
+    if (!!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 

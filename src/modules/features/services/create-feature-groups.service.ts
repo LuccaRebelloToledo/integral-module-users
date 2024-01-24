@@ -39,11 +39,11 @@ export default class CreateFeatureGroupsService {
       });
 
     if (checkFeatureGroupsExists.length > 0) {
-      const featureExists = checkFeatureGroupsExists.find(
+      const featureGroupExists = checkFeatureGroupsExists.find(
         (feature) => feature.key === key,
       );
 
-      if (featureExists) {
+      if (featureGroupExists) {
         throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
       }
       throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
@@ -59,14 +59,12 @@ export default class CreateFeatureGroupsService {
       }
     }
 
-    if (!features.length) {
+    if (!!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 
-    const generatedNanoId = generateNanoId();
-
     const featureGroup = await this.featureGroupRepository.create({
-      id: generatedNanoId,
+      id: generateNanoId(),
       key,
       name,
       features,

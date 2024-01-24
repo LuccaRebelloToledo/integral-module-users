@@ -25,7 +25,7 @@ export default class ListFeatureGroupsByKeyOrNameService {
       name,
     });
 
-    if (!featureGroups.length) {
+    if (!!featureGroups.length) {
       throw new AppError(AppErrorTypes.featureGroups.notFound);
     }
 

@@ -16,7 +16,7 @@ export default class ListUsersService {
   public async execute(): Promise<User[]> {
     const users = await this.userRepository.findAll();
 
-    if (!users.length) {
+    if (!!users.length) {
       throw new AppError(AppErrorTypes.users.notFound, 404);
     }
 
