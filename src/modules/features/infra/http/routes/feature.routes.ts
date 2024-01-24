@@ -21,7 +21,7 @@ featuresRoutes.get(
 );
 
 featuresRoutes.get(
-  '/:id/users',
+  '/users/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
@@ -30,7 +30,7 @@ featuresRoutes.get(
 );
 
 featuresRoutes.get(
-  '/:id/feature-groups',
+  '/feature-groups/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
@@ -41,7 +41,7 @@ featuresRoutes.get(
 featuresRoutes.get(
   '/key-or-name',
   celebrate({
-    [Segments.BODY]: listByKeyOrNameSchema,
+    [Segments.QUERY]: listByKeyOrNameSchema,
   }),
   ensureAuthorized(['full:features', 'list-key-or-name:features']),
   featureController.listByKeyOrName,
