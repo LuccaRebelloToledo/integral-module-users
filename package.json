@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./dist/shared/infra/http/index.js",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "husky:prepare": "husky install",
     "eslint": "eslint ./src --max-warnings 0 --fix",
     "prettier": "prettier --check ./src",
@@ -64,6 +64,7 @@
     "nodemon": "^3.0.2",
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   }
