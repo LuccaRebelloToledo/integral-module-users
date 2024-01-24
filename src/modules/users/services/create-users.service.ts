@@ -44,9 +44,8 @@ export default class CreateUsersService {
       await showFeatureGroupsService.execute(featureGroupId);
     }
 
-    const encryptedPassword = await this.bcryptHashProvider.generateHash(
-      password,
-    );
+    const encryptedPassword =
+      await this.bcryptHashProvider.generateHash(password);
 
     await this.userRepository.create({
       id: generateNanoId(),

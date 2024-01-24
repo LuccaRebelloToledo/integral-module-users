@@ -27,9 +27,8 @@ export default class UpdateFeatureGroupsService {
     name,
     featureIds,
   }: UpdateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
-    const featureGroup = await this.featureGroupRepository.findById(
-      featureGroupId,
-    );
+    const featureGroup =
+      await this.featureGroupRepository.findById(featureGroupId);
 
     if (!featureGroup) {
       throw new AppError(AppErrorTypes.featureGroups.notFound);
@@ -59,9 +58,9 @@ export default class UpdateFeatureGroupsService {
     }
 
     if (featureIds) {
-      let features: Feature[] = [];
+      const features: Feature[] = [];
 
-      for (let featureId of featureIds) {
+      for (const featureId of featureIds) {
         const feature = await this.featureRepository.findById(featureId);
 
         if (feature) {

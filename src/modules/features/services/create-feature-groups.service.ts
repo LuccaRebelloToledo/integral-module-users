@@ -45,9 +45,9 @@ export default class CreateFeatureGroupsService {
       throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
     }
 
-    let features: Feature[] = [];
+    const features: Feature[] = [];
 
-    for (let featureId of featureIds) {
+    for (const featureId of featureIds) {
       const feature = await this.featureRepository.findById(featureId);
 
       if (feature) {

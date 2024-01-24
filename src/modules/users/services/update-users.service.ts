@@ -57,9 +57,8 @@ export default class UpdateUsersService {
     }
 
     if (password) {
-      const encryptedPassword = await this.bcryptHashProvider.generateHash(
-        password,
-      );
+      const encryptedPassword =
+        await this.bcryptHashProvider.generateHash(password);
 
       user.password = encryptedPassword;
     }
@@ -69,19 +68,18 @@ export default class UpdateUsersService {
         ShowFeatureGroupsService,
       );
 
-      const featureGroup = await showFeatureGroupsService.execute(
-        featureGroupId,
-      );
+      const featureGroup =
+        await showFeatureGroupsService.execute(featureGroupId);
 
       user.featureGroupId = featureGroup.id;
       user.featureGroup = featureGroup;
     }
 
     if (featureIds) {
-      let features: Feature[] = [];
+      const features: Feature[] = [];
       const showFeaturesService = container.resolve(ShowFeaturesService);
 
-      for (let featureId of featureIds) {
+      for (const featureId of featureIds) {
         try {
           const feature = await showFeaturesService.execute(featureId);
 
