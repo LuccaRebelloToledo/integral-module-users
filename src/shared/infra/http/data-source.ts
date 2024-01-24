@@ -13,6 +13,14 @@ export const AppDataSource = new DataSource({
   username: env.PG_USER,
   password: env.PG_PASS,
   database: env.PG_DB,
+  cache: {
+    type: 'ioredis',
+    options: {
+      host: env.REDIS_HOST,
+      port: Number(env.REDIS_PORT),
+    },
+    alwaysEnabled: true,
+  },
   entities: [
     isProduction
       ? `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.js`

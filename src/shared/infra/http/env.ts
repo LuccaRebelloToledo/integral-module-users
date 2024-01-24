@@ -12,6 +12,8 @@ const envSchema = Joi.object({
   PG_USER: Joi.string().required(),
   PG_PASS: Joi.string().required(),
   PG_DB: Joi.string().required(),
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PORT: Joi.string().required(),
 });
 
 const { error, value: envVars } = envSchema.validate(process.env, {
