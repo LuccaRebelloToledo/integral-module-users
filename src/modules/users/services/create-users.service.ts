@@ -1,5 +1,7 @@
 import { container, inject, injectable } from 'tsyringe';
 
+import CreateUsersServiceDTO from '../dtos/create-users-service.dto';
+
 import UserRepositoryInterface from '../repositories/user.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
 
@@ -9,13 +11,6 @@ import ShowFeatureGroupsService from '@modules/features/services/show-feature-gr
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
-
-interface CreateUsersServiceDTO {
-  email: string;
-  password: string;
-  name: string;
-  featureGroupId?: string;
-}
 
 const featureGroupMemberId = '6P8s76YxCtSMgmKDx49dV';
 

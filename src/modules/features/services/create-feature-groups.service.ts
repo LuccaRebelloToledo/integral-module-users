@@ -1,5 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
+import CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
+
 import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
 import FeatureRepositoryInterface from '../repositories/feature.repository.interface';
 
@@ -10,12 +12,6 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 import Feature from '../infra/typeorm/entities/feature.entity';
-
-interface CreateFeatureGroupsServiceDTO {
-  key: string;
-  name: string;
-  featureIds: string[];
-}
 
 @injectable()
 export default class CreateFeatureGroupsService {
