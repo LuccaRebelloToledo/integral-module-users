@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -8,11 +8,7 @@ import AuthenticateUsersService from '@modules/users/services/authenticate-users
 import cookiesConfig from '@config/cookie.config';
 
 export default class SessionController {
-  public async signUp(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async signUp(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
@@ -22,11 +18,7 @@ export default class SessionController {
     return response.status(201).json(user);
   }
 
-  public async signIn(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async signIn(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body;
 
     const authenticateUsersService = container.resolve(

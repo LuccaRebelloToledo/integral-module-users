@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -9,22 +9,14 @@ import UpdateUsersService from '@modules/users/services/update-users.service';
 import DeleteUsersService from '@modules/users/services/delete-users.service';
 
 export default class UserController {
-  public async list(
-    _request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async list(_request: Request, response: Response): Promise<Response> {
     const listUsersService = container.resolve(ListUsersService);
     const user = await listUsersService.execute();
 
     return response.json(user);
   }
 
-  public async show(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async show(request: Request, response: Response): Promise<Response> {
     const { id: userId } = request.params;
 
     const showUsersService = container.resolve(ShowUsersService);
@@ -33,11 +25,7 @@ export default class UserController {
     return response.json(users);
   }
 
-  public async create(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async create(request: Request, response: Response): Promise<Response> {
     const { name, email, password, featureGroupId } = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
@@ -51,11 +39,7 @@ export default class UserController {
     return response.status(201).json();
   }
 
-  public async update(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async update(request: Request, response: Response): Promise<Response> {
     const { id: userId } = request.params;
     const { name, email, password, featureGroupId, featureIds } = request.body;
 
@@ -72,11 +56,7 @@ export default class UserController {
     return response.json(user);
   }
 
-  public async delete(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async delete(request: Request, response: Response): Promise<Response> {
     const { id: userId } = request.params;
 
     const deleteUsersService = container.resolve(DeleteUsersService);

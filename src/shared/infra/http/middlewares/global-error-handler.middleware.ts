@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import http from 'http';
 
@@ -12,7 +12,6 @@ export default function globalErrorHandler(
   err: Error,
   request: Request,
   response: Response,
-  _next: NextFunction,
 ): Response {
   const errorData = {
     error: err,

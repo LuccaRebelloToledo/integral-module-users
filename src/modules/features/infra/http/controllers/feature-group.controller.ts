@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -12,11 +12,7 @@ import DeleteFeatureGroupsService from '@modules/features/services/delete-featur
 import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
 
 export default class FeatureGroupController {
-  public async list(
-    _request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async list(_request: Request, response: Response): Promise<Response> {
     const listFeatureGroupsService = container.resolve(
       ListFeatureGroupsService,
     );
@@ -29,7 +25,6 @@ export default class FeatureGroupController {
   public async listByKeyOrName(
     request: Request,
     response: Response,
-    _next: NextFunction,
   ): Promise<Response> {
     const { key, name }: ListByKeyOrNameQueryDTO = request.query;
 
@@ -45,11 +40,7 @@ export default class FeatureGroupController {
     return response.json(featureGroups);
   }
 
-  public async show(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async show(request: Request, response: Response): Promise<Response> {
     const { id: featureGroupId } = request.params;
 
     const showFeatureGroupsService = container.resolve(
@@ -61,11 +52,7 @@ export default class FeatureGroupController {
     return response.json(featureGroup);
   }
 
-  public async create(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async create(request: Request, response: Response): Promise<Response> {
     const { key, name, featureIds } = request.body;
 
     const createFeatureGroupsService = container.resolve(
@@ -81,11 +68,7 @@ export default class FeatureGroupController {
     return response.status(201).json(featureGroup);
   }
 
-  public async update(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async update(request: Request, response: Response): Promise<Response> {
     const { id: featureGroupId } = request.params;
 
     const { key, name, featureIds } = request.body;
@@ -104,11 +87,7 @@ export default class FeatureGroupController {
     return response.json(featureGroup);
   }
 
-  public async delete(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async delete(request: Request, response: Response): Promise<Response> {
     const { id: featureGroupId } = request.params;
 
     const deleteFeatureGroupsService = container.resolve(

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -11,11 +11,7 @@ import ShowFeaturesService from '@modules/features/services/show-features.servic
 import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
 
 export default class FeatureController {
-  public async list(
-    _request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async list(_request: Request, response: Response): Promise<Response> {
     const listFeaturesService = container.resolve(ListFeaturesService);
 
     const features = await listFeaturesService.execute();
@@ -26,7 +22,6 @@ export default class FeatureController {
   public async listByUserId(
     request: Request,
     response: Response,
-    _next: NextFunction,
   ): Promise<Response> {
     const { id: userId } = request.params;
 
@@ -42,7 +37,6 @@ export default class FeatureController {
   public async listByFeatureGroupId(
     request: Request,
     response: Response,
-    _next: NextFunction,
   ): Promise<Response> {
     const { id: featureGroupId } = request.params;
 
@@ -50,9 +44,8 @@ export default class FeatureController {
       ListFeaturesByFeatureGroupIdService,
     );
 
-    const features = await listFeaturesByFeatureGroupIdService.execute(
-      featureGroupId,
-    );
+    const features =
+      await listFeaturesByFeatureGroupIdService.execute(featureGroupId);
 
     return response.json(features);
   }
@@ -60,7 +53,6 @@ export default class FeatureController {
   public async listByKeyOrName(
     request: Request,
     response: Response,
-    _next: NextFunction,
   ): Promise<Response> {
     const { key, name }: ListByKeyOrNameQueryDTO = request.query;
 
@@ -76,11 +68,7 @@ export default class FeatureController {
     return response.json(features);
   }
 
-  public async show(
-    request: Request,
-    response: Response,
-    _next: NextFunction,
-  ): Promise<Response> {
+  public async show(request: Request, response: Response): Promise<Response> {
     const { id: featureId } = request.params;
 
     const showFeaturesService = container.resolve(ShowFeaturesService);
