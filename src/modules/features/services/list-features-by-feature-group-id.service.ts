@@ -20,7 +20,7 @@ export default class ListFeaturesByFeatureGroupIdService {
         featureGroupId,
       );
 
-    if (!!features.length) {
+    if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 

@@ -91,7 +91,7 @@ export default class UpdateUsersService {
         }
       }
 
-      if (!!features.length) {
+      if (!features.length) {
         throw new AppError(AppErrorTypes.features.notFound);
       }
 
@@ -120,7 +120,7 @@ export default class UpdateUsersService {
           ),
       );
 
-      if (!!uniqueFeatures.length) {
+      if (!uniqueFeatures.length) {
         throw new AppError(AppErrorTypes.features.repeatedFeatures);
       }
 

@@ -55,7 +55,7 @@ export default class CreateFeatureGroupsService {
       }
     }
 
-    if (!!features.length) {
+    if (!features.length) {
       throw new AppError(AppErrorTypes.features.notFound);
     }
 
