@@ -2,10 +2,11 @@ import Joi from 'joi';
 
 import { idSchema } from './global.schemas';
 
+import { featureIdsSchema } from './feature-group-related.schemas';
+
 const nameSchema = Joi.string().trim().max(100);
 const emailSchema = Joi.string().email().trim().lowercase().max(100);
 const passwordSchema = Joi.string().trim();
-const featureIdsSchema = Joi.array().items(idSchema.required()).unique();
 
 //Sessions
 
@@ -27,9 +28,9 @@ export const createUsersSchema = signUpSchema.keys({
 });
 
 export const updateUsersSchema = Joi.object({
-  name: nameSchema,
-  email: emailSchema,
-  password: passwordSchema,
-  featureGroupId: idSchema,
-  featureIds: featureIdsSchema,
+  name: nameSchema.optional(),
+  email: emailSchema.optional(),
+  password: passwordSchema.optional(),
+  featureGroupId: idSchema.optional(),
+  featureIds: featureIdsSchema.optional(),
 });
