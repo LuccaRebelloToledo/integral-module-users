@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
+import { cookiesConfig } from '@config/cookie.config';
+
 import CreateUsersService from '@modules/users/services/create-users.service';
 import AuthenticateUsersService from '@modules/users/services/authenticate-users.service';
-
-import cookiesConfig from '@config/cookie.config';
 
 export default class SessionController {
   public async signUp(request: Request, response: Response): Promise<Response> {

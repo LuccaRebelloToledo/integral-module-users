@@ -8,7 +8,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 
 import cors from 'cors';
-import corsConfig from '@config/cors.config';
+import { corsConfig } from '@config/cors.config';
 
 import cookieParser from 'cookie-parser';
 
