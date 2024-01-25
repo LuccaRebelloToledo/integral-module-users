@@ -29,6 +29,6 @@ USER app
 
 EXPOSE 4000
 
-RUN npm migration:run
+RUN npm run migration:run
 
 CMD [ "npm", "run", "start" ]
