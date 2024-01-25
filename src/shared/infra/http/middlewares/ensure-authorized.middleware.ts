@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
+import { FORBIDDEN } from '../constants/http-status-code.constants';
+
 interface IAuthLevelMiddleware {
   (request: Request, response: Response, next: NextFunction): void;
 }
@@ -24,7 +26,10 @@ export default function ensureAuthorized(
         requiredFeatures.includes(userFeature.key),
       )
     ) {
-      throw new AppError(AppErrorTypes.sessions.insufficientPrivilege, 403);
+      throw new AppError(
+        AppErrorTypes.sessions.insufficientPrivilege,
+        FORBIDDEN,
+      );
     }
 
     return next();

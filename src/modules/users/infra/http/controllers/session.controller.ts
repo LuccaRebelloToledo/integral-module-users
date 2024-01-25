@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
+import {
+  CREATED,
+  NO_CONTENT,
+} from '@shared/infra/http/constants/http-status-code.constants';
+
 import { cookiesConfig } from '@config/cookie.config';
 
 import CreateUsersService from '@modules/users/services/create-users.service';
@@ -15,7 +20,7 @@ export default class SessionController {
 
     const user = await createUsersService.execute({ name, email, password });
 
-    return response.status(201).json(user);
+    return response.status(CREATED).json(user);
   }
 
   public async signIn(request: Request, response: Response): Promise<Response> {
@@ -30,6 +35,9 @@ export default class SessionController {
       password,
     });
 
-    return response.cookie('token', token, cookiesConfig).status(204).json();
+    return response
+      .cookie('token', token, cookiesConfig)
+      .status(NO_CONTENT)
+      .json();
   }
 }

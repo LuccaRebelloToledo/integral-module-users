@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
+import {
+  CREATED,
+  NO_CONTENT,
+} from '@shared/infra/http/constants/http-status-code.constants';
+
 import ListFeatureGroupsService from '@modules/features/services/list-feature-groups.service';
 import ListFeatureGroupsByKeyOrNameService from '@modules/features/services/list-feature-groups-by-key-or-name.service';
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
@@ -65,7 +70,7 @@ export default class FeatureGroupController {
       featureIds,
     });
 
-    return response.status(201).json(featureGroup);
+    return response.status(CREATED).json(featureGroup);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -96,6 +101,6 @@ export default class FeatureGroupController {
 
     await deleteFeatureGroupsService.execute(featureGroupId);
 
-    return response.status(204).json();
+    return response.status(NO_CONTENT).json();
   }
 }

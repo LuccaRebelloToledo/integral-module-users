@@ -16,6 +16,8 @@ import ListFeaturesByUserIdService from '@modules/features/services/list-feature
 
 import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 
+import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
+
 @injectable()
 export default class UpdateUsersService {
   constructor(
@@ -37,7 +39,7 @@ export default class UpdateUsersService {
     const user = await this.userRepository.findById(id);
 
     if (!user) {
-      throw new AppError(AppErrorTypes.users.notFound, 404);
+      throw new AppError(AppErrorTypes.users.notFound, NOT_FOUND);
     }
 
     if (name) {

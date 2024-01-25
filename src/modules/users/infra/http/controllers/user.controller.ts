@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
+import {
+  CREATED,
+  NO_CONTENT,
+} from '@shared/infra/http/constants/http-status-code.constants';
+
 import ListUsersService from '@modules/users/services/list-users.service';
 import ShowUsersService from '@modules/users/services/show-users.service';
 import CreateUsersService from '@modules/users/services/create-users.service';
@@ -36,7 +41,7 @@ export default class UserController {
       featureGroupId,
     });
 
-    return response.status(201).json();
+    return response.status(CREATED).json();
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -62,6 +67,6 @@ export default class UserController {
     const deleteUsersService = container.resolve(DeleteUsersService);
     await deleteUsersService.execute(userId);
 
-    return response.status(204).json();
+    return response.status(NO_CONTENT).json();
   }
 }

@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 
 import http from 'http';
+import {
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+} from '../constants/http-status-code.constants';
 
 import AppError from '@shared/errors/app-error';
 
@@ -42,16 +46,16 @@ export default function globalErrorHandler(
       };
     }
 
-    return response.status(400).json({
-      statusCode: 400,
-      error: http.STATUS_CODES[400],
+    return response.status(BAD_REQUEST).json({
+      statusCode: BAD_REQUEST,
+      error: http.STATUS_CODES[BAD_REQUEST],
       message: err.message,
       validation,
     });
   }
 
   if (err instanceof AppError) {
-    const statusCode = Number(err.statusCode) || 400;
+    const statusCode = Number(err.statusCode);
 
     return response.status(statusCode).json({
       statusCode: statusCode,
@@ -61,16 +65,16 @@ export default function globalErrorHandler(
   }
 
   if (err instanceof Error) {
-    return response.status(400).json({
-      statusCode: 400,
-      error: http.STATUS_CODES[400],
+    return response.status(BAD_REQUEST).json({
+      statusCode: BAD_REQUEST,
+      error: http.STATUS_CODES[BAD_REQUEST],
       message: err.message,
     });
   }
 
-  return response.status(500).json({
-    statusCode: 500,
-    error: http.STATUS_CODES[500],
+  return response.status(INTERNAL_SERVER_ERROR).json({
+    statusCode: INTERNAL_SERVER_ERROR,
+    error: http.STATUS_CODES[INTERNAL_SERVER_ERROR],
     message: 'Something is wrong',
   });
 }

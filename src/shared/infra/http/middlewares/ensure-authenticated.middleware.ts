@@ -7,12 +7,17 @@ import { verify } from 'jsonwebtoken';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
+import {
+  INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
+} from '../constants/http-status-code.constants';
+
 type SessionFeature = {
   key: string;
   name: string;
 };
 
-type SessionFeatureGroup = {
+export type SessionFeatureGroup = {
   key: string;
   name: string;
   features: SessionFeature[];
@@ -40,20 +45,20 @@ export default function ensureAuthenticated(
   const token = request.cookies.token;
 
   if (!token) {
-    throw new AppError(AppErrorTypes.sessions.tokenNotFound, 401);
+    throw new AppError(AppErrorTypes.sessions.tokenNotFound, UNAUTHORIZED);
   }
 
   try {
     const decoded = verify(token, authConfig.jwt.secret);
 
     if (!decoded) {
-      throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
+      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
     }
 
     const { sub, featureGroup, standaloneFeatures } = decoded as ITokenPayload;
 
     if (!sub || !featureGroup || !standaloneFeatures) {
-      throw new AppError(AppErrorTypes.sessions.invalidToken, 401);
+      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
     }
 
     request.user = {
@@ -64,9 +69,9 @@ export default function ensureAuthenticated(
 
     return next();
   } catch (err: unknown) {
-    if (err instanceof Error) {
-      throw new AppError(err.message, 401);
+    if (err instanceof AppError) {
+      throw new AppError(err.message, err.statusCode);
     }
-    throw new AppError('Something is wrong!', 500);
+    throw new AppError('Something is wrong!', INTERNAL_SERVER_ERROR);
   }
 }
