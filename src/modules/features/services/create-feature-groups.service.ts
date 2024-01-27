@@ -31,7 +31,7 @@ export default class CreateFeatureGroupsService {
         name,
       });
 
-    if (checkFeatureGroupsExists.length > 0) {
+    if (checkFeatureGroupsExists.length) {
       const featureGroupExists = checkFeatureGroupsExists.find(
         (feature) => feature.key === key,
       );

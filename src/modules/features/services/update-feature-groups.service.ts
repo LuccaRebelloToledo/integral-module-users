@@ -39,7 +39,7 @@ export default class UpdateFeatureGroupsService {
           name,
         });
 
-      if (!checkFeatureGroupsExists.length) {
+      if (checkFeatureGroupsExists.length) {
         const featureExistsByKey = checkFeatureGroupsExists.find(
           (feature) => feature.key === key,
         );
