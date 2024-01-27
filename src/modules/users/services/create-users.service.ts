@@ -5,7 +5,7 @@ import CreateUsersServiceDTO from '../dtos/create-users-service.dto';
 import UserRepositoryInterface from '../repositories/user.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
 
-import generateNanoId from '@shared/utils/generate-nanoid.utils';
+import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
 
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
 

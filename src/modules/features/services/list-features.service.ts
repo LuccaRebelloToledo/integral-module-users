@@ -4,6 +4,7 @@ import FeatureRepositoryInterface from '../repositories/feature.repository.inter
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
 import Feature from '../infra/typeorm/entities/feature.entity';
 
@@ -18,7 +19,7 @@ export default class ListFeaturesService {
     const features = await this.featureRepository.findAll();
 
     if (!features.length) {
-      throw new AppError(AppErrorTypes.features.notFound);
+      throw new AppError(AppErrorTypes.features.notFound, NOT_FOUND);
     }
 
     return features;

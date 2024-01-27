@@ -4,6 +4,7 @@ import FeatureGroupRepositoryInterface from '../repositories/feature-group.repos
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
 @injectable()
 export default class DeleteFeatureGroupsService {
@@ -17,7 +18,7 @@ export default class DeleteFeatureGroupsService {
       await this.featureGroupRepository.findById(featureGroupId);
 
     if (!featureGroup) {
-      throw new AppError(AppErrorTypes.featureGroups.notFound);
+      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
     }
 
     await this.featureGroupRepository.delete(featureGroup);
