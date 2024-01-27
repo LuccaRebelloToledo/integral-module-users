@@ -7,6 +7,10 @@ import User from '../entities/user.entity';
 export default class FakeUserRepository implements UserRepositoryInterface {
   private users: User[] = [];
 
+  public getUsersCount(): number {
+    return this.users.length;
+  }
+
   public async findAll(): Promise<User[]> {
     return this.users;
   }
