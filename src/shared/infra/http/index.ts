@@ -13,9 +13,6 @@ import { corsConfig } from '@config/cors.config';
 import cookieParser from 'cookie-parser';
 
 import routes from './routes';
-
-import AppError from '@shared/errors/app-error';
-
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
 import { env } from './env';
@@ -37,9 +34,6 @@ AppDataSource.initialize().then(async () => {
   app.use(express.json());
 
   app.use(routes);
-  app.all('*', async () => {
-    throw new AppError('Something is wrong');
-  });
 
   app.use(globalErrorHandler);
 
