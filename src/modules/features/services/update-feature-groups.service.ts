@@ -3,22 +3,20 @@ import { inject, injectable } from 'tsyringe';
 import UpdateFeatureGroupsServiceDTO from '../dtos/update-feature-groups-service.dto';
 
 import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
-import FeatureRepositoryInterface from '../repositories/feature.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
-import Feature from '../infra/typeorm/entities/feature.entity';
+
+import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-ids.utils';
 
 @injectable()
 export default class UpdateFeatureGroupsService {
   constructor(
     @inject('FeatureGroupRepository')
     private featureGroupRepository: FeatureGroupRepositoryInterface,
-
-    @inject('FeatureRepository')
-    private featureRepository: FeatureRepositoryInterface,
   ) {}
 
   public async execute({
@@ -31,7 +29,7 @@ export default class UpdateFeatureGroupsService {
       await this.featureGroupRepository.findById(featureGroupId);
 
     if (!featureGroup) {
-      throw new AppError(AppErrorTypes.featureGroups.notFound);
+      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
     }
 
     if (key || name) {
@@ -58,19 +56,7 @@ export default class UpdateFeatureGroupsService {
     }
 
     if (featureIds) {
-      const features: Feature[] = [];
-
-      for (const featureId of featureIds) {
-        const feature = await this.featureRepository.findById(featureId);
-
-        if (feature) {
-          features.push(feature);
-        }
-      }
-
-      if (!features.length) {
-        throw new AppError(AppErrorTypes.features.notFound);
-      }
+      const features = await getFeaturesByFeatureIds(featureIds);
 
       featureGroup.features = features;
     }

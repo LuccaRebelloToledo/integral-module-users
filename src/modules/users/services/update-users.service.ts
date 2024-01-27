@@ -10,11 +10,10 @@ import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
-import ShowFeaturesService from '@modules/features/services/show-features.service';
 import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list-features-by-feature-group-id.service';
 import ListFeaturesByUserIdService from '@modules/features/services/list-features-by-user-id.service';
 
-import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
+import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-ids.utils';
 
 import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
@@ -78,22 +77,7 @@ export default class UpdateUsersService {
     }
 
     if (featureIds) {
-      const features: Feature[] = [];
-      const showFeaturesService = container.resolve(ShowFeaturesService);
-
-      for (const featureId of featureIds) {
-        try {
-          const feature = await showFeaturesService.execute(featureId);
-
-          features.push(feature);
-        } catch (err) {
-          continue;
-        }
-      }
-
-      if (!features.length) {
-        throw new AppError(AppErrorTypes.features.notFound);
-      }
+      const features = await getFeaturesByFeatureIds(featureIds);
 
       const listFeaturesByFeatureGroupIdService = container.resolve(
         ListFeaturesByFeatureGroupIdService,

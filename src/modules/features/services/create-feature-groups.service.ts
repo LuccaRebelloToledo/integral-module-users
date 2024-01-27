@@ -3,24 +3,21 @@ import { inject, injectable } from 'tsyringe';
 import CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
 
 import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
-import FeatureRepositoryInterface from '../repositories/feature.repository.interface';
 
-import generateNanoId from '@shared/utils/generate-nanoid.utils';
+import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
-import Feature from '../infra/typeorm/entities/feature.entity';
+
+import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-ids.utils';
 
 @injectable()
 export default class CreateFeatureGroupsService {
   constructor(
     @inject('FeatureGroupRepository')
     private featureGroupRepository: FeatureGroupRepositoryInterface,
-
-    @inject('FeatureRepository')
-    private featureRepository: FeatureRepositoryInterface,
   ) {}
 
   public async execute({
@@ -45,19 +42,7 @@ export default class CreateFeatureGroupsService {
       throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
     }
 
-    const features: Feature[] = [];
-
-    for (const featureId of featureIds) {
-      const feature = await this.featureRepository.findById(featureId);
-
-      if (feature) {
-        features.push(feature);
-      }
-    }
-
-    if (!features.length) {
-      throw new AppError(AppErrorTypes.features.notFound);
-    }
+    const features = await getFeaturesByFeatureIds(featureIds);
 
     const featureGroup = await this.featureGroupRepository.create({
       id: generateNanoId(),
