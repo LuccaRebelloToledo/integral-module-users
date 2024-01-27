@@ -1,5 +1,6 @@
 import { AppDataSource } from '@shared/infra/http/data-source';
-import { Like, Repository } from 'typeorm';
+
+import { Repository } from 'typeorm';
 
 import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 import FeatureGroup from '../entities/feature-group.entity';
@@ -32,9 +33,22 @@ export default class FeatureGroupRepository
     key,
     name,
   }: FindFeatureGroupsByKeyOrNameDTO): Promise<FeatureGroup[]> {
-    return await this.featureGroupRepository.find({
-      where: [{ key: Like(`%${key}%`) }, { name: Like(`%${name}%`) }],
-    });
+    let query =
+      this.featureGroupRepository.createQueryBuilder('feature_groups');
+
+    if (key) {
+      query = query.where('LOWER(feature_groups.key) LIKE :key', {
+        key: `%${key.toLowerCase()}%`,
+      });
+    }
+
+    if (name) {
+      query = query.orWhere('LOWER(feature_groups.name) LIKE :name', {
+        name: `%${name.toLowerCase()}%`,
+      });
+    }
+
+    return await query.getMany();
   }
 
   public async create(
