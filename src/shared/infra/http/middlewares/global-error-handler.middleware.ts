@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import http from 'http';
 import {
@@ -16,6 +16,7 @@ export default function globalErrorHandler(
   err: Error,
   request: Request,
   response: Response,
+  next: NextFunction,
 ): Response {
   const errorData = {
     error: err,
@@ -32,6 +33,7 @@ export default function globalErrorHandler(
   };
 
   console.error(errorData);
+  next(err);
 
   if (isCelebrateError(err)) {
     const validation: Record<string, unknown> = {};
