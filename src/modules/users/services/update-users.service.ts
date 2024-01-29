@@ -41,12 +41,6 @@ export default class UpdateUsersService {
       throw new AppError(AppErrorTypes.users.notFound, NOT_FOUND);
     }
 
-    if (name) {
-      if (user.name !== name) {
-        user.name = name;
-      }
-    }
-
     if (email) {
       const userWithEmail = await this.userRepository.findByEmail(email);
 
@@ -55,13 +49,6 @@ export default class UpdateUsersService {
       }
 
       user.email = email;
-    }
-
-    if (password) {
-      const encryptedPassword =
-        await this.bcryptHashProvider.generateHash(password);
-
-      user.password = encryptedPassword;
     }
 
     if (featureGroupId) {
@@ -109,6 +96,19 @@ export default class UpdateUsersService {
       }
 
       user.standaloneFeatures = [...featuresByUserId, ...uniqueFeatures];
+    }
+
+    if (name) {
+      if (user.name !== name) {
+        user.name = name;
+      }
+    }
+
+    if (password) {
+      const encryptedPassword =
+        await this.bcryptHashProvider.generateHash(password);
+
+      user.password = encryptedPassword;
     }
 
     const updatedUser = await this.userRepository.save(user);
