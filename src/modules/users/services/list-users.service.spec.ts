@@ -1,8 +1,10 @@
+import AppErrorTypes from '@shared/errors/app-error-types';
 import FakeUserRepository from '../infra/typeorm/repositories/user.repository.fake';
 
 import ListUsersService from './list-users.service';
 
 import AppError from '@shared/errors/app-error';
+import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
 let fakeUserRepository: FakeUserRepository;
 let listUsersService: ListUsersService;
@@ -15,7 +17,9 @@ describe('ListUsersService', () => {
   });
 
   it('should throw an error when there are no users', async () => {
-    await expect(listUsersService.execute()).rejects.toThrow(AppError);
+    await expect(listUsersService.execute()).rejects.toEqual(
+      new AppError(AppErrorTypes.users.notFound, NOT_FOUND),
+    );
   });
 
   it('should be able to list all users', async () => {

@@ -9,6 +9,7 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
 let fakeUserRepository: FakeUserRepository;
 let fakeBCryptHashProvider: FakeBCryptHashProvider;
@@ -56,11 +57,10 @@ describe('CreateUsersService', () => {
 
     const spyFindByEmail = jest.spyOn(fakeUserRepository, 'findByEmail');
 
-    await expect(createUsersService.execute(newUser)).rejects.toThrow(AppError);
     await expect(createUsersService.execute(newUser)).rejects.toEqual(
       new AppError(AppErrorTypes.users.emailAlreadyInUse),
     );
-    expect(spyFindByEmail).toHaveBeenCalledTimes(2);
+    expect(spyFindByEmail).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an error when a feature group is not found', async () => {
@@ -73,19 +73,22 @@ describe('CreateUsersService', () => {
 
     showFeatureGroupsService.execute = jest
       .fn()
-      .mockRejectedValue(new AppError(AppErrorTypes.featureGroups.notFound));
+      .mockRejectedValue(
+        new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND),
+      );
 
     const spyShowFeatureGroups = jest
       .spyOn(container, 'resolve')
       .mockReturnValue(showFeatureGroupsService);
 
     const spyFindByEmail = jest.spyOn(fakeUserRepository, 'findByEmail');
-    await expect(createUsersService.execute(newUser)).rejects.toThrow(AppError);
+
+    await expect(createUsersService.execute(newUser)).rejects.toThrow(
+      new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND),
+    );
+
     expect(spyFindByEmail).toHaveBeenCalledTimes(1);
     expect(spyShowFeatureGroups).toHaveBeenCalledTimes(1);
-    await expect(createUsersService.execute(newUser)).rejects.toEqual(
-      new AppError(AppErrorTypes.featureGroups.notFound),
-    );
   });
 
   it('should be able to create a user', async () => {

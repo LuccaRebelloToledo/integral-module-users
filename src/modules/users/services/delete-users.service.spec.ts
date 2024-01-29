@@ -32,12 +32,11 @@ describe('DeleteUsersService', () => {
 
     const spyFindById = jest.spyOn(fakeUserRepository, 'findById');
 
-    await expect(deleteUsersService.execute('2')).rejects.toThrow(AppError);
     await expect(deleteUsersService.execute('2')).rejects.toEqual(
       new AppError(AppErrorTypes.users.notFound, NOT_FOUND),
     );
 
-    expect(spyFindById).toHaveBeenCalledTimes(2);
+    expect(spyFindById).toHaveBeenCalledTimes(1);
   });
 
   it('should be able to delete the user by id', async () => {
