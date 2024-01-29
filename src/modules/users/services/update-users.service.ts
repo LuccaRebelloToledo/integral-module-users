@@ -98,10 +98,8 @@ export default class UpdateUsersService {
       user.standaloneFeatures = [...featuresByUserId, ...uniqueFeatures];
     }
 
-    if (name) {
-      if (user.name !== name) {
-        user.name = name;
-      }
+    if (name && user.name !== name) {
+      user.name = name;
     }
 
     if (password) {
