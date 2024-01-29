@@ -25,22 +25,7 @@ export default class CreateFeatureGroupsService {
     name,
     featureIds,
   }: CreateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
-    const checkFeatureGroupsExists =
-      await this.featureGroupRepository.findByKeyOrName({
-        key,
-        name,
-      });
-
-    if (checkFeatureGroupsExists.length) {
-      const featureGroupExists = checkFeatureGroupsExists.find(
-        (feature) => feature.key === key,
-      );
-
-      if (featureGroupExists) {
-        throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
-      }
-      throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
-    }
+    await this.checkFeatureGroupExists(key, name);
 
     const features = await getFeaturesByFeatureIds(featureIds);
 
@@ -52,5 +37,24 @@ export default class CreateFeatureGroupsService {
     });
 
     return featureGroup;
+  }
+
+  private async checkFeatureGroupExists(
+    key: string,
+    name: string,
+  ): Promise<void> {
+    const existingFeatureGroups =
+      await this.featureGroupRepository.findByKeyOrName({ key, name });
+
+    if (existingFeatureGroups.length) {
+      const existingFeatureGroup = existingFeatureGroups.find(
+        (featureGroup) => featureGroup.key === key,
+      );
+
+      if (existingFeatureGroup) {
+        throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
+      }
+      throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
+    }
   }
 }

@@ -25,31 +25,10 @@ export default class UpdateFeatureGroupsService {
     name,
     featureIds,
   }: UpdateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
-    const featureGroup =
-      await this.featureGroupRepository.findById(featureGroupId);
-
-    if (!featureGroup) {
-      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
-    }
+    const featureGroup = await this.validateFeatureGroup(featureGroupId);
 
     if (key || name) {
-      const checkFeatureGroupsExists =
-        await this.featureGroupRepository.findByKeyOrName({
-          key,
-          name,
-        });
-
-      if (checkFeatureGroupsExists.length) {
-        const featureExistsByKey = checkFeatureGroupsExists.find(
-          (feature) => feature.key === key,
-        );
-
-        if (featureExistsByKey) {
-          throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
-        }
-
-        throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
-      }
+      await this.validateKeyAndName(key, name);
 
       featureGroup.key = key || featureGroup.key;
       featureGroup.name = name || featureGroup.name;
@@ -62,5 +41,37 @@ export default class UpdateFeatureGroupsService {
     }
 
     return await this.featureGroupRepository.save(featureGroup);
+  }
+
+  private async validateFeatureGroup(
+    featureGroupId: string,
+  ): Promise<FeatureGroup> {
+    const featureGroup =
+      await this.featureGroupRepository.findById(featureGroupId);
+
+    if (!featureGroup) {
+      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
+    }
+
+    return featureGroup;
+  }
+
+  private async validateKeyAndName(key?: string, name?: string): Promise<void> {
+    if (key || name) {
+      const checkFeatureGroupsExists =
+        await this.featureGroupRepository.findByKeyOrName({ key, name });
+
+      if (checkFeatureGroupsExists.length) {
+        const featureExistsByKey = checkFeatureGroupsExists.find(
+          (feature) => feature.key === key,
+        );
+
+        if (featureExistsByKey) {
+          throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
+        }
+
+        throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
+      }
+    }
   }
 }
