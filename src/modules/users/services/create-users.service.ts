@@ -36,13 +36,7 @@ export default class CreateUsersService {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
     }
 
-    if (featureGroupId) {
-      const showFeatureGroupsService = container.resolve(
-        ShowFeatureGroupsService,
-      );
-
-      await showFeatureGroupsService.execute(featureGroupId);
-    }
+    await this.verifyFeatureGroup(featureGroupId);
 
     const encryptedPassword =
       await this.bcryptHashProvider.generateHash(password);
@@ -54,5 +48,15 @@ export default class CreateUsersService {
       password: encryptedPassword,
       featureGroupId: featureGroupId ? featureGroupId : featureGroupMemberId,
     });
+  }
+
+  private async verifyFeatureGroup(featureGroupId?: string): Promise<void> {
+    if (featureGroupId) {
+      const showFeatureGroupsService = container.resolve(
+        ShowFeatureGroupsService,
+      );
+
+      await showFeatureGroupsService.execute(featureGroupId);
+    }
   }
 }

@@ -1,11 +1,8 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import UserRepositoryInterface from '../repositories/user.repository.interface';
 
-import AppError from '@shared/errors/app-error';
-import AppErrorTypes from '@shared/errors/app-error-types';
-
-import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
+import ShowUsersService from './show-users.service';
 
 @injectable()
 export default class DeleteUsersService {
@@ -15,11 +12,9 @@ export default class DeleteUsersService {
   ) {}
 
   public async execute(userId: string): Promise<void> {
-    const user = await this.userRepository.findById(userId);
+    const showUsersService = container.resolve(ShowUsersService);
 
-    if (!user) {
-      throw new AppError(AppErrorTypes.users.notFound, NOT_FOUND);
-    }
+    const user = await showUsersService.execute(userId);
 
     await this.userRepository.delete(user);
   }
