@@ -46,6 +46,8 @@ export default class FakeUserRepository implements UserRepositoryInterface {
       (findUser) => findUser.id === user.id,
     );
 
+    user.updatedAt = new Date();
+
     this.users[findIndex] = user;
 
     return user;
