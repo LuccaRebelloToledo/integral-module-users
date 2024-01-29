@@ -1,4 +1,4 @@
-import FakeUserRepository from '../infra/typeorm/repositories/user.fake.repository';
+import FakeUserRepository from '../infra/typeorm/repositories/user.repository.fake';
 
 import ListUsersService from './list-users.service';
 

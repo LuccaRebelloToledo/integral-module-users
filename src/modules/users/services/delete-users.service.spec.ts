@@ -1,19 +1,19 @@
 import FakeUserRepository from '../infra/typeorm/repositories/user.repository.fake';
 
-import ShowUsersService from './show-users.service';
+import DeleteUsersService from './delete-users.service';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
 let fakeUserRepository: FakeUserRepository;
-let showUsersService: ShowUsersService;
+let deleteUsersService: DeleteUsersService;
 
-describe('ShowUsersService', () => {
+describe('DeleteUsersService', () => {
   beforeEach(() => {
     fakeUserRepository = new FakeUserRepository();
 
-    showUsersService = new ShowUsersService(fakeUserRepository);
+    deleteUsersService = new DeleteUsersService(fakeUserRepository);
   });
 
   it('should throw an error when there are no users found by id', async () => {
@@ -32,15 +32,15 @@ describe('ShowUsersService', () => {
 
     const spyFindById = jest.spyOn(fakeUserRepository, 'findById');
 
-    await expect(showUsersService.execute('2')).rejects.toThrow(AppError);
-    await expect(showUsersService.execute('2')).rejects.toEqual(
+    await expect(deleteUsersService.execute('2')).rejects.toThrow(AppError);
+    await expect(deleteUsersService.execute('2')).rejects.toEqual(
       new AppError(AppErrorTypes.users.notFound, NOT_FOUND),
     );
 
     expect(spyFindById).toHaveBeenCalledTimes(2);
   });
 
-  it('should be able to show the user by id', async () => {
+  it('should be able to delete the user by id', async () => {
     const spyCreate = jest.spyOn(fakeUserRepository, 'create');
 
     const johnDoeOne = await fakeUserRepository.create({
@@ -51,22 +51,16 @@ describe('ShowUsersService', () => {
       featureGroupId: '1',
     });
 
-    await fakeUserRepository.create({
-      id: '2',
-      name: 'John Doe',
-      password: '123456',
-      email: 'johndoe@gmail.com',
-      featureGroupId: '2',
-    });
-
-    expect(spyCreate).toHaveBeenCalledTimes(2);
-    expect(fakeUserRepository.getUsersCount()).toBe(2);
+    expect(spyCreate).toHaveBeenCalledTimes(1);
+    expect(fakeUserRepository.getUsersCount()).toBe(1);
 
     const spyFindById = jest.spyOn(fakeUserRepository, 'findById');
+    const spyDelete = jest.spyOn(fakeUserRepository, 'delete');
 
-    const user = await showUsersService.execute(johnDoeOne.id);
+    await deleteUsersService.execute(johnDoeOne.id);
 
     expect(spyFindById).toHaveBeenCalledTimes(1);
-    expect(user).toEqual(johnDoeOne);
+    expect(spyDelete).toHaveBeenCalledTimes(1);
+    expect(fakeUserRepository.getUsersCount()).toBe(0);
   });
 });
