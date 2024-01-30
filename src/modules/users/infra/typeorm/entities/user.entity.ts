@@ -43,9 +43,9 @@ export default class User {
   })
   standaloneFeatures?: Feature[];
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 }

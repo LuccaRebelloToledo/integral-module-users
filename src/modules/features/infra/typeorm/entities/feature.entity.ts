@@ -41,9 +41,13 @@ export default class Feature {
   })
   userFeatures: User[];
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({
+    type: 'datetime',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({
+    type: 'datetime',
+  })
   updatedAt: Date;
 }
