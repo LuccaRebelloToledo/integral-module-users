@@ -68,10 +68,12 @@ describe('ShowUsersService', () => {
 
     expect(fakeUserRepository.findById).toHaveBeenCalledWith(userId);
     expect(fakeUserRepository.findById).toHaveBeenCalledTimes(1);
-    expect(user.id).toBe(createdUser.id);
-    expect(user.name).toBe(createdUser.name);
-    expect(user.email).toBe(createdUser.email);
-    expect(user.featureGroupId).toBe(createdUser.featureGroupId);
+
+    expect(user.id).toEqual(createdUser.id);
+    expect(user.name).toEqual(createdUser.name);
+    expect(user.email).toEqual(createdUser.email);
+    expect(user.featureGroupId).toEqual(createdUser.featureGroupId);
+
     expect(user).toHaveProperty('createdAt');
     expect(user).toHaveProperty('updatedAt');
   });

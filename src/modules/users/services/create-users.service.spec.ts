@@ -114,7 +114,7 @@ describe('CreateUsersService', () => {
       userPayload.password,
     );
 
-    expect(userPayload.password !== encryptedPassword).toBeTruthy();
+    expect(userPayload.password).not.toEqual(encryptedPassword);
   });
 
   test('should be create a user', async () => {
