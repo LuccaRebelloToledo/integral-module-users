@@ -108,6 +108,7 @@ export default class UpdateUsersService {
     const listFeaturesByFeatureGroupIdService = container.resolve(
       ListFeaturesByFeatureGroupIdService,
     );
+
     return await listFeaturesByFeatureGroupIdService.execute(
       user.featureGroupId,
     );
@@ -117,6 +118,7 @@ export default class UpdateUsersService {
     const listFeaturesByUserIdService = container.resolve(
       ListFeaturesByUserIdService,
     );
+
     return await listFeaturesByUserIdService.execute(user.id);
   }
 
