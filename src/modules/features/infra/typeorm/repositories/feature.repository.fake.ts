@@ -7,7 +7,15 @@ import Feature from '../entities/feature.entity';
 
 import FindFeaturesByKeyOrNameDTO from '@modules/features/dtos/find-features-by-key-or-name.dto';
 
-export default class FeatureRepository implements FeatureRepositoryInterface {
+interface CreateFeatureDTO {
+  id: string;
+  name: string;
+  key: string;
+}
+
+export default class FakeFeatureRepository
+  implements FeatureRepositoryInterface
+{
   private featureRepository: Repository<Feature>;
 
   constructor() {
@@ -77,5 +85,15 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
     }
 
     return await query.getMany();
+  }
+
+  public async create(featureData: CreateFeatureDTO): Promise<Feature> {
+    const feature = this.featureRepository.create(featureData);
+
+    return await this.save(feature);
+  }
+
+  public async save(feature: Feature): Promise<Feature> {
+    return await this.featureRepository.save(feature);
   }
 }
