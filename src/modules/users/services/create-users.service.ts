@@ -4,6 +4,7 @@ import CreateUsersServiceDTO from '../dtos/create-users-service.dto';
 
 import UserRepositoryInterface from '../repositories/user.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
+import User from '../infra/typeorm/entities/user.entity';
 
 import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
 
@@ -29,7 +30,7 @@ export default class CreateUsersService {
     email,
     password,
     featureGroupId,
-  }: CreateUsersServiceDTO): Promise<void> {
+  }: CreateUsersServiceDTO): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
 
     if (user) {
@@ -41,7 +42,7 @@ export default class CreateUsersService {
     const encryptedPassword =
       await this.bcryptHashProvider.generateHash(password);
 
-    await this.userRepository.create({
+    return await this.userRepository.create({
       id: generateNanoId(),
       name,
       email,
