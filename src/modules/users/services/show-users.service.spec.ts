@@ -5,21 +5,26 @@ import FakeFeatureGroupRepository from '@modules/features/infra/typeorm/reposito
 
 import ShowUsersService from './show-users.service';
 
-import AppError from '@shared/errors/app-error';
+import AppErrorTypes from '@shared/errors/app-error-types';
 
 let fakeUserRepository: FakeUserRepository;
 let fakeFeatureGroupRepository: FakeFeatureGroupRepository;
 let showUsersService: ShowUsersService;
 
 describe('ShowUsersService', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
+    await TestDataSource.initialize();
+
     fakeUserRepository = new FakeUserRepository();
     fakeFeatureGroupRepository = new FakeFeatureGroupRepository();
     showUsersService = new ShowUsersService(fakeUserRepository);
-  });
 
-  beforeAll(async () => {
-    await TestDataSource.initialize();
+    await fakeFeatureGroupRepository.create({
+      id: '1',
+      key: 'feature-group-key',
+      name: 'Feature Group Name',
+      features: [],
+    });
   });
 
   afterAll(async () => {
@@ -37,32 +42,27 @@ describe('ShowUsersService', () => {
 
     jest.spyOn(fakeUserRepository, 'findById');
 
-    await expect(showUsersService.execute(userId)).rejects.toBeInstanceOf(
-      AppError,
+    await expect(showUsersService.execute(userId)).rejects.toThrow(
+      AppErrorTypes.users.notFound,
     );
+
     expect(fakeUserRepository.findById).toHaveBeenCalledWith(userId);
+
     expect(fakeUserRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should return a user if a user is found by id', async () => {
-    await fakeFeatureGroupRepository.create({
-      id: '1',
-      key: 'feature-group-key',
-      name: 'Feature Group Name',
-      features: [],
-    });
-
     const createdUser = await fakeUserRepository.create({
       id: '1',
       name: 'John Doe',
-      email: 'johndoe@email.com',
+      email: 'johndoe@example.com',
       password: '123456',
       featureGroupId: '1',
     });
 
-    const userId = '1';
-
     jest.spyOn(fakeUserRepository, 'findById');
+
+    const userId = '1';
 
     const user = await showUsersService.execute(userId);
 
