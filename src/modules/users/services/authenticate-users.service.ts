@@ -15,8 +15,8 @@ import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list
 import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 import User from '../infra/typeorm/entities/user.entity';
 
-import authConfig from '@config/auth.config';
 import { sign } from 'jsonwebtoken';
+import authConfig from '@config/auth.config';
 
 @injectable()
 export default class AuthenticateUsersService {
@@ -61,7 +61,10 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
-    if (!user.featureGroup.features && !user.standaloneFeatures) {
+    if (
+      !user.featureGroup.features.length &&
+      !user.standaloneFeatures?.length
+    ) {
       throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
     }
 

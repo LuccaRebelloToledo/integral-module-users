@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-import authConfig from '@config/auth.config';
-
 import { verify } from 'jsonwebtoken';
+import authConfig from '@config/auth.config';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -57,7 +56,7 @@ export default function ensureAuthenticated(
 
     const { sub, featureGroup, standaloneFeatures } = decoded as ITokenPayload;
 
-    if (!sub || !featureGroup || !standaloneFeatures) {
+    if (!sub && !featureGroup && !standaloneFeatures) {
       throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
     }
 
