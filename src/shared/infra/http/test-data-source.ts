@@ -1,11 +1,10 @@
 import 'reflect-metadata';
-
 import 'tsconfig-paths/register';
 
 import { DataSource } from 'typeorm';
 
 export const TestDataSource = new DataSource({
-  type: 'sqlite',
+  type: 'better-sqlite3',
   database: ':memory:',
   dropSchema: true,
   synchronize: true,
