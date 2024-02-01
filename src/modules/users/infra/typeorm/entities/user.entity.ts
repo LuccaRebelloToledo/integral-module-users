@@ -43,9 +43,9 @@ export default class User {
   })
   standaloneFeatures?: Feature[];
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

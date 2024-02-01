@@ -13,6 +13,7 @@ export const AppDataSource = new DataSource({
   username: env.PG_USER,
   password: env.PG_PASS,
   database: env.PG_DB,
+  useUTC: true,
   cache: {
     type: 'ioredis',
     options: {

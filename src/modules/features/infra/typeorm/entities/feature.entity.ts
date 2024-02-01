@@ -41,13 +41,9 @@ export default class Feature {
   })
   userFeatures: User[];
 
-  @CreateDateColumn({
-    type: 'datetime',
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({
-    type: 'datetime',
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 }
