@@ -18,9 +18,9 @@ export default class SessionController {
 
     const createUsersService = container.resolve(CreateUsersService);
 
-    const user = await createUsersService.execute({ name, email, password });
+    await createUsersService.execute({ name, email, password });
 
-    return response.status(CREATED).json(user);
+    return response.status(CREATED).json();
   }
 
   public async signIn(request: Request, response: Response): Promise<Response> {
