@@ -61,7 +61,7 @@ export default class AuthenticateUsersService {
       throw new AppError(AppErrorTypes.sessions.invalidCredentials);
     }
 
-    if (!user.featureGroup) {
+    if (!user.featureGroup.features && !user.standaloneFeatures) {
       throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
     }
 
