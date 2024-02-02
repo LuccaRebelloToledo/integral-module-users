@@ -30,8 +30,13 @@ export default class UpdateFeatureGroupsService {
     if (key || name) {
       await this.validateKeyAndName(key, name);
 
-      featureGroup.key = key || featureGroup.key;
-      featureGroup.name = name || featureGroup.name;
+      if (key) {
+        featureGroup.key = key;
+      }
+
+      if (name) {
+        featureGroup.name = name;
+      }
     }
 
     if (featureIds) {
@@ -57,21 +62,19 @@ export default class UpdateFeatureGroupsService {
   }
 
   private async validateKeyAndName(key?: string, name?: string): Promise<void> {
-    if (key || name) {
-      const checkFeatureGroupsExists =
-        await this.featureGroupRepository.findByKeyOrName({ key, name });
+    const checkFeatureGroupsExists =
+      await this.featureGroupRepository.findByKeyOrName({ key, name });
 
-      if (checkFeatureGroupsExists.length) {
-        const featureExistsByKey = checkFeatureGroupsExists.find(
-          (feature) => feature.key === key,
-        );
+    if (checkFeatureGroupsExists.length) {
+      const featureExistsByKey = checkFeatureGroupsExists.find(
+        (feature) => feature.key === key,
+      );
 
-        if (featureExistsByKey) {
-          throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
-        }
-
-        throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
+      if (featureExistsByKey) {
+        throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
       }
+
+      throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
     }
   }
 }
