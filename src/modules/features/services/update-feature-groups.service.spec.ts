@@ -93,7 +93,7 @@ describe('UpdateFeatureGroupsService', () => {
     const payload = {
       featureGroupId: '1',
       key: 'feature-group-key',
-      name: 'non-existing-feature-group-name',
+      name: undefined,
       featureIds: [],
     };
 
@@ -114,7 +114,7 @@ describe('UpdateFeatureGroupsService', () => {
   test('should throw an error if feature group is found by name', async () => {
     const payload = {
       featureGroupId: '1',
-      key: 'non-existing-feature-group-key',
+      key: undefined,
       name: 'feature-group-name',
       featureIds: [],
     };
