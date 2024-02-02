@@ -1,25 +1,25 @@
-import { TestDataSource } from '@shared/infra/http/test-data-source';
+import { TestAppDataSource } from '@shared/infra/http/data-source';
 
-import FakeUserRepository from '../infra/typeorm/repositories/user.repository.fake';
-import FakeFeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository.fake';
+import UserRepository from '../infra/typeorm/repositories/user.repository';
+import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 
 import ShowUsersService from './show-users.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let fakeUserRepository: FakeUserRepository;
-let fakeFeatureGroupRepository: FakeFeatureGroupRepository;
+let userRepository: UserRepository;
+let featureGroupRepository: FeatureGroupRepository;
 let showUsersService: ShowUsersService;
 
 describe('ShowUsersService', () => {
   beforeAll(async () => {
-    await TestDataSource.initialize();
+    await TestAppDataSource.initialize();
 
-    fakeUserRepository = new FakeUserRepository();
-    fakeFeatureGroupRepository = new FakeFeatureGroupRepository();
-    showUsersService = new ShowUsersService(fakeUserRepository);
+    userRepository = new UserRepository();
+    featureGroupRepository = new FeatureGroupRepository();
+    showUsersService = new ShowUsersService(userRepository);
 
-    await fakeFeatureGroupRepository.create({
+    await featureGroupRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
@@ -28,31 +28,31 @@ describe('ShowUsersService', () => {
   });
 
   afterAll(async () => {
-    await TestDataSource.destroy();
+    await TestAppDataSource.destroy();
   });
 
   test('should be defined', () => {
-    expect(fakeUserRepository).toBeDefined();
-    expect(fakeFeatureGroupRepository).toBeDefined();
+    expect(userRepository).toBeDefined();
+    expect(featureGroupRepository).toBeDefined();
     expect(showUsersService).toBeDefined();
   });
 
   test('should throw an error if no user is found', async () => {
     const userId = 'non-existing-user-id';
 
-    jest.spyOn(fakeUserRepository, 'findById');
+    jest.spyOn(userRepository, 'findById');
 
     await expect(showUsersService.execute(userId)).rejects.toThrow(
       AppErrorTypes.users.notFound,
     );
 
-    expect(fakeUserRepository.findById).toHaveBeenCalledWith(userId);
+    expect(userRepository.findById).toHaveBeenCalledWith(userId);
 
-    expect(fakeUserRepository.findById).toHaveBeenCalledTimes(1);
+    expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should return a user if a user is found by id', async () => {
-    const createdUser = await fakeUserRepository.create({
+    const createdUser = await userRepository.create({
       id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -60,14 +60,14 @@ describe('ShowUsersService', () => {
       featureGroupId: '1',
     });
 
-    jest.spyOn(fakeUserRepository, 'findById');
+    jest.spyOn(userRepository, 'findById');
 
     const userId = '1';
 
     const user = await showUsersService.execute(userId);
 
-    expect(fakeUserRepository.findById).toHaveBeenCalledWith(userId);
-    expect(fakeUserRepository.findById).toHaveBeenCalledTimes(1);
+    expect(userRepository.findById).toHaveBeenCalledWith(userId);
+    expect(userRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(user.id).toEqual(createdUser.id);
     expect(user.name).toEqual(createdUser.name);

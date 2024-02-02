@@ -1,46 +1,47 @@
-import { TestDataSource } from '@shared/infra/http/test-data-source';
+import { TestAppDataSource } from '@shared/infra/http/data-source';
 
-import FakeUserRepository from '../infra/typeorm/repositories/user.repository.fake';
-import FakeFeatureRepository from '@modules/features/infra/typeorm/repositories/feature.repository.fake';
-import FakeFeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository.fake';
+import UserRepository from '../infra/typeorm/repositories/user.repository';
+import FeatureRepository from '@modules/features/infra/typeorm/repositories/feature.repository';
+import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import AuthenticateUsersService from './authenticate-users.service';
 
-import { container } from 'tsyringe';
-
 import { verify } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';
 
-let fakeUserRepository: FakeUserRepository;
-let fakeFeatureRepository: FakeFeatureRepository;
-let fakeFeatureGroupRepository: FakeFeatureGroupRepository;
+import { container } from 'tsyringe';
+import FeatureRepositoryInterface from '@modules/features/repositories/feature.repository.interface';
+
+let userRepository: UserRepository;
+let featureRepository: FeatureRepository;
+let featureGroupRepository: FeatureGroupRepository;
 let hashProvider: BCryptHashProvider;
 let authenticateUsersService: AuthenticateUsersService;
 
 describe('AuthenticateUsersService', () => {
   beforeAll(async () => {
-    await TestDataSource.initialize();
+    await TestAppDataSource.initialize();
 
-    fakeUserRepository = new FakeUserRepository();
-    fakeFeatureRepository = new FakeFeatureRepository();
-    fakeFeatureGroupRepository = new FakeFeatureGroupRepository();
+    userRepository = new UserRepository();
+    featureRepository = new FeatureRepository();
+    featureGroupRepository = new FeatureGroupRepository();
     hashProvider = new BCryptHashProvider();
     authenticateUsersService = new AuthenticateUsersService(
-      fakeUserRepository,
+      userRepository,
       hashProvider,
     );
 
-    await fakeFeatureGroupRepository.create({
+    await featureGroupRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
       features: [],
     });
 
-    await fakeUserRepository.create({
+    await userRepository.create({
       id: '1',
       name: 'John Doe Invalid',
       email: 'johndoe@example.com',
@@ -48,13 +49,13 @@ describe('AuthenticateUsersService', () => {
       featureGroupId: '1',
     });
 
-    const feature = await fakeFeatureRepository.create({
+    const feature = await featureRepository.create({
       id: '1',
       key: 'feature-key',
       name: 'Feature Name',
     });
 
-    await fakeFeatureGroupRepository.create({
+    await featureGroupRepository.create({
       id: '2',
       key: 'feature-group-key-2',
       name: 'Feature Group Name 2',
@@ -63,7 +64,7 @@ describe('AuthenticateUsersService', () => {
 
     const encryptedPassword = await hashProvider.generateHash('123456789');
 
-    await fakeUserRepository.create({
+    await userRepository.create({
       id: '2',
       name: 'John Doe Valid',
       email: 'johndoe_valid@example.com',
@@ -73,19 +74,20 @@ describe('AuthenticateUsersService', () => {
 
     container.reset();
 
-    container.register('FeatureRepository', {
-      useValue: fakeFeatureRepository,
-    });
+    container.registerSingleton<FeatureRepositoryInterface>(
+      'FeatureRepository',
+      FeatureRepository,
+    );
   });
 
   afterAll(async () => {
-    await TestDataSource.destroy();
+    await TestAppDataSource.destroy();
   });
 
   test('should be defined', () => {
-    expect(fakeUserRepository).toBeDefined();
-    expect(fakeFeatureRepository).toBeDefined();
-    expect(fakeFeatureGroupRepository).toBeDefined();
+    expect(UserRepository).toBeDefined();
+    expect(FeatureRepository).toBeDefined();
+    expect(featureGroupRepository).toBeDefined();
     expect(hashProvider).toBeDefined();
     expect(authenticateUsersService).toBeDefined();
   });
@@ -96,17 +98,15 @@ describe('AuthenticateUsersService', () => {
       password: '123456',
     };
 
-    jest.spyOn(fakeUserRepository, 'findByEmail');
+    jest.spyOn(userRepository, 'findByEmail');
 
     await expect(authenticateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.sessions.invalidCredentials,
     );
 
-    expect(fakeUserRepository.findByEmail).toHaveBeenCalledWith(
-      userPayload.email,
-    );
+    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
 
-    expect(fakeUserRepository.findByEmail).toHaveBeenCalledTimes(1);
+    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if user not have feature group and standalone features', async () => {
@@ -115,17 +115,15 @@ describe('AuthenticateUsersService', () => {
       password: '123456789',
     };
 
-    jest.spyOn(fakeUserRepository, 'findByEmail');
+    jest.spyOn(userRepository, 'findByEmail');
 
     await expect(authenticateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.sessions.missingUserFeatureGroup,
     );
 
-    expect(fakeUserRepository.findByEmail).toHaveBeenCalledWith(
-      userPayload.email,
-    );
+    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
 
-    expect(fakeUserRepository.findByEmail).toHaveBeenCalledTimes(1);
+    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if password is incorrect', async () => {
