@@ -38,8 +38,8 @@ export default class AuthenticateUsersService {
 
     const token = this.generateToken(
       user,
-      features.groupedFeatures,
-      features.standaloneFeatures,
+      features.groupedFeatures!,
+      features.standaloneFeatures!,
     );
 
     return {
@@ -47,8 +47,8 @@ export default class AuthenticateUsersService {
     };
   }
 
-  private mapFeatures(features: Feature[]) {
-    return features.map((feature) => ({
+  private mapFeatures(features?: Feature[]) {
+    return features?.map((feature) => ({
       key: feature.key,
       name: feature.name,
     }));
@@ -91,9 +91,7 @@ export default class AuthenticateUsersService {
 
     const mappedGroupedFeatures = this.mapFeatures(groupedFeatures);
 
-    const standaloneFeatures = user.standaloneFeatures
-      ? this.mapFeatures(user.standaloneFeatures)
-      : [];
+    const standaloneFeatures = this.mapFeatures(user.standaloneFeatures);
 
     return {
       groupedFeatures: mappedGroupedFeatures,
