@@ -12,9 +12,6 @@ import UpdateUsersService from './update-users.service';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { container } from 'tsyringe';
-import UserRepositoryInterface from '../repositories/user.repository.interface';
-import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
-import FeatureRepositoryInterface from '@modules/features/repositories/feature.repository.interface';
 
 let userRepository: UserRepository;
 let featureRepository: FeatureRepository;
@@ -35,20 +32,17 @@ describe('UpdateUsersService', () => {
 
     container.reset();
 
-    container.registerSingleton<UserRepositoryInterface>(
-      'UserRepository',
-      UserRepository,
-    );
+    container.register('UserRepository', {
+      useValue: userRepository,
+    });
 
-    container.registerSingleton<FeatureGroupRepositoryInterface>(
-      'FeatureGroupRepository',
-      FeatureGroupRepository,
-    );
+    container.register('FeatureGroupRepository', {
+      useValue: featureGroupRepository,
+    });
 
-    container.registerSingleton<FeatureRepositoryInterface>(
-      'FeatureRepository',
-      FeatureRepository,
-    );
+    container.register('FeatureRepository', {
+      useValue: featureRepository,
+    });
 
     const feature = await featureRepository.create({
       id: '1',
@@ -90,9 +84,15 @@ describe('UpdateUsersService', () => {
       id: 'non-existing-user-id',
     };
 
+    jest.spyOn(userRepository, 'findById');
+
     await expect(updateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.users.notFound,
     );
+
+    expect(userRepository.findById).toHaveBeenCalledWith(userPayload.id);
+
+    expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if user is found by email', async () => {
@@ -126,9 +126,17 @@ describe('UpdateUsersService', () => {
       featureGroupId: '2',
     };
 
+    jest.spyOn(featureGroupRepository, 'findById');
+
     await expect(updateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.featureGroups.notFound,
     );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureGroupId,
+    );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if no feature is found by id', async () => {
@@ -137,9 +145,17 @@ describe('UpdateUsersService', () => {
       featureIds: ['2'],
     };
 
+    jest.spyOn(featureRepository, 'findById');
+
     await expect(updateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.features.notFound,
     );
+
+    expect(featureRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureIds[0],
+    );
+
+    expect(featureRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if feature repeated', async () => {
@@ -149,9 +165,24 @@ describe('UpdateUsersService', () => {
       featureIds: ['1'],
     };
 
+    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureRepository, 'findById');
+
     await expect(updateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.features.repeatedFeatures,
     );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureGroupId,
+    );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+
+    expect(featureRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureIds[0],
+    );
+
+    expect(featureRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should be a update an user', async () => {
@@ -183,11 +214,27 @@ describe('UpdateUsersService', () => {
       featureIds: [featureThree.id],
     };
 
+    jest.spyOn(userRepository, 'findByEmail');
+    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureRepository, 'findById');
     jest.spyOn(userRepository, 'save');
 
     const newUser = await updateUsersService.execute(userPayload);
 
     expect(userRepository.save).toHaveBeenCalledTimes(1);
+
+    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
+    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
+
+    expect(featureRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureIds[0],
+    );
+    expect(featureRepository.findById).toHaveBeenCalledTimes(1);
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureGroupId,
+    );
+    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(newUser.name).not.toEqual(user.name);
     expect(newUser.email).not.toEqual(user.email);

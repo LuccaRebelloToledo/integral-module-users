@@ -13,7 +13,6 @@ import { verify } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';
 
 import { container } from 'tsyringe';
-import FeatureRepositoryInterface from '@modules/features/repositories/feature.repository.interface';
 
 let userRepository: UserRepository;
 let featureRepository: FeatureRepository;
@@ -74,10 +73,9 @@ describe('AuthenticateUsersService', () => {
 
     container.reset();
 
-    container.registerSingleton<FeatureRepositoryInterface>(
-      'FeatureRepository',
-      FeatureRepository,
-    );
+    container.register('FeatureRepository', {
+      useValue: featureRepository,
+    });
   });
 
   afterAll(async () => {

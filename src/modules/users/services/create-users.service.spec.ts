@@ -9,7 +9,6 @@ import CreateUsersService from './create-users.service';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { container } from 'tsyringe';
-import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 
 let userRepository: UserRepository;
 let featureGroupRepository: FeatureGroupRepository;
@@ -42,10 +41,9 @@ describe('CreateUsersService', () => {
 
     container.reset();
 
-    container.registerSingleton<FeatureGroupRepositoryInterface>(
-      'FeatureGroupRepository',
-      FeatureGroupRepository,
-    );
+    container.register('FeatureGroupRepository', {
+      useValue: featureGroupRepository,
+    });
   });
 
   afterAll(async () => {
@@ -86,9 +84,17 @@ describe('CreateUsersService', () => {
       featureGroupId: '2',
     };
 
+    jest.spyOn(featureGroupRepository, 'findById');
+
     await expect(createUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.featureGroups.notFound,
     );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureGroupId,
+    );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should be encrypt the password', async () => {
@@ -114,6 +120,7 @@ describe('CreateUsersService', () => {
       featureGroupId: '1',
     };
 
+    jest.spyOn(featureGroupRepository, 'findById');
     jest.spyOn(userRepository, 'create');
     jest.spyOn(userRepository, 'save');
 
@@ -128,6 +135,12 @@ describe('CreateUsersService', () => {
     expect(userCreated).toHaveProperty('createdAt');
 
     expect(userCreated).toHaveProperty('updatedAt');
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+      userPayload.featureGroupId,
+    );
+
+    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(userRepository.create).toHaveBeenCalledTimes(1);
 

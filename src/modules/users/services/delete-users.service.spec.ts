@@ -8,7 +8,6 @@ import DeleteUsersService from './delete-users.service';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { container } from 'tsyringe';
-import UserRepositoryInterface from '../repositories/user.repository.interface';
 
 let userRepository: UserRepository;
 let featureGroupRepository: FeatureGroupRepository;
@@ -39,10 +38,9 @@ describe('DeleteUsersService', () => {
 
     container.reset();
 
-    container.registerSingleton<UserRepositoryInterface>(
-      'UserRepository',
-      UserRepository,
-    );
+    container.register('UserRepository', {
+      useValue: userRepository,
+    });
   });
 
   afterAll(async () => {
@@ -56,11 +54,19 @@ describe('DeleteUsersService', () => {
   });
 
   test('should throw an error if no user is found', async () => {
-    const userId = 'non-existing-user-id';
+    const userPayload = {
+      id: 'non-existing-user-id',
+    };
 
-    await expect(deleteUsersService.execute(userId)).rejects.toThrow(
+    jest.spyOn(userRepository, 'findById');
+
+    await expect(deleteUsersService.execute(userPayload.id)).rejects.toThrow(
       AppErrorTypes.users.notFound,
     );
+
+    expect(userRepository.findById).toHaveBeenCalledWith(userPayload.id);
+
+    expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should be delete a user', async () => {
@@ -68,11 +74,16 @@ describe('DeleteUsersService', () => {
       id: '1',
     };
 
+    jest.spyOn(userRepository, 'findById');
     jest.spyOn(userRepository, 'delete');
 
     await deleteUsersService.execute(userPayload.id);
 
     expect(userRepository.delete).toHaveBeenCalledTimes(1);
+
+    expect(userRepository.findById).toHaveBeenCalledWith(userPayload.id);
+
+    expect(userRepository.findById).toHaveBeenCalledTimes(1);
 
     const user = await userRepository.findById(userPayload.id);
 
