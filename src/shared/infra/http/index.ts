@@ -17,30 +17,32 @@ import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
 import { env } from './env';
 
-AppDataSource.initialize().then(async () => {
-  console.log('🚀 Database connected');
+AppDataSource.initialize()
+  .then(async () => {
+    console.log('🚀 Database connected');
 
-  const app = express();
+    const app = express();
 
-  app.use(compression());
-  app.use(
-    helmet({
-      hidePoweredBy: true,
-    }),
-  );
-  app.use(cors(corsConfig));
-  app.use(cookieParser());
+    app.use(compression());
+    app.use(
+      helmet({
+        hidePoweredBy: true,
+      }),
+    );
+    app.use(cors(corsConfig));
+    app.use(cookieParser());
 
-  app.use(express.json());
+    app.use(express.json());
 
-  app.use(routes);
+    app.use(routes);
 
-  app.use(globalErrorHandler);
+    app.use(globalErrorHandler);
 
-  const port = env.PORT ?? 4000;
-  app.listen({
-    port: port,
+    const port = env.PORT ?? 4000;
+    app.listen(port);
+
+    console.log(`🚀 HTTP Server listening on port ${port}`);
+  })
+  .catch((error) => {
+    console.error('🚀 Database connection failed', error), process.exit(1);
   });
-
-  console.log(`🚀 HTTP Server listening on port ${port}`);
-});
