@@ -1,4 +1,8 @@
-import { AppDataSource } from '@shared/infra/http/data-source';
+import {
+  AppDataSource,
+  TestAppDataSource,
+  isTesting,
+} from '@shared/infra/http/data-source';
 
 import { Repository } from 'typeorm';
 
@@ -6,12 +10,15 @@ import FeatureRepositoryInterface from '@modules/features/repositories/feature.r
 import Feature from '../entities/feature.entity';
 
 import FindFeaturesByKeyOrNameDTO from '@modules/features/dtos/find-features-by-key-or-name.dto';
+import CreateFeaturesDTO from '@modules/features/dtos/create-features.dto';
 
 export default class FeatureRepository implements FeatureRepositoryInterface {
   private featureRepository: Repository<Feature>;
 
   constructor() {
-    this.featureRepository = AppDataSource.getRepository(Feature);
+    this.featureRepository = isTesting
+      ? TestAppDataSource.getRepository(Feature)
+      : AppDataSource.getRepository(Feature);
   }
 
   public async findAll(): Promise<Feature[]> {
@@ -77,5 +84,14 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
     }
 
     return await query.getMany();
+  }
+
+  public async create(featureData: CreateFeaturesDTO): Promise<Feature> {
+    const feature = this.featureRepository.create(featureData);
+
+    return this.save(feature);
+  }
+  public async save(feature: Feature): Promise<Feature> {
+    return this.featureRepository.save(feature);
   }
 }

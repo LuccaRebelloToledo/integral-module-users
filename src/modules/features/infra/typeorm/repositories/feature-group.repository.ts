@@ -1,4 +1,8 @@
-import { AppDataSource } from '@shared/infra/http/data-source';
+import {
+  AppDataSource,
+  TestAppDataSource,
+  isTesting,
+} from '@shared/infra/http/data-source';
 
 import { Repository } from 'typeorm';
 
@@ -14,7 +18,9 @@ export default class FeatureGroupRepository
   private featureGroupRepository: Repository<FeatureGroup>;
 
   constructor() {
-    this.featureGroupRepository = AppDataSource.getRepository(FeatureGroup);
+    this.featureGroupRepository = isTesting
+      ? TestAppDataSource.getRepository(FeatureGroup)
+      : AppDataSource.getRepository(FeatureGroup);
   }
 
   public async findAll(): Promise<FeatureGroup[]> {

@@ -1,6 +1,7 @@
 import Feature from '../infra/typeorm/entities/feature.entity';
 
 import FindFeaturesByKeyOrNameDTO from '../dtos/find-features-by-key-or-name.dto';
+import CreateFeaturesDTO from '../dtos/create-features.dto';
 
 export default interface FeatureRepositoryInterface {
   findAll(): Promise<Feature[]>;
@@ -11,4 +12,6 @@ export default interface FeatureRepositoryInterface {
     key,
     name,
   }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]>;
+  create(featureData: CreateFeaturesDTO): Promise<Feature>;
+  save(feature: Feature): Promise<Feature>;
 }

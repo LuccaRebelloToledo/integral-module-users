@@ -1,4 +1,8 @@
-import { AppDataSource } from '@shared/infra/http/data-source';
+import {
+  AppDataSource,
+  TestAppDataSource,
+  isTesting,
+} from '@shared/infra/http/data-source';
 
 import { Repository } from 'typeorm';
 
@@ -11,7 +15,9 @@ export default class UserRepository implements UserRepositoryInterface {
   private userRepository: Repository<User>;
 
   constructor() {
-    this.userRepository = AppDataSource.getRepository(User);
+    this.userRepository = isTesting
+      ? TestAppDataSource.getRepository(User)
+      : AppDataSource.getRepository(User);
   }
 
   public async findAll(): Promise<User[]> {
