@@ -5,6 +5,7 @@ import { env } from './env';
 import { DataSource } from 'typeorm';
 
 export const isProduction = env.NODE_ENV === 'production';
+export const isTesting = env.NODE_ENV === 'test';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -31,5 +32,16 @@ export const AppDataSource = new DataSource({
     isProduction
       ? `${__dirname}/../typeorm/migrations/*.js`
       : `${__dirname}/../typeorm/migrations/*.ts`,
+  ],
+});
+
+export const TestAppDataSource = new DataSource({
+  type: 'better-sqlite3',
+  database: ':memory:',
+  dropSchema: true,
+  synchronize: true,
+  logging: false,
+  entities: [
+    `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.ts`,
   ],
 });
