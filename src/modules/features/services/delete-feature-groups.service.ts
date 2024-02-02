@@ -1,10 +1,8 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
 
-import AppError from '@shared/errors/app-error';
-import AppErrorTypes from '@shared/errors/app-error-types';
-import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
+import ShowFeatureGroupsService from './show-feature-groups.service';
 
 @injectable()
 export default class DeleteFeatureGroupsService {
@@ -14,12 +12,11 @@ export default class DeleteFeatureGroupsService {
   ) {}
 
   public async execute(featureGroupId: string): Promise<void> {
-    const featureGroup =
-      await this.featureGroupRepository.findById(featureGroupId);
+    const showFeatureGroupsService = container.resolve(
+      ShowFeatureGroupsService,
+    );
 
-    if (!featureGroup) {
-      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
-    }
+    const featureGroup = await showFeatureGroupsService.execute(featureGroupId);
 
     await this.featureGroupRepository.delete(featureGroup);
   }
