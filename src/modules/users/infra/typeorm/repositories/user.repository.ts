@@ -4,11 +4,13 @@ import {
   isTesting,
 } from '@shared/infra/http/data-source';
 
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import UserRepositoryInterface from '@modules/users/repositories/user.repository.interface';
 import User from '../entities/user.entity';
 
+import ListUsersRepositoryParamsDTO from '@modules/users/dtos/list-users-repository-params.dto';
+import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
 import CreateUsersDTO from '@modules/users/dtos/create-users.dto';
 
 export default class UserRepository implements UserRepositoryInterface {
@@ -20,10 +22,36 @@ export default class UserRepository implements UserRepositoryInterface {
       : AppDataSource.getRepository(User);
   }
 
-  public async findAll(): Promise<User[]> {
-    return await this.userRepository.find({
-      relations: ['featureGroup', 'standaloneFeatures'],
-    });
+  public async findAll({
+    take,
+    skip,
+    sort,
+    order,
+    name,
+    email,
+  }: ListUsersRepositoryParamsDTO): Promise<ListRepositoryResponseDTO<User>> {
+    const query = this.userRepository
+      .createQueryBuilder('users')
+      .leftJoinAndSelect('users.featureGroup', 'featureGroup')
+      .leftJoinAndSelect('users.standaloneFeatures', 'standaloneFeatures')
+      .take(take)
+      .skip(skip)
+      .orderBy(`users.${sort}`, order as 'ASC' | 'DESC');
+
+    if (name) {
+      query.andWhere({ name: ILike(`%${name}%`) });
+    }
+
+    if (email) {
+      query.andWhere({ email: ILike(`%${email}%`) });
+    }
+
+    const [items, total] = await query.getManyAndCount();
+
+    return {
+      items,
+      total,
+    };
   }
 
   public async findById(id: string): Promise<User | null> {
