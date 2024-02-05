@@ -4,7 +4,7 @@ import {
   isTesting,
 } from '@shared/infra/http/data-source';
 
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 import FeatureGroup from '../entities/feature-group.entity';
@@ -39,19 +39,15 @@ export default class FeatureGroupRepository
     key,
     name,
   }: FindFeatureGroupsByKeyOrNameDTO): Promise<FeatureGroup[]> {
-    let query =
+    const query =
       this.featureGroupRepository.createQueryBuilder('feature_groups');
 
     if (key) {
-      query = query.where('LOWER(feature_groups.key) LIKE :key', {
-        key: `%${key.toLowerCase()}%`,
-      });
+      query.where({ key: ILike(`%${key}%`) });
     }
 
     if (name) {
-      query = query.orWhere('LOWER(feature_groups.name) LIKE :name', {
-        name: `%${name.toLowerCase()}%`,
-      });
+      query.andWhere({ name: ILike(`%${name}%`) });
     }
 
     return await query.getMany();
