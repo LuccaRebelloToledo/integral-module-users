@@ -10,11 +10,29 @@ import ShowFeaturesService from '@modules/features/services/show-features.servic
 
 import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
 
+import FeaturePaginationControllerParamsDTO from '@modules/features/dtos/feature-pagination-controller-params.dto';
+
 export default class FeatureController {
-  public async list(_request: Request, response: Response): Promise<Response> {
+  public async list(request: Request, response: Response): Promise<Response> {
+    const {
+      page,
+      limit,
+      order,
+      sort,
+      key,
+      name,
+    }: FeaturePaginationControllerParamsDTO = request.query;
+
     const listFeaturesService = container.resolve(ListFeaturesService);
 
-    const features = await listFeaturesService.execute();
+    const features = await listFeaturesService.execute({
+      page: page!,
+      limit: limit!,
+      order: order!,
+      sort: sort!,
+      key,
+      name,
+    });
 
     return response.json(features);
   }
