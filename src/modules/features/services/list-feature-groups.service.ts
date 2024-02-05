@@ -6,7 +6,12 @@ import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
+import ListFeatureGroupsServiceResponseDTO from '../dtos/list-feature-groups-service-response.dto';
+
+import { convertPageAndLimitToInt } from '@shared/utils/convert-page-and-limit-to-int.utils';
+import { calculateSkip } from '@shared/utils/calculate-skip.utils';
+import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-details.utils';
 
 @injectable()
 export default class ListFeatureGroupsService {
@@ -15,13 +20,46 @@ export default class ListFeatureGroupsService {
     private featureGroupRepository: FeatureGroupRepositoryInterface,
   ) {}
 
-  public async execute(): Promise<FeatureGroup[]> {
-    const featureGroups = await this.featureGroupRepository.findAll();
+  public async execute({
+    page,
+    limit,
+    sort,
+    order,
+    key,
+    name,
+  }: ListFeatureGroupsServiceParamsDTO): Promise<ListFeatureGroupsServiceResponseDTO> {
+    const { pageParsed, limitParsed } = convertPageAndLimitToInt(page, limit);
 
-    if (!featureGroups.length) {
-      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
+    const skip = calculateSkip(pageParsed, limitParsed);
+
+    const { items, total } = await this.featureGroupRepository.findAll({
+      take: limitParsed,
+      skip,
+      sort,
+      order,
+      key,
+      name,
+    });
+
+    if (!items.length) {
+      throw new AppError(AppErrorTypes.features.notFound, NOT_FOUND);
     }
 
-    return featureGroups;
+    const { previous, next, totalPages } = calculatePaginationDetails(
+      total,
+      pageParsed,
+      limitParsed,
+    );
+
+    return {
+      pagination: {
+        previous,
+        current: pageParsed,
+        next,
+        total: totalPages,
+      },
+      totalItems: total,
+      items,
+    };
   }
 }
