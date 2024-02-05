@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { idSchema } from './global.schemas';
+import { idSchema, paginationParamsSchema, sortSchema } from './global.schemas';
 
 import { featureIdsSchema } from './feature-group-related.schemas';
 
@@ -8,7 +8,7 @@ const nameSchema = Joi.string().trim().max(100);
 const emailSchema = Joi.string().email().trim().lowercase().max(100);
 const passwordSchema = Joi.string().trim();
 
-//Sessions
+// Sessions
 
 export const signUpSchema = Joi.object({
   email: emailSchema.required(),
@@ -33,4 +33,10 @@ export const updateUsersSchema = Joi.object({
   password: passwordSchema.optional(),
   featureGroupId: idSchema.optional(),
   featureIds: featureIdsSchema.optional(),
+});
+
+export const userPaginationParamsSchema = paginationParamsSchema.keys({
+  sort: sortSchema.valid('name', 'email'),
+  name: nameSchema.optional(),
+  email: nameSchema.lowercase().optional(),
 });

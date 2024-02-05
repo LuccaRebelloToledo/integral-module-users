@@ -11,3 +11,32 @@ export const idSchema = Joi.string()
 export const idParamSchema = Joi.object({
   id: idSchema.required(),
 });
+
+// GLOBAL PAGINATION PARAMS SCHEMA
+
+const pageSchema = Joi.string()
+  .trim()
+  .regex(/^[1-9]\d*$/)
+  .default('1');
+
+const limitSchema = Joi.string()
+  .trim()
+  .regex(/^[1-9]\d*$/)
+  .default('5');
+
+export const sortSchema = Joi.string()
+  .trim()
+  .valid('createdAt', 'updatedAt')
+  .default('createdAt');
+
+const orderSchema = Joi.string()
+  .trim()
+  .uppercase()
+  .valid('ASC', 'DESC')
+  .default('DESC');
+
+export const paginationParamsSchema = Joi.object({
+  page: pageSchema,
+  limit: limitSchema,
+  order: orderSchema,
+});
