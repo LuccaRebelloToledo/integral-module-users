@@ -1,7 +1,11 @@
 import { Joi } from 'celebrate';
 
 import { idSchema } from './global.schemas';
-import { keySchema, nameSchema } from './feature-related.schemas';
+import {
+  featurePaginationParamsSchema,
+  keySchema,
+  nameSchema,
+} from './feature-related.schemas';
 
 export const featureIdsSchema = Joi.array().items(idSchema.required()).unique();
 
@@ -16,3 +20,5 @@ export const updateFeatureGroupsSchema = Joi.object({
   name: nameSchema.optional(),
   featureIds: featureIdsSchema.optional(),
 });
+
+export const featureGroupPaginationParamsSchema = featurePaginationParamsSchema;
