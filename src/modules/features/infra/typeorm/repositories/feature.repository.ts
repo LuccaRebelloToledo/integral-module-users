@@ -102,11 +102,11 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
     const query = this.featureRepository.createQueryBuilder('features');
 
     if (key) {
-      query.where({ key: ILike(`%${key}%`) });
+      query.orWhere({ key: ILike(`%${key}%`) });
     }
 
     if (name) {
-      query.andWhere({ name: ILike(`%${name}%`) });
+      query.orWhere({ name: ILike(`%${name}%`) });
     }
 
     return await query.getMany();
