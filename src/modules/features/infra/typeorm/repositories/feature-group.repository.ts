@@ -9,6 +9,8 @@ import { ILike, Repository } from 'typeorm';
 import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 import FeatureGroup from '../entities/feature-group.entity';
 
+import ListFeatureGroupsRepositoryParamsDTO from '@modules/features/dtos/list-feature-groups-repository-params.dto';
+import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
 import FindFeatureGroupsByKeyOrNameDTO from '@modules/features/dtos/find-feature-groups-by-key-or-name.dto';
 import CreateFeatureGroupsDTO from '@modules/features/dtos/create-feature-groups.dto';
 
@@ -23,8 +25,37 @@ export default class FeatureGroupRepository
       : AppDataSource.getRepository(FeatureGroup);
   }
 
-  public async findAll(): Promise<FeatureGroup[]> {
-    return await this.featureGroupRepository.find();
+  public async findAll({
+    take,
+    skip,
+    sort,
+    order,
+    key,
+    name,
+  }: ListFeatureGroupsRepositoryParamsDTO): Promise<
+    ListRepositoryResponseDTO<FeatureGroup>
+  > {
+    const query = this.featureGroupRepository
+      .createQueryBuilder('feature_groups')
+      .leftJoinAndSelect('feature_groups.features', 'features')
+      .take(take)
+      .skip(skip)
+      .orderBy(`feature_groups.${sort}`, order as 'ASC' | 'DESC');
+
+    if (key) {
+      query.andWhere({ key: ILike(`%${key}%`) });
+    }
+
+    if (name) {
+      query.andWhere({ name: ILike(`%${name}%`) });
+    }
+
+    const [items, total] = await query.getManyAndCount();
+
+    return {
+      items,
+      total,
+    };
   }
 
   public async findById(featureGroupId: string): Promise<FeatureGroup | null> {
