@@ -5,6 +5,7 @@ import { idParamSchema } from '@shared/schemas/global.schemas';
 import { listByKeyOrNameSchema } from '@shared/schemas/feature-related.schemas';
 import {
   createFeatureGroupsSchema,
+  featureGroupPaginationParamsSchema,
   updateFeatureGroupsSchema,
 } from '@shared/schemas/feature-group-related.schemas';
 
@@ -20,6 +21,9 @@ featureGroupsRoutes.use(ensureAuthenticated);
 
 featureGroupsRoutes.get(
   '/',
+  celebrate({
+    [Segments.QUERY]: featureGroupPaginationParamsSchema,
+  }),
   ensureAuthorized(['full:feature-groups', 'list:feature-groups']),
   featureGroupController.list,
 );

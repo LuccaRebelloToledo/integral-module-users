@@ -2,7 +2,10 @@ import { Router } from 'express';
 import { Segments, celebrate } from 'celebrate';
 
 import { idParamSchema } from '@shared/schemas/global.schemas';
-import { listByKeyOrNameSchema } from '@shared/schemas/feature-related.schemas';
+import {
+  featurePaginationParamsSchema,
+  listByKeyOrNameSchema,
+} from '@shared/schemas/feature-related.schemas';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
@@ -16,6 +19,9 @@ featuresRoutes.use(ensureAuthenticated);
 
 featuresRoutes.get(
   '/',
+  celebrate({
+    [Segments.QUERY]: featurePaginationParamsSchema,
+  }),
   ensureAuthorized(['full:features', 'list:features']),
   featureController.list,
 );
