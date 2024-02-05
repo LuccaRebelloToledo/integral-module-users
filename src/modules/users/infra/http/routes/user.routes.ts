@@ -4,6 +4,7 @@ import { Segments, celebrate } from 'celebrate';
 import {
   createUsersSchema,
   updateUsersSchema,
+  userPaginationParamsSchema,
 } from '@shared/schemas/user-related.schemas';
 import { idParamSchema } from '@shared/schemas/global.schemas';
 
@@ -19,6 +20,9 @@ userRoutes.use(ensureAuthenticated);
 
 userRoutes.get(
   '/',
+  celebrate({
+    [Segments.QUERY]: userPaginationParamsSchema,
+  }),
   ensureAuthorized(['full:users', 'list:users']),
   userController.list,
 );
