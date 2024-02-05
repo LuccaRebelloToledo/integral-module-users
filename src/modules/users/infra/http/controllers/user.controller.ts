@@ -13,21 +13,39 @@ import CreateUsersService from '@modules/users/services/create-users.service';
 import UpdateUsersService from '@modules/users/services/update-users.service';
 import DeleteUsersService from '@modules/users/services/delete-users.service';
 
-export default class UserController {
-  public async list(_request: Request, response: Response): Promise<Response> {
-    const listUsersService = container.resolve(ListUsersService);
-    const user = await listUsersService.execute();
+import UserPaginationControllerParamsDTO from '@modules/users/dtos/user-pagination-controller-params.dto';
 
-    return response.json(user);
+export default class UserController {
+  public async list(request: Request, response: Response): Promise<Response> {
+    const {
+      page,
+      limit,
+      order,
+      sort,
+      name,
+      email,
+    }: UserPaginationControllerParamsDTO = request.query;
+
+    const listUsersService = container.resolve(ListUsersService);
+    const users = await listUsersService.execute({
+      page: page!,
+      limit: limit!,
+      order: order!,
+      sort: sort!,
+      name,
+      email,
+    });
+
+    return response.json(users);
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
     const { id: userId } = request.params;
 
     const showUsersService = container.resolve(ShowUsersService);
-    const users = await showUsersService.execute(userId);
+    const user = await showUsersService.execute(userId);
 
-    return response.json(users);
+    return response.json(user);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
