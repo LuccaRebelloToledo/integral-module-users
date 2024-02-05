@@ -16,13 +16,31 @@ import DeleteFeatureGroupsService from '@modules/features/services/delete-featur
 
 import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
 
+import FeatureGroupPaginationControllerParamsDTO from '@modules/features/dtos/feature-groups-pagination-controller-params.dto';
+
 export default class FeatureGroupController {
-  public async list(_request: Request, response: Response): Promise<Response> {
+  public async list(request: Request, response: Response): Promise<Response> {
+    const {
+      page,
+      limit,
+      order,
+      sort,
+      key,
+      name,
+    }: FeatureGroupPaginationControllerParamsDTO = request.query;
+
     const listFeatureGroupsService = container.resolve(
       ListFeatureGroupsService,
     );
 
-    const featureGroups = await listFeatureGroupsService.execute();
+    const featureGroups = await listFeatureGroupsService.execute({
+      page: page!,
+      limit: limit!,
+      sort: sort!,
+      order: order!,
+      key,
+      name,
+    });
 
     return response.json(featureGroups);
   }
