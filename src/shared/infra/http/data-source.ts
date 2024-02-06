@@ -25,8 +25,8 @@ export const AppDataSource = new DataSource({
   },
   entities: [
     isProduction
-      ? `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.js`
-      : `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.ts`,
+      ? `${__dirname}/../../../../dist/modules/**/infra/typeorm/entities/*.entity.js`
+      : `${__dirname}/../../../../src/modules/**/infra/typeorm/entities/*.entity.ts`,
   ],
   migrations: [
     isProduction
@@ -34,6 +34,16 @@ export const AppDataSource = new DataSource({
       : `${__dirname}/../typeorm/migrations/*.ts`,
   ],
 });
+
+export const dataSourceConnection = async () => {
+  try {
+    await AppDataSource.initialize();
+    console.log('🚀 Database connected');
+  } catch (error) {
+    console.error('🚀 Database connection failed', error);
+    process.exit(1);
+  }
+};
 
 export const TestAppDataSource = new DataSource({
   type: 'better-sqlite3',
