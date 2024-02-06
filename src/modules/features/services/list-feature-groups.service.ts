@@ -42,7 +42,7 @@ export default class ListFeatureGroupsService {
     });
 
     if (!items.length) {
-      throw new AppError(AppErrorTypes.features.notFound, NOT_FOUND);
+      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
     }
 
     const { previous, next, totalPages } = calculatePaginationDetails(
