@@ -1,4 +1,4 @@
-import { TestAppDataSource } from '@shared/infra/http/data-source';
+import { TestAppDataSource } from '@shared/infra/http/test-data-source';
 
 import UserRepository from '../infra/typeorm/repositories/user.repository';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
