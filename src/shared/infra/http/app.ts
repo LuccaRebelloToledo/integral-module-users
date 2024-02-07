@@ -22,17 +22,6 @@ import { env } from './env';
 
 const app = express();
 
-app.use(compression());
-app.use(
-  helmet({
-    hidePoweredBy: true,
-  }),
-);
-app.use(cors(corsConfig));
-app.use(cookieParser());
-
-app.use(express.json());
-
 Sentry.init({
   dsn: env.DSN,
   environment: env.NODE_ENV,
@@ -46,6 +35,17 @@ Sentry.init({
 });
 
 app.use(Sentry.Handlers.requestHandler());
+
+app.use(compression());
+app.use(
+  helmet({
+    hidePoweredBy: true,
+  }),
+);
+app.use(cors(corsConfig));
+app.use(cookieParser());
+
+app.use(express.json());
 
 app.use(Sentry.Handlers.tracingHandler());
 
