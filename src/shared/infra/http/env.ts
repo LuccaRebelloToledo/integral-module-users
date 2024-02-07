@@ -6,6 +6,7 @@ const envSchema = Joi.object({
   NODE_ENV: Joi.string().valid('test', 'development', 'production').required(),
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION: Joi.string().required(),
+  DSN: Joi.string().uri().required(),
   PORT: Joi.string().required(),
   PG_HOST: Joi.string().required(),
   PG_PORT: Joi.string().required(),
