@@ -1,8 +1,4 @@
-import {
-  AppDataSource,
-  TestAppDataSource,
-  isTesting,
-} from '@shared/infra/http/data-source';
+import { getActiveDataSource } from '@shared/utils/get-active-data-source.utils';
 
 import { ILike, Repository } from 'typeorm';
 
@@ -18,9 +14,7 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   private featureRepository: Repository<Feature>;
 
   constructor() {
-    this.featureRepository = isTesting
-      ? TestAppDataSource.getRepository(Feature)
-      : AppDataSource.getRepository(Feature);
+    this.featureRepository = getActiveDataSource().getRepository(Feature);
   }
 
   public async findAll({

@@ -1,8 +1,4 @@
-import {
-  AppDataSource,
-  TestAppDataSource,
-  isTesting,
-} from '@shared/infra/http/data-source';
+import { getActiveDataSource } from '@shared/utils/get-active-data-source.utils';
 
 import { ILike, Repository } from 'typeorm';
 
@@ -17,9 +13,7 @@ export default class UserRepository implements UserRepositoryInterface {
   private userRepository: Repository<User>;
 
   constructor() {
-    this.userRepository = isTesting
-      ? TestAppDataSource.getRepository(User)
-      : AppDataSource.getRepository(User);
+    this.userRepository = getActiveDataSource().getRepository(User);
   }
 
   public async findAll({
