@@ -1,7 +1,9 @@
-# Expressjs User Module
+# Integral module for managing all user-related operations
 
-## Objectives
+This module is an integral part of an application, responsible for managing all user-related operations.
 
-1. Handle Unknown Errors And Capture With Sentry
-2. Health Check
-3. Graceful Shutdown
+## Contributing
+Contributions are always welcome. If you find any issues or have any suggestions, feel free to open an issue or submit a pull request.
+
+## License
+This project is licensed under the MIT license.
