@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import 'tsconfig-paths/register';
 
-import { env } from './env';
 import { DataSource } from 'typeorm';
+
+import { env } from './env';
 
 export const isProduction = env.NODE_ENV === 'production';
 export const isTesting = env.NODE_ENV === 'test';
@@ -32,26 +33,5 @@ export const AppDataSource = new DataSource({
     isProduction
       ? `${__dirname}/../typeorm/migrations/*.js`
       : `${__dirname}/../typeorm/migrations/*.ts`,
-  ],
-});
-
-export const AppDataSourceInitialize = async () => {
-  try {
-    await AppDataSource.initialize();
-    console.log('🚀 Database connected');
-  } catch (error) {
-    console.error('🚀 Database connection failed', error);
-    process.exit(1);
-  }
-};
-
-export const TestAppDataSource = new DataSource({
-  type: 'better-sqlite3',
-  database: ':memory:',
-  dropSchema: true,
-  synchronize: true,
-  logging: false,
-  entities: [
-    `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.ts`,
   ],
 });
