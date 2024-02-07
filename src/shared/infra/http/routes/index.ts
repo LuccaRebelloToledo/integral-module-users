@@ -15,7 +15,7 @@ routes.use('/users', userRoutes);
 routes.use('/sessions', sessionRoutes);
 
 routes.all('*', async () => {
-  throw new AppError('Something is wrong');
+  throw new AppError('Route not defined. Please check the URL and try again.');
 });
 
 export default routes;
