@@ -3,6 +3,9 @@ import '@shared/container';
 import express from 'express';
 import 'express-async-errors';
 
+import * as Sentry from '@sentry/node';
+import { ProfilingIntegration } from '@sentry/profiling-node';
+
 import compression from 'compression';
 import helmet from 'helmet';
 
@@ -12,9 +15,6 @@ import { corsConfig } from '@config/cors.config';
 import cookieParser from 'cookie-parser';
 
 import routes from './routes';
-
-import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
 
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
@@ -36,6 +36,8 @@ Sentry.init({
 
 app.use(Sentry.Handlers.requestHandler());
 
+app.use(Sentry.Handlers.tracingHandler());
+
 app.use(compression());
 app.use(
   helmet({
@@ -46,8 +48,6 @@ app.use(cors(corsConfig));
 app.use(cookieParser());
 
 app.use(express.json());
-
-app.use(Sentry.Handlers.tracingHandler());
 
 app.use(routes);
 
