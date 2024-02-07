@@ -1,17 +1,17 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Default1706108969494 implements MigrationInterface {
-  name = 'Default1706108969494';
+export class Default1707315164077 implements MigrationInterface {
+  name = 'Default1707315164077';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "features" ("id" character varying(21) NOT NULL, "key" character varying(50) NOT NULL, "name" character varying(50) NOT NULL, "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "UQ_0cc5c687428b94489ce1edc3c5a" UNIQUE ("key"), CONSTRAINT "UQ_bcc3a344ae156a9fba128e1cb4d" UNIQUE ("name"), CONSTRAINT "PK_5c1e336df2f4a7051e5bf08a941" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "features" ("id" character varying(21) NOT NULL, "key" character varying(50) NOT NULL, "name" character varying(50) NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_0cc5c687428b94489ce1edc3c5a" UNIQUE ("key"), CONSTRAINT "UQ_bcc3a344ae156a9fba128e1cb4d" UNIQUE ("name"), CONSTRAINT "PK_5c1e336df2f4a7051e5bf08a941" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "feature_groups" ("id" character varying(21) NOT NULL, "key" character varying(50) NOT NULL, "name" character varying(50) NOT NULL, "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "UQ_2a30a8af474dcef836abe567df9" UNIQUE ("key"), CONSTRAINT "UQ_f144e4f34cc0b1cf5aec0b2b857" UNIQUE ("name"), CONSTRAINT "PK_fccccc087ddae8137824b8a5368" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "feature_groups" ("id" character varying(21) NOT NULL, "key" character varying(50) NOT NULL, "name" character varying(50) NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_2a30a8af474dcef836abe567df9" UNIQUE ("key"), CONSTRAINT "UQ_f144e4f34cc0b1cf5aec0b2b857" UNIQUE ("name"), CONSTRAINT "PK_fccccc087ddae8137824b8a5368" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "users" ("id" character varying(21) NOT NULL, "name" character varying(100) NOT NULL, "email" character varying(100) NOT NULL, "password" character varying NOT NULL, "featureGroupId" character varying(21) NOT NULL, "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "users" ("id" character varying(21) NOT NULL, "name" character varying(100) NOT NULL, "email" character varying(100) NOT NULL, "password" character varying NOT NULL, "featureGroupId" character varying(21) NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "user_features" ("featureId" character varying(21) NOT NULL, "userId" character varying(21) NOT NULL, CONSTRAINT "PK_25cc6a04bb8aa111d7cd5163aaf" PRIMARY KEY ("featureId", "userId"))`,
