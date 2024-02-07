@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
+import * as Sentry from '@sentry/node';
+
 import http from 'http';
 import {
   BAD_REQUEST,
@@ -73,6 +75,23 @@ export default function globalErrorHandler(
       message: err.message,
     });
   }
+
+  process.on('uncaughtException', (error) => {
+    Sentry.captureException(error, {
+      fingerprint: [error.message],
+      extra: errorData,
+    });
+  });
+
+  process.on('unhandledRejection', (error) => {
+    Sentry.captureException(error, {
+      extra: errorData,
+    });
+  });
+
+  Sentry.captureException(err, {
+    extra: errorData,
+  });
 
   return response.status(INTERNAL_SERVER_ERROR).json({
     statusCode: INTERNAL_SERVER_ERROR,
