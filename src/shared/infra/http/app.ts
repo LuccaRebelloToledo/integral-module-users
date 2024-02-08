@@ -15,7 +15,7 @@ import { corsConfig } from '@config/cors.config';
 import cookieParser from 'cookie-parser';
 
 import swaggerUi from 'swagger-ui-express';
-import { swaggerDocument } from '@config/swagger.config';
+import swaggerDocument from '@config/swagger.json';
 
 import routes from './routes';
 
