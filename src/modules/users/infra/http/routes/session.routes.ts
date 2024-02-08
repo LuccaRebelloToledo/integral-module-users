@@ -32,13 +32,19 @@ const sessionController = new SessionController();
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/EmailAlreadyInUseSchema'
+ *            $ref: '#/components/schemas/ExceptionSchema'
+ *          examples:
+ *            email-already-in-use:
+ *              $ref: '#/components/examples/email-already-in-use'
  *     '500':
  *      description: An unexpected error occurred on the server while processing the request.
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/InternalServerErrorSchema'
+ *            $ref: '#/components/schemas/ExceptionSchema'
+ *          examples:
+ *            internal-server-error:
+ *              $ref: '#/components/examples/internal-server-error'
  */
 sessionRoutes.post(
   '/sign-up',
@@ -70,25 +76,37 @@ sessionRoutes.post(
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/InvalidCredentialsSchema'
+ *            $ref: '#/components/schemas/ExceptionSchema'
+ *          examples:
+ *            invalid-credentials:
+ *              $ref: '#/components/examples/invalid-credentials'
  *     '403':
  *      description: The user is not associated with any feature group.
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/MissingUserFeatureGroupSchema'
+ *            $ref: '#/components/schemas/ExceptionSchema'
+ *          examples:
+ *            missing-user-feature-group:
+ *              $ref: '#/components/examples/missing-user-feature-group'
  *     '404':
  *      description: The user is not associated with any feature.
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/FeatureNotFoundSchema'
+ *            $ref: '#/components/schemas/ExceptionSchema'
+ *          examples:
+ *            feature-not-found:
+ *              $ref: '#/components/examples/feature-not-found'
  *     '500':
  *      description: An unexpected error occurred on the server while processing the request.
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/InternalServerErrorSchema'
+ *            $ref: '#/components/schemas/ExceptionSchema'
+ *          examples:
+ *            internal-server-error:
+ *              $ref: '#/components/examples/internal-server-error'
  */
 sessionRoutes.post(
   '/sign-in',
