@@ -14,8 +14,7 @@ const AppErrorTypes = {
   users: {
     emailAlreadyInUse:
       'The provided email is already in use. Please use a different email.',
-    notFound:
-      'The user was not found. Please check the provided user ID or username.',
+    notFound: 'The user was not found. Please check the provided user ID.',
   },
   features: {
     notFound:
