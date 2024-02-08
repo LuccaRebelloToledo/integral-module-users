@@ -1,7 +1,7 @@
 {
-  "name": "expressjs-user-module",
+  "name": "integral-module-for-managing-all-user-related-operations",
   "version": "1.0.0",
-  "description": "ExpressJs User API",
+  "description": "This module is an integral part of an application, responsible for managing all user-related operations.",
   "main": "index.js",
   "scripts": {
     "start": "node ./dist/shared/infra/http/server.js",
@@ -52,6 +52,8 @@
     "nanoid": "^3.3.7",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "tsyringe": "^4.8.0",
     "typeorm": "^0.3.20"
   },
@@ -66,6 +68,8 @@
     "@types/jest": "^29.5.11",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.15",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
