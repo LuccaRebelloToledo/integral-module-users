@@ -96,6 +96,6 @@ export default function globalErrorHandler(
   return response.status(INTERNAL_SERVER_ERROR).json({
     statusCode: INTERNAL_SERVER_ERROR,
     error: http.STATUS_CODES[INTERNAL_SERVER_ERROR],
-    message: 'Something is wrong',
+    message: 'Something is wrong!',
   });
 }
