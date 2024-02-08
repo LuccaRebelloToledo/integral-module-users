@@ -14,6 +14,9 @@ import { corsConfig } from '@config/cors.config';
 
 import cookieParser from 'cookie-parser';
 
+import swaggerUi from 'swagger-ui-express';
+import { swaggerDocument } from '@config/swagger.config';
+
 import routes from './routes';
 
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
@@ -48,6 +51,8 @@ app.use(cors(corsConfig));
 app.use(cookieParser());
 
 app.use(express.json());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(routes);
 
