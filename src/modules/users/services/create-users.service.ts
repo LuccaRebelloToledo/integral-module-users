@@ -12,6 +12,7 @@ import ShowFeatureGroupsService from '@modules/features/services/show-feature-gr
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
 const featureGroupMemberId = '6P8s76YxCtSMgmKDx49dV';
 
@@ -34,7 +35,7 @@ export default class CreateUsersService {
     const user = await this.userRepository.findByEmail(email);
 
     if (user) {
-      throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
+      throw new AppError(AppErrorTypes.users.emailAlreadyInUse, CONFLICT);
     }
 
     await this.verifyFeatureGroup(featureGroupId);
