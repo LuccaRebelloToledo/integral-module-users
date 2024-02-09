@@ -1,24 +1,32 @@
 const AppErrorTypes = {
   sessions: {
-    invalidCredentials: 'Your credentials are invalid!',
-    tokenNotFound: 'Token was not found!',
-    invalidToken: 'Token is invalid!',
+    invalidCredentials:
+      'The provided credentials are invalid. Please check your email and password.',
+    tokenNotFound:
+      'The authentication token was not found. Please log in again.',
+    invalidToken:
+      'The authentication token is invalid or has expired. Please log in again.',
     insufficientPrivilege:
-      'You do not have enough privilege to access this resource!',
-    missingUserFeatureGroup: 'User does not have a feature group!',
+      'You do not have sufficient privileges to access this resource. Please contact the administrator if you believe this is an error.',
+    missingUserFeatureGroup:
+      'The user does not have an assigned feature group. Please contact the administrator to resolve this issue.',
   },
   users: {
-    emailAlreadyInUse: 'The email provided is already in use!',
-    notFound: 'User was not found!',
+    emailAlreadyInUse:
+      'The provided email is already in use. Please use a different email.',
+    notFound: 'The user(s) was not found.',
   },
   features: {
-    notFound: 'Feature was not found!',
-    repeatedFeatures: 'There are repeated features!',
+    notFound: 'The feature(s) was not found.',
+    repeatedFeatures:
+      'There are repeated features. Each feature should be unique.',
   },
   featureGroups: {
-    notFound: 'Feature group was not found!',
-    keyAlreadyRegistered: 'Feature group key is already registered!',
-    nameAlreadyRegistered: 'Feature group name is already registered!',
+    notFound: 'The feature group(s) was not found.',
+    keyAlreadyRegistered:
+      'The feature group key is already registered. Please use a unique key.',
+    nameAlreadyRegistered:
+      'The feature group name is already registered. Please use a unique name.',
   },
 };
 

@@ -2,10 +2,7 @@ import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
-import {
-  CREATED,
-  NO_CONTENT,
-} from '@shared/infra/http/constants/http-status-code.constants';
+import { NO_CONTENT } from '@shared/infra/http/constants/http-status-code.constants';
 
 import { cookiesConfig } from '@config/cookie.config';
 
@@ -20,7 +17,7 @@ export default class SessionController {
 
     await createUsersService.execute({ name, email, password });
 
-    return response.status(CREATED).json();
+    return response.status(NO_CONTENT).json();
   }
 
   public async signIn(request: Request, response: Response): Promise<Response> {

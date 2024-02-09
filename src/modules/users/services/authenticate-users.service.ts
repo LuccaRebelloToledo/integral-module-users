@@ -9,6 +9,10 @@ import UserRepositoryInterface from '../repositories/user.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import {
+  FORBIDDEN,
+  UNAUTHORIZED,
+} from '@shared/infra/http/constants/http-status-code.constants';
 
 import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list-features-by-feature-group-id.service';
 
@@ -58,14 +62,10 @@ export default class AuthenticateUsersService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError(AppErrorTypes.sessions.invalidCredentials);
-    }
-
-    if (
-      !user.featureGroup.features.length &&
-      !user.standaloneFeatures?.length
-    ) {
-      throw new AppError(AppErrorTypes.sessions.missingUserFeatureGroup);
+      throw new AppError(
+        AppErrorTypes.sessions.invalidCredentials,
+        UNAUTHORIZED,
+      );
     }
 
     const passwordMatch = await this.bcryptHashProvider.compareHash(
@@ -74,7 +74,20 @@ export default class AuthenticateUsersService {
     );
 
     if (!passwordMatch) {
-      throw new AppError(AppErrorTypes.sessions.invalidCredentials);
+      throw new AppError(
+        AppErrorTypes.sessions.invalidCredentials,
+        UNAUTHORIZED,
+      );
+    }
+
+    if (
+      !user.featureGroup.features.length &&
+      !user.standaloneFeatures?.length
+    ) {
+      throw new AppError(
+        AppErrorTypes.sessions.missingUserFeatureGroup,
+        FORBIDDEN,
+      );
     }
 
     return user;

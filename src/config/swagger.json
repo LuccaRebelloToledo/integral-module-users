@@ -1,0 +1,1057 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Integral module for managing all user-related operations",
+    "version": "1.0.0",
+    "description": "This module is an integral part of an application, responsible for managing all user-related operations.",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "contact": {
+      "name": "Lucca de Almeida Rebello Toledo",
+      "email": "luccarebtoledo@gmail.com",
+      "url": "https://www.linkedin.com/in/lucca-toledo/"
+    }
+  },
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "features",
+      "description": "Handles all operations related to features"
+    },
+    {
+      "name": "feature-groups",
+      "description": "Handles all operations related to feature groups"
+    },
+    {
+      "name": "users",
+      "description": "Handles all operations related to user management"
+    },
+    {
+      "name": "sessions",
+      "description": "Handles all operations related to user sessions"
+    }
+  ],
+  "schemes": ["https", "http"],
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "This endpoint retrieves users in the form of a list.",
+        "operationId": "getUsers",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "description": "The page number for pagination.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of items per page.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The field to sort by. The available fields are: 'email', 'name', 'createdAt', 'updatedAt'.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "description": "The order of sorting. The available orders are: 'DESC', 'ASC'.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "The email to filter by.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "The name to filter by.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Users"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No users were found to compose a list. This may occur if there are no users in the database or the provided search criteria did not match any users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/user-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["users"],
+        "summary": "This endpoint create a user.",
+        "operationId": "createUsers",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "description": "The required data for a new user to be created.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUsersSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User was be created successfully."
+          },
+          "401": {
+            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The provided feature group ID was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-group-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be completed because the email provided is already associated with an existing account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "email-already-in-use": {
+                    "$ref": "#/components/examples/email-already-in-use"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "This endpoint retrieves a user by their ID.",
+        "operationId": "getUserById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the user to retrieve.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The user was not found. Please check the provided user ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/user-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["users"],
+        "summary": "This endpoint update a user by their ID.",
+        "operationId": "updateUserById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the user to update.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The required data for a user to be updated.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUsersSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The user was successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user has repeated features. Each feature should be unique.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "repeated-features": {
+                    "$ref": "#/components/examples/repeated-features"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested resource was not found. This could be due to an incorrect user ID, feature group, or feature.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/user-not-found"
+                  },
+                  "feature-group-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  },
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "This endpoint delete a user from the system by their ID.",
+        "operationId": "deleteUserById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the user to delete.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The user was successfully deleted."
+          },
+          "401": {
+            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The user was not found. Please check the provided user ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/user-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/sign-up": {
+      "post": {
+        "tags": ["sessions"],
+        "summary": "This endpoint allows a new user to sign up for an account.",
+        "operationId": "signUp",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "description": "The required data for a new user to sign up.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The account has been successfully created for the new user."
+          },
+          "409": {
+            "description": "The request could not be completed because the email provided is already associated with an existing account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "email-already-in-use": {
+                    "$ref": "#/components/examples/email-already-in-use"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/sign-in": {
+      "post": {
+        "tags": ["sessions"],
+        "summary": "This endpoint is used for user authentication. It allows a user to sign in to their account using their credentials.",
+        "operationId": "signIn",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "description": "The user needs to provide the necessary credentials (usually email and password) to sign in.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The request was successful and a token has been provided for the user's session."
+          },
+          "401": {
+            "description": "The user's credentials are not recognized or are incorrect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-credentials": {
+                    "$ref": "#/components/examples/invalid-credentials"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user is not associated with any feature group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "missing-user-feature-group": {
+                    "$ref": "#/components/examples/missing-user-feature-group"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The user is not associated with any feature.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "token",
+        "description": "The cookie value requested in routes in swagger is not necessary if you have logged in and received your token.",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ExceptionSchema": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "previous": {
+            "oneOf": [{ "type": "string" }, { "type": "integer" }],
+            "description": "Information about the previous page."
+          },
+          "current": {
+            "type": "integer",
+            "description": "The current page."
+          },
+          "next": {
+            "oneOf": [{ "type": "string" }, { "type": "integer" }],
+            "description": "Information about the next page."
+          },
+          "total": {
+            "oneOf": [{ "type": "string" }, { "type": "integer" }],
+            "description": "Information about the total number of pages."
+          }
+        }
+      },
+      "Feature": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "nanoid",
+            "example": "kSiTZJAz0v1VKBDbeLhUm"
+          },
+          "key": {
+            "type": "string",
+            "example": "key"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          }
+        }
+      },
+      "Features": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Feature"
+        }
+      },
+      "FeatureGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "nanoid",
+            "example": "kSiTZJAz0v1VKBDbeLhUt"
+          },
+          "key": {
+            "type": "string",
+            "example": "key"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          }
+        }
+      },
+      "FeatureGroups": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureGroup"
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "nanoid",
+            "example": "kSiTZJAz0v1VKBDbeLhUh"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@gmail.com"
+          },
+          "featureGroupId": {
+            "type": "string",
+            "format": "nanoid",
+            "example": "kSiTZJAz0v1VKBDbeLhUt"
+          },
+          "featureGroup": {
+            "$ref": "#/components/schemas/FeatureGroup"
+          },
+          "standaloneFeatures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          }
+        }
+      },
+      "Users": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          },
+          "totalItems": {
+            "type": "integer",
+            "example": 1
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "CreateUsersSchema": {
+        "type": "object",
+        "required": ["name", "email", "password", "featureGroupId"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "123456"
+          },
+          "featureGroupId": {
+            "type": "string",
+            "format": "nanoid",
+            "minimum": 21,
+            "maximum": 21,
+            "example": "kSiTZJAz0v1VKBDbeLhUt"
+          }
+        }
+      },
+      "UpdateUsersSchema": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "123456"
+          },
+          "featureGroupId": {
+            "type": "string",
+            "format": "nanoid",
+            "minimum": 21,
+            "maximum": 21,
+            "example": "kSiTZJAz0v1VKBDbeLhUt"
+          },
+          "featureIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "nanoid",
+              "minimum": 21,
+              "maximum": 21,
+              "example": "kSiTZJAz0v1VKBDbeLhUt"
+            }
+          }
+        }
+      },
+      "SignUpSchema": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "123456"
+          }
+        }
+      },
+      "SignInSchema": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "johndoe@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "123456"
+          }
+        }
+      }
+    },
+    "examples": {
+      "repeated-features": {
+        "value": {
+          "statusCode": 400,
+          "status": "Bad Request",
+          "message": "There are repeated features. Each feature should be unique."
+        }
+      },
+      "user-not-found": {
+        "value": {
+          "statusCode": 404,
+          "status": "Not Found",
+          "message": "The user(s) was not found."
+        }
+      },
+      "insufficient-privilege": {
+        "value": {
+          "statusCode": 403,
+          "status": "Forbidden",
+          "message": "You do not have sufficient privileges to access this resource. Please contact the administrator if you believe this is an error."
+        }
+      },
+      "invalid-credentials": {
+        "value": {
+          "statusCode": 401,
+          "status": "Unauthorized",
+          "message": "The provided credentials are invalid. Please check your email and password."
+        }
+      },
+      "missing-user-feature-group": {
+        "value": {
+          "statusCode": 403,
+          "status": "Forbidden",
+          "message": "The user does not have an assigned feature group. Please contact the administrator to resolve this issue."
+        }
+      },
+      "feature-not-found": {
+        "value": {
+          "statusCode": 404,
+          "status": "Not Found",
+          "message": "The feature(s) was not found."
+        }
+      },
+      "feature-group-not-found": {
+        "value": {
+          "statusCode": 404,
+          "status": "Not Found",
+          "message": "The feature group(s) was not found."
+        }
+      },
+      "email-already-in-use": {
+        "value": {
+          "statusCode": 409,
+          "status": "Conflict",
+          "message": "The provided email is already in use. Please use a different email."
+        }
+      },
+      "internal-server-error": {
+        "value": {
+          "statusCode": 500,
+          "status": "Internal server error",
+          "message": "Something is wrong!"
+        }
+      },
+      "invalid-token": {
+        "value": {
+          "statusCode": 401,
+          "status": "Unauthorized",
+          "message": "The authentication token is invalid or has expired. Please log in again."
+        }
+      },
+      "token-not-found": {
+        "value": {
+          "statusCode": 401,
+          "status": "Unauthorized",
+          "message": "The authentication token was not found. Please log in again."
+        }
+      }
+    }
+  }
+}

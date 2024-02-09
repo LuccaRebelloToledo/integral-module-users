@@ -82,6 +82,7 @@ describe('UpdateUsersService', () => {
   test('should throw an error if no user is found', async () => {
     const userPayload = {
       id: 'non-existing-user-id',
+      name: 'John Doe',
     };
 
     jest.spyOn(userRepository, 'findById');
@@ -107,6 +108,7 @@ describe('UpdateUsersService', () => {
     const userPayload = {
       id: '1',
       email: 'johndoe2@example.com',
+      name: 'John Doe',
     };
 
     jest.spyOn(userRepository, 'findByEmail');
@@ -124,6 +126,7 @@ describe('UpdateUsersService', () => {
     const userPayload = {
       id: '1',
       featureGroupId: '2',
+      name: 'John Doe',
     };
 
     jest.spyOn(featureGroupRepository, 'findById');
@@ -142,6 +145,7 @@ describe('UpdateUsersService', () => {
   test('should throw an error if no feature is found by id', async () => {
     const userPayload = {
       id: '1',
+      name: 'John Doe',
       featureIds: ['2'],
     };
 
@@ -161,6 +165,7 @@ describe('UpdateUsersService', () => {
   test('should throw an error if feature repeated', async () => {
     const userPayload = {
       id: '1',
+      name: 'John Doe',
       featureGroupId: '1',
       featureIds: ['1'],
     };

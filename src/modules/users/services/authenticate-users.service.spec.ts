@@ -19,6 +19,7 @@ let featureRepository: FeatureRepository;
 let featureGroupRepository: FeatureGroupRepository;
 let hashProvider: BCryptHashProvider;
 let authenticateUsersService: AuthenticateUsersService;
+let encryptedPassword: string;
 
 describe('AuthenticateUsersService', () => {
   beforeAll(async () => {
@@ -40,11 +41,13 @@ describe('AuthenticateUsersService', () => {
       features: [],
     });
 
+    encryptedPassword = await hashProvider.generateHash('123456789');
+
     await userRepository.create({
       id: '1',
       name: 'John Doe Invalid',
       email: 'johndoe@example.com',
-      password: '123456789',
+      password: encryptedPassword,
       featureGroupId: '1',
     });
 
@@ -60,8 +63,6 @@ describe('AuthenticateUsersService', () => {
       name: 'Feature Group Name 2',
       features: [feature],
     });
-
-    const encryptedPassword = await hashProvider.generateHash('123456789');
 
     await userRepository.create({
       id: '2',
@@ -107,23 +108,6 @@ describe('AuthenticateUsersService', () => {
     expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
-  test('should throw an error if user not have feature group and standalone features', async () => {
-    const userPayload = {
-      email: 'johndoe@example.com',
-      password: '123456789',
-    };
-
-    jest.spyOn(userRepository, 'findByEmail');
-
-    await expect(authenticateUsersService.execute(userPayload)).rejects.toThrow(
-      AppErrorTypes.sessions.missingUserFeatureGroup,
-    );
-
-    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
-
-    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
-  });
-
   test('should throw an error if password is incorrect', async () => {
     const userPayload = {
       email: 'johndoe_valid@example.com',
@@ -142,6 +126,23 @@ describe('AuthenticateUsersService', () => {
     );
 
     expect(hashProvider.compareHash).toHaveBeenCalledTimes(1);
+  });
+
+  test('should throw an error if user not have feature group and standalone features', async () => {
+    const userPayload = {
+      email: 'johndoe@example.com',
+      password: '123456789',
+    };
+
+    jest.spyOn(userRepository, 'findByEmail');
+
+    await expect(authenticateUsersService.execute(userPayload)).rejects.toThrow(
+      AppErrorTypes.sessions.missingUserFeatureGroup,
+    );
+
+    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
+
+    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
   test('should be generate a token for the user', async () => {

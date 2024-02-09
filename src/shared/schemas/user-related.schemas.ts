@@ -28,7 +28,7 @@ export const createUsersSchema = signUpSchema.keys({
 });
 
 export const updateUsersSchema = Joi.object({
-  name: nameSchema.optional(),
+  name: nameSchema.required(),
   email: emailSchema.optional(),
   password: passwordSchema.optional(),
   featureGroupId: idSchema.optional(),
