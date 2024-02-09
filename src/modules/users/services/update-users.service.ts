@@ -38,15 +38,23 @@ export default class UpdateUsersService {
   }: UpdateUsersDTO): Promise<User> {
     const user = await this.findUserById(id);
 
-    await this.updateEmail(user, email);
-
-    await this.updateFeatureGroup(user, featureGroupId);
-
-    await this.updateFeatures(user, featureIds);
-
-    await this.updatePassword(user, password);
-
     this.updateName(user, name);
+
+    if (email) {
+      await this.updateEmail(user, email);
+    }
+
+    if (featureGroupId) {
+      await this.updateFeatureGroup(user, featureGroupId);
+    }
+
+    if (featureIds) {
+      await this.updateFeatures(user, featureIds);
+    }
+
+    if (password) {
+      await this.updatePassword(user, password);
+    }
 
     const updatedUser = await this.userRepository.save(user);
 
@@ -61,47 +69,40 @@ export default class UpdateUsersService {
     return user;
   }
 
-  private async updateEmail(user: User, email?: string) {
-    if (email) {
-      const userWithEmail = await this.userRepository.findByEmail(email);
+  private async updateEmail(user: User, email: string) {
+    const userWithEmail = await this.userRepository.findByEmail(email);
 
-      if (userWithEmail) {
-        throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
-      }
-
-      user.email = email;
+    if (userWithEmail) {
+      throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
     }
+
+    user.email = email;
   }
 
-  private async updateFeatureGroup(user: User, featureGroupId?: string) {
-    if (featureGroupId) {
-      const showFeatureGroupsService = container.resolve(
-        ShowFeatureGroupsService,
-      );
+  private async updateFeatureGroup(user: User, featureGroupId: string) {
+    const showFeatureGroupsService = container.resolve(
+      ShowFeatureGroupsService,
+    );
 
-      const featureGroup =
-        await showFeatureGroupsService.execute(featureGroupId);
+    const featureGroup = await showFeatureGroupsService.execute(featureGroupId);
 
-      user.featureGroupId = featureGroup.id;
-      user.featureGroup = featureGroup;
-    }
+    user.featureGroupId = featureGroup.id;
+    user.featureGroup = featureGroup;
   }
 
-  private async updateFeatures(user: User, featureIds?: string[]) {
-    if (featureIds) {
-      const features = await getFeaturesByFeatureIds(featureIds);
+  private async updateFeatures(user: User, featureIds: string[]) {
+    const features = await getFeaturesByFeatureIds(featureIds);
 
-      const groupedFeatures = await this.getGroupedFeatures(user);
+    const groupedFeatures = await this.getGroupedFeatures(user);
 
-      const featuresByUserId = await this.getFeaturesByUserId(user);
+    const featuresByUserId = await this.getFeaturesByUserId(user);
 
-      const uniqueFeatures = this.getUniqueFeatures(
-        [...groupedFeatures, ...featuresByUserId],
-        features,
-      );
+    const uniqueFeatures = this.getUniqueFeatures(
+      [...groupedFeatures, ...featuresByUserId],
+      features,
+    );
 
-      user.standaloneFeatures = [...featuresByUserId, ...uniqueFeatures];
-    }
+    user.standaloneFeatures = [...featuresByUserId, ...uniqueFeatures];
   }
 
   private async getGroupedFeatures(user: User) {
@@ -137,18 +138,16 @@ export default class UpdateUsersService {
     return uniqueFeatures;
   }
 
-  private updateName(user: User, name?: string) {
-    if (name && user.name !== name) {
+  private updateName(user: User, name: string) {
+    if (user.name !== name) {
       user.name = name;
     }
   }
 
-  private async updatePassword(user: User, password?: string) {
-    if (password) {
-      const encryptedPassword =
-        await this.bcryptHashProvider.generateHash(password);
+  private async updatePassword(user: User, password: string) {
+    const encryptedPassword =
+      await this.bcryptHashProvider.generateHash(password);
 
-      user.password = encryptedPassword;
-    }
+    user.password = encryptedPassword;
   }
 }
