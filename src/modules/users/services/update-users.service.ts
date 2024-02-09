@@ -8,6 +8,7 @@ import User from '../infra/typeorm/entities/user.entity';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
 import ShowUsersService from './show-users.service';
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
@@ -73,7 +74,7 @@ export default class UpdateUsersService {
     const userWithEmail = await this.userRepository.findByEmail(email);
 
     if (userWithEmail) {
-      throw new AppError(AppErrorTypes.users.emailAlreadyInUse);
+      throw new AppError(AppErrorTypes.users.emailAlreadyInUse, CONFLICT);
     }
 
     user.email = email;
