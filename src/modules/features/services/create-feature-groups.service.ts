@@ -8,6 +8,7 @@ import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
+import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
@@ -52,9 +53,15 @@ export default class CreateFeatureGroupsService {
       );
 
       if (existingFeatureGroup) {
-        throw new AppError(AppErrorTypes.featureGroups.keyAlreadyRegistered);
+        throw new AppError(
+          AppErrorTypes.featureGroups.keyAlreadyRegistered,
+          CONFLICT,
+        );
       }
-      throw new AppError(AppErrorTypes.featureGroups.nameAlreadyRegistered);
+      throw new AppError(
+        AppErrorTypes.featureGroups.nameAlreadyRegistered,
+        CONFLICT,
+      );
     }
   }
 }
