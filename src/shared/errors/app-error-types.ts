@@ -14,17 +14,15 @@ const AppErrorTypes = {
   users: {
     emailAlreadyInUse:
       'The provided email is already in use. Please use a different email.',
-    notFound: 'The user was not found. Please check the provided user ID.',
+    notFound: 'The user(s) was not found.',
   },
   features: {
-    notFound:
-      'The feature was not found. Please check the provided feature ID or name.',
+    notFound: 'The feature(s) was not found.',
     repeatedFeatures:
-      'There are repeated features in the feature group. Each feature in a group should be unique.',
+      'There are repeated features. Each feature should be unique.',
   },
   featureGroups: {
-    notFound:
-      'The feature group was not found. Please check the provided feature group ID or name.',
+    notFound: 'The feature group(s) was not found.',
     keyAlreadyRegistered:
       'The feature group key is already registered. Please use a unique key.',
     nameAlreadyRegistered:
