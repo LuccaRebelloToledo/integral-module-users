@@ -68,6 +68,26 @@ export default class AuthenticateUsersService {
       );
     }
 
+    await this.checkPassword(password, user);
+
+    this.checkUserFeatures(user);
+
+    return user;
+  }
+
+  private checkUserFeatures(user: User) {
+    if (
+      !user.featureGroup.features.length &&
+      !user.standaloneFeatures?.length
+    ) {
+      throw new AppError(
+        AppErrorTypes.sessions.missingUserFeatureGroup,
+        FORBIDDEN,
+      );
+    }
+  }
+
+  private async checkPassword(password: string, user: User) {
     const passwordMatch = await this.bcryptHashProvider.compareHash(
       password,
       user.password,
@@ -79,18 +99,6 @@ export default class AuthenticateUsersService {
         UNAUTHORIZED,
       );
     }
-
-    if (
-      !user.featureGroup.features.length &&
-      !user.standaloneFeatures?.length
-    ) {
-      throw new AppError(
-        AppErrorTypes.sessions.missingUserFeatureGroup,
-        FORBIDDEN,
-      );
-    }
-
-    return user;
   }
 
   private async getUserFeatures(user: User) {
