@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import * as Sentry from '@sentry/node';
 
-import http from 'http';
+import http from 'node:http';
 import {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
@@ -13,6 +13,8 @@ import AppError from '@shared/errors/app-error';
 import { isCelebrateError } from 'celebrate';
 
 import EscapeHtml from 'escape-html';
+
+import { exit } from 'node:process';
 
 export default function globalErrorHandler(
   err: Error,
@@ -34,14 +36,14 @@ export default function globalErrorHandler(
     statusMessage: request.statusMessage,
   };
 
-  console.error(errorData);
+  console.error(err);
   next(err);
 
   if (isCelebrateError(err)) {
     const validation: Record<string, unknown> = {};
 
     for (const [segment, joiError] of err.details.entries()) {
-      validation[segment] = {
+      validation[segment!] = {
         source: segment,
         keys: JSON.stringify(
           joiError.details.map((detail) => EscapeHtml(detail.path.join('.'))),
@@ -52,7 +54,7 @@ export default function globalErrorHandler(
 
     return response.status(BAD_REQUEST).json({
       statusCode: BAD_REQUEST,
-      error: http.STATUS_CODES[BAD_REQUEST],
+      error: http.STATUS_CODES[BAD_REQUEST!],
       message: err.message,
       validation,
     });
@@ -63,7 +65,7 @@ export default function globalErrorHandler(
 
     return response.status(statusCode).json({
       statusCode: statusCode,
-      error: http.STATUS_CODES[statusCode],
+      error: http.STATUS_CODES[statusCode!],
       message: err.message,
     });
   }
@@ -71,7 +73,7 @@ export default function globalErrorHandler(
   if (err instanceof Error) {
     return response.status(BAD_REQUEST).json({
       statusCode: BAD_REQUEST,
-      error: http.STATUS_CODES[BAD_REQUEST],
+      error: http.STATUS_CODES[BAD_REQUEST!],
       message: err.message,
     });
   }
@@ -81,12 +83,16 @@ export default function globalErrorHandler(
       fingerprint: [error.message],
       extra: errorData,
     });
+
+    exit(1);
   });
 
   process.on('unhandledRejection', (error) => {
     Sentry.captureException(error, {
       extra: errorData,
     });
+
+    throw new AppError(String(error), INTERNAL_SERVER_ERROR);
   });
 
   Sentry.captureException(err, {
@@ -95,7 +101,7 @@ export default function globalErrorHandler(
 
   return response.status(INTERNAL_SERVER_ERROR).json({
     statusCode: INTERNAL_SERVER_ERROR,
-    error: http.STATUS_CODES[INTERNAL_SERVER_ERROR],
+    error: http.STATUS_CODES[INTERNAL_SERVER_ERROR!],
     message: 'Something is wrong!',
   });
 }

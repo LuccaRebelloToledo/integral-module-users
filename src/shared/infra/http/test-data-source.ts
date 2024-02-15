@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import 'tsconfig-paths/register';
 
 import { DataSource } from 'typeorm';
 

@@ -4,6 +4,8 @@ import { env } from './env';
 
 import app from './app';
 
+import { exit } from 'node:process';
+
 AppDataSource.initialize()
   .then(() => {
     console.log('🚀 Database connected');
@@ -16,5 +18,5 @@ AppDataSource.initialize()
   })
   .catch((error) => {
     console.error('🚀 Database connection failed', error);
-    process.exit(1);
+    exit(1);
   });
