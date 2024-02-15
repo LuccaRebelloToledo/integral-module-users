@@ -7,8 +7,8 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "start": "node ./dist/shared/infra/http/server.js",
-    "start:dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/shared/infra/http/server.ts",
+    "start": "node ./dist/shared/infra/http/index.js",
+    "start:dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/shared/infra/http/index.ts",
     "build": "tsc && tsc-alias && npm run sentry:sourcemaps",
     "eslint": "eslint ./src --max-warnings 0 --fix",
     "prettier": "prettier --write ./src",

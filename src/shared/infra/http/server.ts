@@ -1,22 +1,22 @@
-import { AppDataSource } from './data-source';
-
 import { env } from './env';
 
 import app from './app';
+import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';
 
-import { exit } from 'node:process';
+const port = env.PORT ?? 4000;
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('🚀 Database connected');
+export const server = app.listen(port, () => {
+  console.log(`🚀 HTTP Server listening on port ${port}`);
+});
 
-    const port = env.PORT ?? 4000;
+process.on('SIGTERM', () => {
+  console.log('🚀 SIGTERM signal received');
 
-    app.listen(port, () => {
-      console.log(`🚀 HTTP Server listening on port ${port}`);
-    });
-  })
-  .catch((error) => {
-    console.error('🚀 Database connection failed', error);
-    exit(1);
-  });
+  gracefulShutdown();
+});
+
+process.on('SIGINT', () => {
+  console.log('🚀 SIGINT signal received');
+
+  gracefulShutdown();
+});

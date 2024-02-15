@@ -14,7 +14,7 @@ import { isCelebrateError } from 'celebrate';
 
 import EscapeHtml from 'escape-html';
 
-import { exit } from 'node:process';
+import { gracefulShutdown } from '../graceful-shutdown/graceful-shutdown';
 
 export default function globalErrorHandler(
   err: Error,
@@ -84,14 +84,10 @@ export default function globalErrorHandler(
       extra: errorData,
     });
 
-    exit(1);
+    gracefulShutdown();
   });
 
   process.on('unhandledRejection', (error) => {
-    Sentry.captureException(error, {
-      extra: errorData,
-    });
-
     throw error;
   });
 
