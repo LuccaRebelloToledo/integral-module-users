@@ -92,7 +92,7 @@ export default function globalErrorHandler(
       extra: errorData,
     });
 
-    throw new AppError(String(error), INTERNAL_SERVER_ERROR);
+    throw error;
   });
 
   Sentry.captureException(err, {
