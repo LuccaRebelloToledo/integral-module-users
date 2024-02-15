@@ -41,6 +41,1096 @@
     }
   ],
   "paths": {
+    "/features": {
+      "get": {
+        "tags": ["features"],
+        "summary": "This endpoint retrieves features in the form of a list.",
+        "operationId": "getFeatures",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "description": "The page number for pagination.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of items per page.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The field to sort by. The available fields are: 'key', 'name', 'createdAt', 'updatedAt'.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "description": "The order of sorting. The available orders are: 'DESC', 'ASC'.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "key",
+            "description": "The key of the feature to filter by.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "The name of the feature to filter by.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Features",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Features"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No features were found to compose a list. This may occur if there are no features in the database or the provided search criteria did not match any features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/{id}": {
+      "get": {
+        "tags": ["features"],
+        "summary": "This endpoint retrieves feature by their ID.",
+        "operationId": "getFeatureById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the Feature to retrieve.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The feature was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feature"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The feature was not found. Please check the provided feature ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/key-or-name": {
+      "get": {
+        "tags": ["features"],
+        "summary": "This endpoint retrieves features by key or name in the form of a list.",
+        "operationId": "getFeaturesByKeyOrName",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "key",
+            "description": "The key of the feature to filter by.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "The name of the feature to filter by.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Features By Key Or Name.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeaturesByKeyOrName"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No feature were found to compose a list. This may occur if there are no features in the database or the provided search criteria did not match any features.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/users/{id}": {
+      "get": {
+        "tags": ["features"],
+        "summary": "This endpoint retrieves features of the user by your ID.",
+        "operationId": "getFeatureByUserId",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the user to retrieve your features.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The feature(s) was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/FeaturesByUserId" },
+                    { "type": "array", "items": {} }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/features/feature-groups/{id}": {
+      "get": {
+        "tags": ["features"],
+        "summary": "This endpoint retrieves features of the feature group by your ID.",
+        "operationId": "getFeatureByFeatureGroupId",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the feature group to retrieve your features.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The feature(s) was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeaturesByFeatureGroupId"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The feature was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-groups": {
+      "get": {
+        "tags": ["feature-groups"],
+        "summary": "This endpoint retrieves feature groups in the form of a list.",
+        "operationId": "getFeatureGroups",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "description": "The page number for pagination.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "The number of items per page.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "The field to sort by. The available fields are: 'key', 'name', 'createdAt', 'updatedAt'.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "description": "The order of sorting. The available orders are: 'DESC', 'ASC'.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "key",
+            "description": "The key of the feature group to filter by.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "The name of the feature group to filter by.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Feature Groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureGroups"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No feature groups were found to compose a list. This may occur if there are no feature groups in the database or the provided search criteria did not match any feature groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-group-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["feature-groups"],
+        "summary": "This endpoint create a feature group.",
+        "operationId": "createFeatureGroups",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "description": "The required data for a new feature group to be created.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFeatureGroupsSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Feature Group was be created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureGroup"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The provided feature id(s) was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be completed because the key or name provided is already associated with an existing feature group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "key-already-registered": {
+                    "$ref": "#/components/examples/key-already-registered"
+                  },
+                  "name-already-registered": {
+                    "$ref": "#/components/examples/name-already-registered"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-groups/key-or-name": {
+      "get": {
+        "tags": ["feature-groups"],
+        "summary": "This endpoint retrieves feature groups by key or name in the form of a list.",
+        "operationId": "getFeatureGroupsByKeyOrName",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "key",
+            "description": "The key of the feature group to filter by.",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "The name of the feature group to filter by.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Feature Groups",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureGroupsByKeyOrName"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No feature groups were found to compose a list. This may occur if there are no feature groups in the database or the provided search criteria did not match any feature groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-group-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-groups/{id}": {
+      "get": {
+        "tags": ["feature-groups"],
+        "summary": "This endpoint retrieves a feature group by their ID.",
+        "operationId": "getFeatureGroupById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the Feature Group to retrieve.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The feature group was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureGroup"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The feature group was not found. Please check the provided feature group ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["feature-groups"],
+        "summary": "This endpoint update a feature group by their ID.",
+        "operationId": "updateFeatureGroupById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the Feature Group to update.",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "The required data for a feature group to be updated.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFeatureGroupsSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The feature group was successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureGroup"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The requested resource was not found. This could be due to an incorrect feature group ID, or feature Id(s).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "feature-group-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  },
+                  "feature-not-found": {
+                    "$ref": "#/components/examples/feature-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request could not be completed because the key or name provided is already associated with an existing feature group.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "key-already-registered": {
+                    "$ref": "#/components/examples/key-already-registered"
+                  },
+                  "name-already-registered": {
+                    "$ref": "#/components/examples/name-already-registered"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["feature-groups"],
+        "summary": "This endpoint delete a feature group by their ID.",
+        "operationId": "deleteFeatureGroupById",
+        "security": [{ "cookieAuth": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the Feature Group to delete.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The Feature Group was successfully deleted."
+          },
+          "401": {
+            "description": "The requested token was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The requested user do not have sufficient privileges to access this resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "insufficient-privilege": {
+                    "$ref": "#/components/examples/insufficient-privilege"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Feature Group was not found. Please check the provided Feature Group ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/feature-group-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "tags": ["users"],
@@ -99,7 +1189,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "description": "The requested token was not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -183,7 +1273,7 @@
             "description": "User was be created successfully."
           },
           "401": {
-            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "description": "The requested token was not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -288,7 +1378,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "description": "The requested token was not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -402,7 +1492,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "description": "The requested token was not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -471,7 +1561,7 @@
       },
       "delete": {
         "tags": ["users"],
-        "summary": "This endpoint delete a user from the system by their ID.",
+        "summary": "This endpoint delete a user by their ID.",
         "operationId": "deleteUserById",
         "security": [{ "cookieAuth": [] }],
         "consumes": ["application/json"],
@@ -489,7 +1579,7 @@
             "description": "The user was successfully deleted."
           },
           "401": {
-            "description": "The requested token was not found. Please ensure the feature group exists before creating a user.",
+            "description": "The requested token was not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -722,18 +1812,22 @@
         "properties": {
           "previous": {
             "oneOf": [{ "type": "string" }, { "type": "integer" }],
+            "example": "There is no previous page!",
             "description": "Information about the previous page."
           },
           "current": {
             "type": "integer",
+            "example": 1,
             "description": "The current page."
           },
           "next": {
             "oneOf": [{ "type": "string" }, { "type": "integer" }],
+            "example": "There is no next page!",
             "description": "Information about the next page."
           },
           "total": {
             "oneOf": [{ "type": "string" }, { "type": "integer" }],
+            "example": "You are already on the last page!",
             "description": "Information about the total number of pages."
           }
         }
@@ -766,10 +1860,40 @@
           }
         }
       },
-      "Features": {
+      "FeaturesByUserId": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Feature"
+        }
+      },
+      "FeaturesByFeatureGroupId": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Feature"
+        }
+      },
+      "FeaturesByKeyOrName": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Feature"
+        }
+      },
+      "Features": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          },
+          "totalItems": {
+            "type": "integer",
+            "example": 1
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            }
+          }
         }
       },
       "FeatureGroup": {
@@ -806,10 +1930,75 @@
           }
         }
       },
-      "FeatureGroups": {
+      "FeatureGroupsByKeyOrName": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/FeatureGroup"
+        }
+      },
+      "FeatureGroups": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          },
+          "totalItems": {
+            "type": "integer",
+            "example": 1
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureGroup"
+            }
+          }
+        }
+      },
+      "CreateFeatureGroupsSchema": {
+        "type": "object",
+        "required": ["key", "name", "featureIds"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "Feature Group Key"
+          },
+          "name": {
+            "type": "string",
+            "example": "Feature Group Name"
+          },
+          "featureIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "nanoid",
+              "minimum": 21,
+              "maximum": 21,
+              "example": "kSiTZJAz0v1VKBDbeLhUt"
+            }
+          }
+        }
+      },
+      "UpdateFeatureGroupsSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "Feature Group Key Update"
+          },
+          "name": {
+            "type": "string",
+            "example": "Feature Group Name Update"
+          },
+          "featureIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "nanoid",
+              "minimum": 21,
+              "maximum": 21,
+              "example": "kSiTZJAz0v1VKBDbeLhUt"
+            }
+          }
         }
       },
       "User": {
@@ -1022,6 +2211,20 @@
           "statusCode": 404,
           "status": "Not Found",
           "message": "The feature group(s) was not found."
+        }
+      },
+      "key-already-registered": {
+        "value": {
+          "statusCode": 409,
+          "status": "Conflict",
+          "message": "The feature group key is already registered. Please use a unique key."
+        }
+      },
+      "name-already-registered": {
+        "value": {
+          "statusCode": 409,
+          "status": "Conflict",
+          "message": "The feature group name is already registered. Please use a unique name."
         }
       },
       "email-already-in-use": {
