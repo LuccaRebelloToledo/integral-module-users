@@ -84,6 +84,14 @@ export default function globalErrorHandler(
       extra: errorData,
     });
 
+    if (error instanceof AppError && error.isOperational) {
+      return response.status(error.statusCode).json({
+        statusCode: error.statusCode,
+        error: http.STATUS_CODES[error.statusCode!],
+        message: error.message,
+      });
+    }
+
     gracefulShutdown();
   });
 
