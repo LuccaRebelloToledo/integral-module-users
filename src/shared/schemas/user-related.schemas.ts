@@ -36,7 +36,7 @@ export const updateUsersSchema = Joi.object({
 });
 
 export const userPaginationParamsSchema = paginationParamsSchema.keys({
-  sort: sortSchema.valid('name', 'email'),
+  sort: sortSchema.valid('name', 'email').optional(),
   name: nameSchema.optional(),
   email: nameSchema.lowercase().optional(),
 });

@@ -10,7 +10,7 @@ export const listByKeyOrNameSchema = Joi.object({
 });
 
 export const featurePaginationParamsSchema = paginationParamsSchema.keys({
-  sort: sortSchema.valid('key', 'name'),
+  sort: sortSchema.valid('key', 'name').optional(),
   key: keySchema.optional(),
   name: nameSchema.optional(),
 });
