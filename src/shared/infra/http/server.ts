@@ -1,4 +1,4 @@
-import { env } from './env';
+import { env } from '../environments/env';
 
 import app from './app';
 import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';

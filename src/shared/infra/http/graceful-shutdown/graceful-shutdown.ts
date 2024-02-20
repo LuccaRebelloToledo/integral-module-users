@@ -1,4 +1,4 @@
-import { AppDataSource } from '@shared/infra/http/data-source';
+import { AppDataSource } from '@shared/infra/typeorm/data-sources/data-source';
 
 import { server } from '@shared/infra/http/server';
 

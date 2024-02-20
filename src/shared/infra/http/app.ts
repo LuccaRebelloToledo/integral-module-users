@@ -21,7 +21,7 @@ import routes from './routes';
 
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
-import { env } from './env';
+import { env } from '../environments/env';
 
 const app = express();
 
