@@ -37,7 +37,7 @@ export default function globalErrorHandler(
   };
 
   console.error(err);
-  next(err);
+  next();
 
   if (isCelebrateError(err)) {
     const validation: Record<string, unknown> = {};
@@ -70,17 +70,9 @@ export default function globalErrorHandler(
     });
   }
 
-  if (err instanceof Error) {
-    return response.status(BAD_REQUEST).json({
-      statusCode: BAD_REQUEST,
-      error: http.STATUS_CODES[BAD_REQUEST!],
-      message: err.message,
-    });
-  }
-
   process.on('uncaughtException', (error) => {
     Sentry.captureException(error, {
-      fingerprint: [error.message],
+      fingerprint: ['uncaughtException' + error.message],
       extra: errorData,
     });
 
