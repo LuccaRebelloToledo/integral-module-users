@@ -1,4 +1,4 @@
-import { env } from '@shared/infra/http/env';
+import { env } from '@shared/infra/environments/env';
 
 export const corsConfig = {
   credentials: true,

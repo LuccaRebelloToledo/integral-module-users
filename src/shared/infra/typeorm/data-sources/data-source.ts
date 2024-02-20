@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { DataSource } from 'typeorm';
 
-import { env } from './env';
+import { env } from '@shared/infra/environments/env';
 
 export const isProduction = env.NODE_ENV === 'production';
 export const isTesting = env.NODE_ENV === 'test';
@@ -25,12 +25,12 @@ export const AppDataSource = new DataSource({
   },
   entities: [
     isProduction
-      ? `${__dirname}/../../../../dist/modules/**/infra/typeorm/entities/*.entity.js`
-      : `${__dirname}/../../../../src/modules/**/infra/typeorm/entities/*.entity.ts`,
+      ? `${__dirname}/../../../../../dist/modules/**/infra/typeorm/entities/*.entity.js`
+      : `${__dirname}/../../../../../src/modules/**/infra/typeorm/entities/*.entity.ts`,
   ],
   migrations: [
     isProduction
-      ? `${__dirname}/../typeorm/migrations/*.js`
-      : `${__dirname}/../typeorm/migrations/*.ts`,
+      ? `${__dirname}/../migrations/*.js`
+      : `${__dirname}/../migrations/*.ts`,
   ],
 });

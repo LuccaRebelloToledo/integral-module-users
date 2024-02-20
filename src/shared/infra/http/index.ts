@@ -1,4 +1,4 @@
-import { AppDataSource } from './data-source';
+import { AppDataSource } from '../typeorm/data-sources/data-source';
 
 import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';
 

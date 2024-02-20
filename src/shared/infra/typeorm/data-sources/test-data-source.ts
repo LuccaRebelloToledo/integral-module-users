@@ -9,6 +9,6 @@ export const TestAppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [
-    `${__dirname}/../../../modules/**/infra/typeorm/entities/*.entity.ts`,
+    `${__dirname}/../../../../modules/**/infra/typeorm/entities/*.entity.ts`,
   ],
 });
