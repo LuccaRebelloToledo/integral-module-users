@@ -31,6 +31,13 @@ describe('CreateUsersService', () => {
       features: [],
     });
 
+    await featureGroupRepository.create({
+      id: '2',
+      key: 'MEMBER',
+      name: 'MEMBER',
+      features: [],
+    });
+
     await userRepository.create({
       id: '1',
       name: 'John Doe',
@@ -81,7 +88,7 @@ describe('CreateUsersService', () => {
       name: 'John Doe 2',
       email: 'johndoe2@example.com',
       password: '123456',
-      featureGroupId: '2',
+      featureGroupId: '3',
     };
 
     jest.spyOn(featureGroupRepository, 'findById');
@@ -112,7 +119,7 @@ describe('CreateUsersService', () => {
     expect(userPayload.password).not.toEqual(encryptedPassword);
   });
 
-  test('should be create a user', async () => {
+  test('should be create a user with featureGroupId', async () => {
     const userPayload = {
       name: 'John Doe 3',
       email: 'johndoe3@example.com',
@@ -141,6 +148,35 @@ describe('CreateUsersService', () => {
     );
 
     expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+
+    expect(userRepository.create).toHaveBeenCalledTimes(1);
+
+    expect(userRepository.save).toHaveBeenCalledTimes(1);
+  });
+
+  test('should be create a user no having featureGroupId', async () => {
+    const userPayload = {
+      name: 'John Doe 4',
+      email: 'johndoe4@example.com',
+      password: '123456',
+    };
+
+    jest.spyOn(featureGroupRepository, 'findByKeyOrName');
+    jest.spyOn(userRepository, 'create');
+    jest.spyOn(userRepository, 'save');
+
+    const userCreated = await createUsersService.execute(userPayload);
+
+    expect(userCreated.name).toBe(userPayload.name);
+    expect(userCreated.email).toBe(userPayload.email);
+
+    expect(userCreated).toHaveProperty('password');
+
+    expect(userCreated).toHaveProperty('createdAt');
+
+    expect(userCreated).toHaveProperty('updatedAt');
+
+    expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
 
     expect(userRepository.create).toHaveBeenCalledTimes(1);
 

@@ -9,12 +9,12 @@ import User from '../infra/typeorm/entities/user.entity';
 import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
 
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
+import ListFeatureGroupsByKeyOrNameService from '@modules/features/services/list-feature-groups-by-key-or-name.service';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
-import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
-const featureGroupMemberId = '6P8s76YxCtSMgmKDx49dV';
+import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
 @injectable()
 export default class CreateUsersService {
@@ -42,6 +42,18 @@ export default class CreateUsersService {
       await this.verifyFeatureGroup(featureGroupId);
     }
 
+    if (!featureGroupId) {
+      const listFeatureGroupsByKeyOrNameService = container.resolve(
+        ListFeatureGroupsByKeyOrNameService,
+      );
+
+      const featureGroups = await listFeatureGroupsByKeyOrNameService.execute({
+        key: 'MEMBER',
+      });
+
+      featureGroupId = featureGroups[0].id;
+    }
+
     const encryptedPassword =
       await this.bcryptHashProvider.generateHash(password);
 
@@ -50,7 +62,7 @@ export default class CreateUsersService {
       name,
       email,
       password: encryptedPassword,
-      featureGroupId: featureGroupId ? featureGroupId : featureGroupMemberId,
+      featureGroupId,
     });
   }
 
