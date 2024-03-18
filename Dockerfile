@@ -1,34 +1,25 @@
-# Build
-FROM node:20.10.0-alpine3.10 AS build
+FROM node:lts-alpine as build
 
-WORKDIR /usr/src/app
+WORKDIR /build
 
-COPY package*.json ./
+COPY package*.json .
+RUN npm ci
 
-RUN npm install && npm cache clean --force
-
-COPY . .
+COPY src/ src/
+COPY tsconfig.json tsconfig.json
 
 RUN npm run build
 
-# Production
-FROM node:20.10.0-alpine3.10 AS production
+FROM node:lts-alpine as production
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY --from=build /usr/src/app/LICENSE ./
+COPY --from=build build/package*.json .
 
-COPY --from=build /usr/src/app/package*.json ./
+RUN npm ci --omit=dev
 
-COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build build/dist dist/
 
-RUN npm install --only=production && npm cache clean --force
-
-RUN addgroup app && adduser -S -G app app
-USER app
+CMD ["npm", "start"]
 
 EXPOSE 4000
-
-RUN npm run migration:run
-
-CMD [ "npm", "run", "start" ]
