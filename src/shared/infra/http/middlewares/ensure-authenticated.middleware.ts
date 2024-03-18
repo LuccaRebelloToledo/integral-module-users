@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { verify } from 'jsonwebtoken';
+import { JwtPayload, verify } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';
 
 import AppError from '@shared/errors/app-error';
@@ -10,31 +10,6 @@ import {
   INTERNAL_SERVER_ERROR,
   UNAUTHORIZED,
 } from '../constants/http-status-code.constants';
-
-type SessionFeature = {
-  key: string;
-  name: string;
-};
-
-export type SessionFeatureGroup = {
-  key: string;
-  name: string;
-  features: SessionFeature[];
-};
-
-export type SessionUser = {
-  id: string;
-  featureGroup: SessionFeatureGroup;
-  standaloneFeatures: SessionFeature[];
-};
-
-interface ITokenPayload {
-  sub: string;
-  exp: number;
-  iat: number;
-  featureGroup: SessionFeatureGroup;
-  standaloneFeatures: SessionFeature[];
-}
 
 export default function ensureAuthenticated(
   request: Request,
@@ -54,16 +29,14 @@ export default function ensureAuthenticated(
       throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
     }
 
-    const { sub, featureGroup, standaloneFeatures } = decoded as ITokenPayload;
+    const { sub } = decoded as JwtPayload;
 
-    if (!sub && !featureGroup && !standaloneFeatures) {
+    if (!sub) {
       throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
     }
 
     request.user = {
       id: sub,
-      featureGroup,
-      standaloneFeatures,
     };
 
     return next();

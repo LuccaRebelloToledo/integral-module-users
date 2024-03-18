@@ -1,8 +1,7 @@
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
 import AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
-import MappedFeaturesInterface from '../dtos/mapped-feature.dto';
 
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
 import UserRepositoryInterface from '../repositories/user.repository.interface';
@@ -14,9 +13,6 @@ import {
   UNAUTHORIZED,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
-import ListFeaturesByFeatureGroupIdService from '@modules/features/services/list-features-by-feature-group-id.service';
-
-import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 import User from '../infra/typeorm/entities/user.entity';
 
 import { sign } from 'jsonwebtoken';
@@ -38,24 +34,11 @@ export default class AuthenticateUsersService {
   }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
     const user = await this.validateUser(email, password);
 
-    const features = await this.getUserFeatures(user);
-
-    const token = this.generateToken(
-      user,
-      features.groupedFeatures!,
-      features.standaloneFeatures!,
-    );
+    const token = this.generateToken(user);
 
     return {
       token,
     };
-  }
-
-  private mapFeatures(features?: Feature[]) {
-    return features?.map((feature) => ({
-      key: feature.key,
-      name: feature.name,
-    }));
   }
 
   public async validateUser(email: string, password: string) {
@@ -101,48 +84,14 @@ export default class AuthenticateUsersService {
     }
   }
 
-  private async getUserFeatures(user: User) {
-    const listFeaturesByFeatureGroupIdService = container.resolve(
-      ListFeaturesByFeatureGroupIdService,
-    );
-
-    const groupedFeatures = await listFeaturesByFeatureGroupIdService.execute(
-      user.featureGroupId,
-    );
-
-    const mappedGroupedFeatures = this.mapFeatures(groupedFeatures);
-
-    const standaloneFeatures = this.mapFeatures(user.standaloneFeatures);
-
-    return {
-      groupedFeatures: mappedGroupedFeatures,
-      standaloneFeatures,
-    };
-  }
-
-  private generateToken(
-    user: User,
-    groupedFeatures: MappedFeaturesInterface[],
-    standaloneFeatures: MappedFeaturesInterface[],
-  ) {
+  private generateToken(user: User) {
     const { secret, expiresIn } = authConfig.jwt;
 
-    const token = sign(
-      {
-        featureGroup: {
-          key: user.featureGroup.key,
-          name: user.featureGroup.name,
-          features: groupedFeatures,
-        },
-        standaloneFeatures,
-      },
-      secret,
-      {
-        subject: user.id,
-        expiresIn,
-        algorithm: 'HS512',
-      },
-    );
+    const token = sign({}, secret, {
+      subject: user.id,
+      expiresIn,
+      algorithm: 'HS512',
+    });
 
     return token;
   }

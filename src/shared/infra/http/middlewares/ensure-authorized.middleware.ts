@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
+import { container } from 'tsyringe';
+
+import ShowUsersService from '@modules/users/services/show-users.service';
+
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
@@ -12,14 +16,21 @@ interface IAuthLevelMiddleware {
 export default function ensureAuthorized(
   requiredFeatures: Array<string>,
 ): IAuthLevelMiddleware {
-  function authorize(
+  async function authorize(
     request: Request,
     _response: Response,
     next: NextFunction,
-  ): void {
-    const { featureGroup, standaloneFeatures } = request.user;
+  ): Promise<void> {
+    const { id } = request.user;
 
-    const combinedFeatures = [...featureGroup.features, ...standaloneFeatures];
+    const showUsersService = container.resolve(ShowUsersService);
+
+    const user = await showUsersService.execute(id);
+
+    const combinedFeatures = [
+      ...user.featureGroup.features,
+      ...(user.standaloneFeatures ?? []),
+    ];
 
     if (
       !combinedFeatures.find((userFeature) =>

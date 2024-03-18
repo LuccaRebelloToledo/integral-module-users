@@ -161,7 +161,5 @@ describe('AuthenticateUsersService', () => {
     const decoded = verify(token, authConfig.jwt.secret);
     expect(decoded).toBeDefined();
     expect(decoded).toHaveProperty('sub');
-    expect(decoded).toHaveProperty('featureGroup');
-    expect(decoded).toHaveProperty('standaloneFeatures');
   });
 });
