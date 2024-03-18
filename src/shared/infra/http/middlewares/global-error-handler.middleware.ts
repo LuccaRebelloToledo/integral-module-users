@@ -14,13 +14,12 @@ import { isCelebrateError } from 'celebrate';
 
 import EscapeHtml from 'escape-html';
 
-import { gracefulShutdown } from '../graceful-shutdown/graceful-shutdown';
-
 export default function globalErrorHandler(
   err: Error,
   request: Request,
   response: Response,
-  next: NextFunction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction,
 ): Response {
   const errorData = {
     error: err,
@@ -37,7 +36,6 @@ export default function globalErrorHandler(
   };
 
   console.error(err);
-  next();
 
   if (isCelebrateError(err)) {
     const validation: Record<string, unknown> = {};
@@ -69,27 +67,6 @@ export default function globalErrorHandler(
       message: err.message,
     });
   }
-
-  process.on('uncaughtException', (error) => {
-    Sentry.captureException(error, {
-      fingerprint: ['uncaughtException' + error.message],
-      extra: errorData,
-    });
-
-    if (error instanceof AppError && error.isOperational) {
-      return response.status(error.statusCode).json({
-        statusCode: error.statusCode,
-        error: http.STATUS_CODES[error.statusCode!],
-        message: error.message,
-      });
-    }
-
-    gracefulShutdown();
-  });
-
-  process.on('unhandledRejection', (error) => {
-    throw error;
-  });
 
   Sentry.captureException(err, {
     extra: errorData,

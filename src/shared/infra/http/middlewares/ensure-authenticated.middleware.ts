@@ -67,10 +67,11 @@ export default function ensureAuthenticated(
     };
 
     return next();
-  } catch (err: unknown) {
-    if (err instanceof AppError) {
-      throw new AppError(err.message, err.statusCode);
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw new AppError(error.message, error.statusCode);
     }
+
     throw new AppError('Something is wrong!', INTERNAL_SERVER_ERROR);
   }
 }
