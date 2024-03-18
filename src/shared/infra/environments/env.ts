@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { Joi } from 'celebrate';
 
 const envSchema = Joi.object({
-  NODE_ENV: Joi.string().valid('test', 'development', 'production').required(),
+  NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION: Joi.string().required(),
   DSN: Joi.string().uri().required(),
