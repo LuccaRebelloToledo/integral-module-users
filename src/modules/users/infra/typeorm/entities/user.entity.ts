@@ -1,22 +1,11 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
 
+import BaseEntity from '@shared/infra/typeorm/entities/base-entity';
 import FeatureGroup from '@modules/features/infra/typeorm/entities/feature-group.entity';
 import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 
 @Entity('users')
-export default class User {
-  @PrimaryColumn({ type: 'varchar', length: 21 })
-  id: string;
-
+export default class User extends BaseEntity {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
@@ -26,14 +15,14 @@ export default class User {
   @Column({ type: 'varchar', select: false })
   password: string;
 
-  @Column({ type: 'varchar', length: 21 })
+  @Column({ type: 'varchar', length: 21, name: 'feature_group_id' })
   featureGroupId: string;
 
   @ManyToOne(() => FeatureGroup, (featureGroup) => featureGroup.users, {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'featureGroupId' })
+  @JoinColumn({ name: 'feature_group_id' })
   featureGroup: FeatureGroup;
 
   @ManyToMany(() => Feature, (feature) => feature.userFeatures, {
@@ -42,10 +31,4 @@ export default class User {
     nullable: true,
   })
   standaloneFeatures?: Feature[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

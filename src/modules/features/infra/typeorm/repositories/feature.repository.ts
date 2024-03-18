@@ -76,8 +76,8 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
         'features.createdAt',
         'features.updatedAt',
       ])
-      .innerJoin('grouped_features', 'gf', 'features.id = gf.featureId')
-      .where('gf.featureGroupId = :featureGroupId', { featureGroupId })
+      .innerJoin('grouped_features', 'gf', 'features.id = gf.feature_id')
+      .where('gf.feature_group_id = :featureGroupId', { featureGroupId })
       .getMany();
   }
 

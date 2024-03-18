@@ -1,21 +1,12 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+
+import BaseEntity from '@shared/infra/typeorm/entities/base-entity';
 
 import FeatureGroup from './feature-group.entity';
 import User from '@modules/users/infra/typeorm/entities/user.entity';
 
 @Entity('features')
-export default class Feature {
-  @PrimaryColumn({ type: 'varchar', length: 21 })
-  id: string;
-
+export default class Feature extends BaseEntity {
   @Column({ type: 'varchar', length: 50, unique: true })
   key: string;
 
@@ -36,14 +27,8 @@ export default class Feature {
   })
   @JoinTable({
     name: 'user_features',
-    joinColumn: { name: 'featureId' },
-    inverseJoinColumn: { name: 'userId' },
+    joinColumn: { name: 'feature_id' },
+    inverseJoinColumn: { name: 'user_id' },
   })
   userFeatures: User[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
