@@ -4,10 +4,6 @@
     "title": "Integral module for managing all user-related operations",
     "version": "1.0.0",
     "description": "This module is an integral part of an application, responsible for managing all user-related operations.",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    },
     "contact": {
       "name": "Lucca de Almeida Rebello Toledo",
       "email": "luccarebtoledo@gmail.com",
