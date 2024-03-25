@@ -37,6 +37,12 @@
     "sourceMap": true,
     "inlineSources": true
   },
+
+  // ts-node
+  "ts-node": {
+    "files": true
+  },
+
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "coverage"]
 }
