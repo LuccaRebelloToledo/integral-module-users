@@ -109,9 +109,14 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   public async create(featureData: CreateFeaturesDTO): Promise<Feature> {
     const feature = this.featureRepository.create(featureData);
 
-    return this.save(feature);
+    return await this.save(feature);
   }
+
   public async save(feature: Feature): Promise<Feature> {
-    return this.featureRepository.save(feature);
+    return await this.featureRepository.save(feature);
+  }
+
+  public async delete(feature: Feature): Promise<void> {
+    await this.featureRepository.delete(feature.id);
   }
 }
