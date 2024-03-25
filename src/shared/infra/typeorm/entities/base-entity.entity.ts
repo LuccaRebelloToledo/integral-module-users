@@ -1,6 +1,6 @@
 import { PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export default class BaseEntity {
+export default abstract class BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 21 })
   id: string;
 

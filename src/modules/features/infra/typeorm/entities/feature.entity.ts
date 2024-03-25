@@ -1,6 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 
-import BaseEntity from '@shared/infra/typeorm/entities/base-entity';
+import BaseEntity from '@shared/infra/typeorm/entities/base-entity.entity';
 
 import FeatureGroup from './feature-group.entity';
 import User from '@modules/users/infra/typeorm/entities/user.entity';
