@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "This module is an integral part of an application, responsible for managing all user-related operations.",
   "main": "index.js",
+  "author": "LuccaRebelloToledo",
   "engines": {
     "node": ">=14.0.0"
   },
   "scripts": {
     "start": "node ./dist/shared/infra/http/index.js",
     "start:dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/shared/infra/http/index.ts",
-    "build": "tsc && tsc-alias",
+    "build": "rimraf ./dist && tsc && tsc-alias",
     "lint": "eslint ./src --max-warnings 0 --fix",
     "format": "prettier --write ./src",
     "lint-staged": "lint-staged",
@@ -21,7 +22,6 @@
     "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/shared/infra/typeorm/data-sources/data-source.ts",
     "husky:prepare": "husky"
   },
-  "author": "LuccaRebelloToledo",
   "dependencies": {
     "@sentry/cli": "^2.28.0",
     "@sentry/node": "^7.100.1",
@@ -73,6 +73,7 @@
     "lint-staged": "^15.2.1",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
