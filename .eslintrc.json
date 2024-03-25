@@ -2,7 +2,7 @@
     "env": {
         "es2022": true,
         "node": true,
-        "jest": true
+        "jest/globals": true
     },
     "extends": [
         "eslint:recommended",
@@ -19,16 +19,10 @@
         "project": ["./tsconfig.json"]
     },
     "plugins": [
-        "@typescript-eslint",
-        "jest" 
+        "@typescript-eslint"
     ],
     "rules": {
         "node/no-unsupported-features/es-syntax": "off",
         "node/no-missing-import": "off"
-    },
-    "settings": {
-        "jest": {
-            "version": "latest"
-        }
     }
 }
