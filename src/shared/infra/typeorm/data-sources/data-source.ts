@@ -23,14 +23,7 @@ export const AppDataSource = new DataSource({
     },
     alwaysEnabled: true,
   },
-  entities: [
-    isProduction
-      ? `${__dirname}/../../../../../dist/modules/**/infra/typeorm/entities/*.entity.js`
-      : `${__dirname}/../../../../../src/modules/**/infra/typeorm/entities/*.entity.ts`,
-  ],
-  migrations: [
-    isProduction
-      ? `${__dirname}/../migrations/*.js`
-      : `${__dirname}/../migrations/*.ts`,
-  ],
+  entities: [`./**/modules/**/infra/typeorm/entities/*.entity.{ts, js}`],
+  migrations: [`${__dirname}/../migrations/*.{ts, js}`],
+  migrationsRun: true,
 });
