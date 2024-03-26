@@ -1,5 +1,7 @@
 # Integral Module for Managing All User-Related Operations
 
+[![Coverage Status](https://coveralls.io/repos/github/LuccaRebelloToledo/integral-module-users/badge.svg?branch=main)](https://coveralls.io/github/LuccaRebelloToledo/integral-module-users?branch=main)
+
 This module is an integral part of an application, responsible for managing all user-related operations. It provides APIs for creating, updating, deleting, and retrieving user information.
 
 ## Prerequisites
@@ -9,7 +11,7 @@ This module is an integral part of an application, responsible for managing all 
 
 ## Quick Start
 
-```console
+```
 # Clone the app
 $ git clone https://github.com/LuccaRebelloToledo/integral-module-users.git
 
