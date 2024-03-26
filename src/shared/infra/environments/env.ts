@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+
+export const isTesting = process.env.NODE_ENV === 'test';
+
+const dotenvConfigOutput = dotenv.config({
+  path: isTesting ? '.env.test' : '.env',
+});
 
 import { Joi } from 'celebrate';
 
@@ -17,9 +23,12 @@ const envSchema = Joi.object({
   REDIS_PORT: Joi.string().required(),
 });
 
-const { error, value: envVars } = envSchema.validate(process.env, {
-  allowUnknown: true,
-});
+const { error, value: envVars } = envSchema.validate(
+  dotenvConfigOutput.parsed,
+  {
+    allowUnknown: true,
+  },
+);
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);

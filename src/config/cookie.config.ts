@@ -1,6 +1,7 @@
-import { isProduction } from '@shared/infra/typeorm/data-sources/data-source';
+import { env } from '@shared/infra/environments/env';
 
 const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+const isProduction = env.NODE_ENV === 'production';
 
 export const cookiesConfig = {
   path: '/',

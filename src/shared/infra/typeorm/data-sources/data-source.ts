@@ -4,9 +4,6 @@ import { DataSource } from 'typeorm';
 
 import { env } from '@shared/infra/environments/env';
 
-export const isProduction = env.NODE_ENV === 'production';
-export const isTesting = env.NODE_ENV === 'test';
-
 export const AppDataSource = new DataSource({
   type: 'postgres',
   host: env.PG_HOST,
