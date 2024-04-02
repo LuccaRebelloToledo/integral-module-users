@@ -23,4 +23,5 @@ export const AppDataSource = new DataSource({
   entities: [`./**/modules/**/infra/typeorm/entities/*.entity.{ts, js}`],
   migrations: [`${__dirname}/../migrations/*.{ts, js}`],
   migrationsRun: true,
+  migrationsTransactionMode: 'all',
 });
