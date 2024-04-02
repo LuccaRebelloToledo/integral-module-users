@@ -1,6 +1,6 @@
 # Integral Module for Managing All User-Related Operations
 
-[![Coverage Status](https://coveralls.io/repos/github/LuccaRebelloToledo/integral-module-users/badge.svg?branch=main)](https://coveralls.io/github/LuccaRebelloToledo/integral-module-users?branch=main)
+[![Coverage Status](https://badgen.net/coveralls/c/github/LuccaRebelloToledo/integral-module-users/main)](https://coveralls.io/github/LuccaRebelloToledo/integral-module-users?branch=main)
 
 This module is an integral part of an application, responsible for managing all user-related operations. It provides APIs for creating, updating, deleting, and retrieving user information.
 
@@ -38,7 +38,7 @@ $ npm start
 
 To run the test suite, first install the dependencies, then run `npm test`:
 
-```console
+```
 $ npm install
 $ npm test
 ```
