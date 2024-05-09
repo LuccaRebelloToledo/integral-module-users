@@ -1,7 +1,5 @@
 # Integral Module for Managing All User-Related Operations
 
-[![Coverage Status](https://badgen.net/coveralls/c/github/LuccaRebelloToledo/integral-module-users/main)](https://coveralls.io/github/LuccaRebelloToledo/integral-module-users?branch=main)
-
 This module is an integral part of an application, responsible for managing all user-related operations. It provides APIs for creating, updating, deleting, and retrieving user information.
 
 ## Prerequisites
@@ -44,7 +42,7 @@ $ npm test
 ```
 
 ### API Documentation
-Refer to the [API Documentation](http://localhost:4000/api-docs/) for more details on how to use the APIs.
+Refer to the [API Documentation](http://localhost:4000/documentation/) for more details on how to use the APIs.
 
 ### Contributing
 Contributions are always welcome. If you find any issues or have any suggestions, feel free to open an issue or submit a pull request.
