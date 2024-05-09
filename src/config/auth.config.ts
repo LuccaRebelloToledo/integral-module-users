@@ -1,4 +1,4 @@
-import { env } from '@shared/infra/environments/env';
+import { env } from '@shared/infra/environments/environments';
 
 export default {
   jwt: {

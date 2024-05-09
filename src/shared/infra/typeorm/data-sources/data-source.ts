@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { DataSource } from 'typeorm';
 
-import { env } from '@shared/infra/environments/env';
+import { env } from '@shared/infra/environments/environments';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -17,6 +17,7 @@ export const AppDataSource = new DataSource({
     options: {
       host: env.REDIS_HOST,
       port: Number(env.REDIS_PORT),
+      password: env.REDIS_PASS,
     },
     alwaysEnabled: true,
   },

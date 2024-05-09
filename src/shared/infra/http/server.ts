@@ -1,4 +1,4 @@
-import { env } from '../environments/env';
+import { env } from '../environments/environments';
 
 import app from './app';
 

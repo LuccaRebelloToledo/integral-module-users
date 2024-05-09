@@ -21,7 +21,7 @@ import routes from './routes';
 
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
-import { env } from '../environments/env';
+import { env } from '../environments/environments';
 
 const app = express();
 
@@ -52,7 +52,7 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(routes);
 
