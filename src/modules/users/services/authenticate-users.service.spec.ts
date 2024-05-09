@@ -155,10 +155,12 @@ describe('AuthenticateUsersService', () => {
     const token = result.token;
 
     expect(token).toBeDefined();
-    expect(typeof token).toBe('string');
     expect(token.length).toBeGreaterThan(0);
+    expect(token.split(' ')[0]).toBe('Bearer');
 
-    const decoded = verify(token, authConfig.jwt.secret);
+    const sanitizedToken = token.split(' ')[1];
+
+    const decoded = verify(sanitizedToken, authConfig.jwt.secret);
     expect(decoded).toBeDefined();
     expect(decoded).toHaveProperty('sub');
   });

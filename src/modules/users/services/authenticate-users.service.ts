@@ -34,9 +34,13 @@ export default class AuthenticateUsersService {
   }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
     const user = await this.validateUser(email, password);
 
+    const sanitizedUser: Partial<User> = user;
+    delete sanitizedUser['password'];
+
     const token = this.generateToken(user);
 
     return {
+      user: sanitizedUser,
       token,
     };
   }
@@ -93,6 +97,6 @@ export default class AuthenticateUsersService {
       algorithm: 'HS512',
     });
 
-    return token;
+    return `Bearer ${token}`;
   }
 }

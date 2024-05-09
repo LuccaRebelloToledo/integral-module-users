@@ -4,8 +4,6 @@ import { container } from 'tsyringe';
 
 import { NO_CONTENT } from '@shared/infra/http/constants/http-status-code.constants';
 
-import { cookiesConfig } from '@config/cookie.config';
-
 import CreateUsersService from '@modules/users/services/create-users.service';
 import AuthenticateUsersService from '@modules/users/services/authenticate-users.service';
 
@@ -27,14 +25,11 @@ export default class SessionController {
       AuthenticateUsersService,
     );
 
-    const { token } = await authenticateUsersService.execute({
+    const { user, token } = await authenticateUsersService.execute({
       email,
       password,
     });
 
-    return response
-      .cookie('token', token, cookiesConfig)
-      .status(NO_CONTENT)
-      .json();
+    return response.json({ user, token });
   }
 }

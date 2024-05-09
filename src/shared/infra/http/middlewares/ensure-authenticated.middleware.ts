@@ -6,45 +6,36 @@ import authConfig from '@config/auth.config';
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import {
-  INTERNAL_SERVER_ERROR,
-  UNAUTHORIZED,
-} from '../constants/http-status-code.constants';
+import { UNAUTHORIZED } from '../constants/http-status-code.constants';
 
 export default function ensureAuthenticated(
   request: Request,
   _response: Response,
   next: NextFunction,
 ): void {
-  const token = request.cookies.token;
+  const token = request.headers.authorization;
 
   if (!token) {
     throw new AppError(AppErrorTypes.sessions.tokenNotFound, UNAUTHORIZED);
   }
 
-  try {
-    const decoded = verify(token, authConfig.jwt.secret);
+  const sanitizedToken = token.split(' ')[1];
 
-    if (!decoded) {
-      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
-    }
+  const decoded = verify(sanitizedToken, authConfig.jwt.secret);
 
-    const { sub } = decoded as JwtPayload;
-
-    if (!sub) {
-      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
-    }
-
-    request.user = {
-      id: sub,
-    };
-
-    return next();
-  } catch (error) {
-    if (error instanceof AppError) {
-      throw new AppError(error.message, error.statusCode);
-    }
-
-    throw new AppError('Something is wrong!', INTERNAL_SERVER_ERROR);
+  if (!decoded) {
+    throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
   }
+
+  const { sub } = decoded as JwtPayload;
+
+  if (!sub) {
+    throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
+  }
+
+  request.user = {
+    id: sub,
+  };
+
+  return next();
 }
