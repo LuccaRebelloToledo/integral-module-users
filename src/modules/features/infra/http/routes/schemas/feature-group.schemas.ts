@@ -1,11 +1,12 @@
 import { Joi } from 'celebrate';
 
-import { idSchema } from './global.schemas';
+import { idSchema } from '@shared/infra/http/routes/schemas/global.schemas';
+
 import {
-  featurePaginationParamsSchema,
   keySchema,
   nameSchema,
-} from './feature-related.schemas';
+  featurePaginationParamsSchema,
+} from './feature.schemas';
 
 export const featureIdsSchema = Joi.array().items(idSchema.required()).unique();
 

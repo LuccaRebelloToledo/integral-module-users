@@ -1,8 +1,12 @@
 import Joi from 'joi';
 
-import { idSchema, paginationParamsSchema, sortSchema } from './global.schemas';
+import {
+  idSchema,
+  paginationParamsSchema,
+  sortSchema,
+} from '@shared/infra/http/routes/schemas/global.schemas';
 
-import { featureIdsSchema } from './feature-group-related.schemas';
+import { featureIdsSchema } from '@modules/features/infra/http/routes/schemas/feature-group.schemas';
 
 const nameSchema = Joi.string().trim().max(100);
 const emailSchema = Joi.string().email().trim().lowercase().max(100);

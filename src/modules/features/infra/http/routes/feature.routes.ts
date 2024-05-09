@@ -1,16 +1,18 @@
 import { Router } from 'express';
-import { Segments, celebrate } from 'celebrate';
 
-import { idParamSchema } from '@shared/schemas/global.schemas';
-import {
-  featurePaginationParamsSchema,
-  listByKeyOrNameSchema,
-} from '@shared/schemas/feature-related.schemas';
+import FeatureController from '../controllers/feature.controller';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
 
-import FeatureController from '../controllers/feature.controller';
+import { Segments, celebrate } from 'celebrate';
+
+import { idParamSchema } from '@shared/infra/http/routes/schemas/global.schemas';
+
+import {
+  featurePaginationParamsSchema,
+  listByKeyOrNameSchema,
+} from './schemas/feature.schemas';
 
 const featuresRoutes = Router();
 const featureController = new FeatureController();

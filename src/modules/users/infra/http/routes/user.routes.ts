@@ -1,17 +1,19 @@
 import { Router } from 'express';
-import { Segments, celebrate } from 'celebrate';
 
-import {
-  createUsersSchema,
-  updateUsersSchema,
-  userPaginationParamsSchema,
-} from '@shared/schemas/user-related.schemas';
-import { idParamSchema } from '@shared/schemas/global.schemas';
+import UserController from '../controllers/user.controller';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
 
-import UserController from '../controllers/user.controller';
+import { Segments, celebrate } from 'celebrate';
+
+import { idParamSchema } from '@shared/infra/http/routes/schemas/global.schemas';
+
+import {
+  userPaginationParamsSchema,
+  createUsersSchema,
+  updateUsersSchema,
+} from './schemas/user.schemas';
 
 const userRoutes = Router();
 const userController = new UserController();

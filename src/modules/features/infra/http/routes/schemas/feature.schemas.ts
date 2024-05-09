@@ -1,5 +1,9 @@
 import { Joi } from 'celebrate';
-import { paginationParamsSchema, sortSchema } from './global.schemas';
+
+import {
+  paginationParamsSchema,
+  sortSchema,
+} from '@shared/infra/http/routes/schemas/global.schemas';
 
 export const keySchema = Joi.string().trim().lowercase().max(50);
 export const nameSchema = keySchema;

@@ -1,18 +1,21 @@
 import { Router } from 'express';
-import { Segments, celebrate } from 'celebrate';
 
-import { idParamSchema } from '@shared/schemas/global.schemas';
-import { listByKeyOrNameSchema } from '@shared/schemas/feature-related.schemas';
-import {
-  createFeatureGroupsSchema,
-  featureGroupPaginationParamsSchema,
-  updateFeatureGroupsSchema,
-} from '@shared/schemas/feature-group-related.schemas';
+import FeatureGroupController from '../controllers/feature-group.controller';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
 
-import FeatureGroupController from '../controllers/feature-group.controller';
+import { Segments, celebrate } from 'celebrate';
+
+import { idParamSchema } from '@shared/infra/http/routes/schemas/global.schemas';
+
+import {
+  featureGroupPaginationParamsSchema,
+  createFeatureGroupsSchema,
+  updateFeatureGroupsSchema,
+} from './schemas/feature-group.schemas';
+
+import { listByKeyOrNameSchema } from './schemas/feature.schemas';
 
 const featureGroupsRoutes = Router();
 const featureGroupController = new FeatureGroupController();

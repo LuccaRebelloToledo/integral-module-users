@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import { Segments, celebrate } from 'celebrate';
-import {
-  signInSchema,
-  signUpSchema,
-} from '@shared/schemas/user-related.schemas';
 
 import SessionController from '../controllers/session.controller';
+
+import { Segments, celebrate } from 'celebrate';
+
+import { signUpSchema, signInSchema } from './schemas/user.schemas';
 
 const sessionRoutes = Router();
 const sessionController = new SessionController();
