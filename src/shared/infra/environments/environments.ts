@@ -6,6 +6,7 @@ import { Joi } from 'celebrate';
 
 const environmentsSchema = Joi.object({
   NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
+  CORS_ORIGIN: Joi.string().uri().allow('*').required(),
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION: Joi.string().required(),
   DSN: Joi.string().uri().required(),
