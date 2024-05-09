@@ -42,7 +42,7 @@
         "tags": ["features"],
         "summary": "This endpoint retrieves features in the form of a list.",
         "operationId": "getFeatures",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -162,7 +162,7 @@
         "tags": ["features"],
         "summary": "This endpoint retrieves feature by their ID.",
         "operationId": "getFeatureById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -252,7 +252,7 @@
         "tags": ["features"],
         "summary": "This endpoint retrieves features by key or name in the form of a list.",
         "operationId": "getFeaturesByKeyOrName",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -348,7 +348,7 @@
         "tags": ["features"],
         "summary": "This endpoint retrieves features of the user by your ID.",
         "operationId": "getFeatureByUserId",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -426,7 +426,7 @@
         "tags": ["features"],
         "summary": "This endpoint retrieves features of the feature group by your ID.",
         "operationId": "getFeatureByFeatureGroupId",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -516,7 +516,7 @@
         "tags": ["feature-groups"],
         "summary": "This endpoint retrieves feature groups in the form of a list.",
         "operationId": "getFeatureGroups",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -634,7 +634,7 @@
         "tags": ["feature-groups"],
         "summary": "This endpoint create a feature group.",
         "operationId": "createFeatureGroups",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "requestBody": {
@@ -745,7 +745,7 @@
         "tags": ["feature-groups"],
         "summary": "This endpoint retrieves feature groups by key or name in the form of a list.",
         "operationId": "getFeatureGroupsByKeyOrName",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -841,7 +841,7 @@
         "tags": ["feature-groups"],
         "summary": "This endpoint retrieves a feature group by their ID.",
         "operationId": "getFeatureGroupById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -929,7 +929,7 @@
         "tags": ["feature-groups"],
         "summary": "This endpoint update a feature group by their ID.",
         "operationId": "updateFeatureGroupById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -1049,7 +1049,7 @@
         "tags": ["feature-groups"],
         "summary": "This endpoint delete a feature group by their ID.",
         "operationId": "deleteFeatureGroupById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -1132,7 +1132,7 @@
         "tags": ["users"],
         "summary": "This endpoint retrieves users in the form of a list.",
         "operationId": "getUsers",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -1250,7 +1250,7 @@
         "tags": ["users"],
         "summary": "This endpoint create a user.",
         "operationId": "createUsers",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "requestBody": {
@@ -1351,7 +1351,7 @@
         "tags": ["users"],
         "summary": "This endpoint retrieves a user by their ID.",
         "operationId": "getUserById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -1439,7 +1439,7 @@
         "tags": ["users"],
         "summary": "This endpoint update a user by their ID.",
         "operationId": "updateUserById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -1559,7 +1559,7 @@
         "tags": ["users"],
         "summary": "This endpoint delete a user by their ID.",
         "operationId": "deleteUserById",
-        "security": [{ "cookieAuth": [] }],
+        "security": [{ "bearerAuth": [] }],
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -1711,8 +1711,15 @@
           }
         },
         "responses": {
-          "204": {
-            "description": "The request was successful and a token has been provided for the user's session."
+          "200": {
+            "description": "The request was successful and a token has been provided for the user's session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseSchema"
+                }
+              }
+            }
           },
           "401": {
             "description": "The user's credentials are not recognized or are incorrect.",
@@ -1780,15 +1787,41 @@
   },
   "components": {
     "securitySchemes": {
-      "cookieAuth": {
+      "bearerAuth": {
         "type": "apiKey",
-        "in": "cookie",
-        "name": "token",
-        "description": "The cookie value requested in routes in swagger is not necessary if you have logged in and received your token.",
-        "bearerFormat": "JWT"
+        "scheme": "bearer",
+        "name": "Authorization",
+        "in": "header",
+        "bearerFormat": "JWT",
+        "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
       }
     },
     "schemas": {
+      "BaseEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "nanoid",
+            "example": "kSiTZJAz0v1VKBDbeLhUm"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-09-01T00:00:00.000Z"
+          }
+        }
+      },
       "ExceptionSchema": {
         "type": "object",
         "properties": {
@@ -1829,32 +1862,24 @@
         }
       },
       "Feature": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "nanoid",
-            "example": "kSiTZJAz0v1VKBDbeLhUm"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEntity"
           },
-          "key": {
-            "type": "string",
-            "example": "key"
-          },
-          "name": {
-            "type": "string",
-            "example": "name"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-09-01T00:00:00.000Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-09-01T00:00:00.000Z"
+          {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "example": "key"
+              },
+              "name": {
+                "type": "string",
+                "example": "name"
+              }
+            }
           }
-        }
+        ]
       },
       "FeaturesByUserId": {
         "type": "array",
@@ -1893,38 +1918,30 @@
         }
       },
       "FeatureGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "nanoid",
-            "example": "kSiTZJAz0v1VKBDbeLhUt"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEntity"
           },
-          "key": {
-            "type": "string",
-            "example": "key"
-          },
-          "name": {
-            "type": "string",
-            "example": "name"
-          },
-          "features": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Feature"
+          {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "example": "key"
+              },
+              "name": {
+                "type": "string",
+                "example": "name"
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Feature"
+                }
+              }
             }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-09-01T00:00:00.000Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-09-01T00:00:00.000Z"
           }
-        }
+        ]
       },
       "FeatureGroupsByKeyOrName": {
         "type": "array",
@@ -1998,47 +2015,39 @@
         }
       },
       "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "nanoid",
-            "example": "kSiTZJAz0v1VKBDbeLhUh"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEntity"
           },
-          "name": {
-            "type": "string",
-            "example": "John Doe"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "example": "johndoe@gmail.com"
-          },
-          "featureGroupId": {
-            "type": "string",
-            "format": "nanoid",
-            "example": "kSiTZJAz0v1VKBDbeLhUt"
-          },
-          "featureGroup": {
-            "$ref": "#/components/schemas/FeatureGroup"
-          },
-          "standaloneFeatures": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Feature"
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "johndoe@gmail.com"
+              },
+              "featureGroupId": {
+                "type": "string",
+                "format": "nanoid",
+                "example": "kSiTZJAz0v1VKBDbeLhUt"
+              },
+              "featureGroup": {
+                "$ref": "#/components/schemas/FeatureGroup"
+              },
+              "standaloneFeatures": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Feature"
+                }
+              }
             }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-09-01T00:00:00.000Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-09-01T00:00:00.000Z"
           }
-        }
+        ]
       },
       "Users": {
         "type": "object",
@@ -2155,6 +2164,21 @@
             "type": "string",
             "format": "password",
             "example": "123456"
+          }
+        }
+      },
+      "Token": {
+        "type": "string",
+        "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      },
+      "SignInResponseSchema": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "token": {
+            "$ref": "#/components/schemas/Token"
           }
         }
       }
