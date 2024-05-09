@@ -14,15 +14,9 @@ export const idParamSchema = Joi.object({
 
 // GLOBAL PAGINATION PARAMS SCHEMA
 
-const pageSchema = Joi.string()
-  .trim()
-  .regex(/^[1-9]\d*$/)
-  .default('1');
+const pageSchema = Joi.number().integer().positive().min(1).default(1);
 
-const limitSchema = Joi.string()
-  .trim()
-  .regex(/^[1-9]\d*$/)
-  .default('5');
+const limitSchema = Joi.number().integer().positive().min(1).default(5);
 
 export const sortSchema = Joi.string()
   .trim()

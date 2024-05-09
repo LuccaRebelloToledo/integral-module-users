@@ -10,7 +10,6 @@ import ListFeaturesServiceParamsDTO from '../dtos/list-features-service-params.d
 import ListFeaturesServiceResponseDTO from '../dtos/list-features-service-response.dto';
 
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
-import { convertPageAndLimitToInt } from '@shared/utils/convert-page-and-limit-to-int.utils';
 import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-details.utils';
 
 @injectable()
@@ -28,12 +27,10 @@ export default class ListFeaturesService {
     key,
     name,
   }: ListFeaturesServiceParamsDTO): Promise<ListFeaturesServiceResponseDTO> {
-    const { pageParsed, limitParsed } = convertPageAndLimitToInt(page, limit);
-
-    const skip = calculateSkip(pageParsed, limitParsed);
+    const skip = calculateSkip(page, limit);
 
     const { items, total } = await this.featureRepository.findAll({
-      take: limitParsed,
+      take: limit,
       skip,
       sort,
       order,
@@ -47,14 +44,14 @@ export default class ListFeaturesService {
 
     const { previous, next, totalPages } = calculatePaginationDetails(
       total,
-      pageParsed,
-      limitParsed,
+      page,
+      limit,
     );
 
     return {
       pagination: {
         previous,
-        current: pageParsed,
+        current: page,
         next,
         total: totalPages,
       },

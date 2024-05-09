@@ -9,7 +9,6 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 import ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
 import ListFeatureGroupsServiceResponseDTO from '../dtos/list-feature-groups-service-response.dto';
 
-import { convertPageAndLimitToInt } from '@shared/utils/convert-page-and-limit-to-int.utils';
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
 import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-details.utils';
 
@@ -28,12 +27,10 @@ export default class ListFeatureGroupsService {
     key,
     name,
   }: ListFeatureGroupsServiceParamsDTO): Promise<ListFeatureGroupsServiceResponseDTO> {
-    const { pageParsed, limitParsed } = convertPageAndLimitToInt(page, limit);
-
-    const skip = calculateSkip(pageParsed, limitParsed);
+    const skip = calculateSkip(page, limit);
 
     const { items, total } = await this.featureGroupRepository.findAll({
-      take: limitParsed,
+      take: limit,
       skip,
       sort,
       order,
@@ -47,14 +44,14 @@ export default class ListFeatureGroupsService {
 
     const { previous, next, totalPages } = calculatePaginationDetails(
       total,
-      pageParsed,
-      limitParsed,
+      page,
+      limit,
     );
 
     return {
       pagination: {
         previous,
-        current: pageParsed,
+        current: page,
         next,
         total: totalPages,
       },

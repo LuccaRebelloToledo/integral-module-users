@@ -10,7 +10,6 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 import ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
 import ListUsersServiceResponseDTO from '../dtos/list-users-service-response.dto';
 
-import { convertPageAndLimitToInt } from '@shared/utils/convert-page-and-limit-to-int.utils';
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
 import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-details.utils';
 
@@ -29,12 +28,10 @@ export default class ListUsersService {
     name,
     email,
   }: ListUsersServiceParamsDTO): Promise<ListUsersServiceResponseDTO> {
-    const { pageParsed, limitParsed } = convertPageAndLimitToInt(page, limit);
-
-    const skip = calculateSkip(pageParsed, limitParsed);
+    const skip = calculateSkip(page, limit);
 
     const { items, total } = await this.userRepository.findAll({
-      take: limitParsed,
+      take: limit,
       skip,
       sort,
       order,
@@ -48,14 +45,14 @@ export default class ListUsersService {
 
     const { previous, next, totalPages } = calculatePaginationDetails(
       total,
-      pageParsed,
-      limitParsed,
+      page,
+      limit,
     );
 
     return {
       pagination: {
         previous,
-        current: pageParsed,
+        current: page,
         next,
         total: totalPages,
       },

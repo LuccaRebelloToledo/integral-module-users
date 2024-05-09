@@ -1,6 +1,6 @@
 export default interface PaginationControllerParamsDTO {
-  page?: string;
-  limit?: string;
+  page?: number;
+  limit?: number;
   sort?: string;
   order?: string;
 }

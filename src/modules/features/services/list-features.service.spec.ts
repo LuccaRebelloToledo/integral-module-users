@@ -6,30 +6,24 @@ import ListFeaturesService from './list-features.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { convertPageAndLimitToInt } from '@shared/utils/convert-page-and-limit-to-int.utils';
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
 
 let featureRepository: FeatureRepository;
 let listFeaturesService: ListFeaturesService;
 
 const payload = {
-  page: '1',
-  limit: '5',
+  page: 1,
+  limit: 5,
   sort: 'createdAt',
   order: 'DESC',
   name: undefined,
   email: undefined,
 };
 
-const { pageParsed, limitParsed } = convertPageAndLimitToInt(
-  payload.page,
-  payload.limit,
-);
-
-const skip = calculateSkip(pageParsed, limitParsed);
+const skip = calculateSkip(payload.page, payload.limit);
 
 const payloadParsed = {
-  take: limitParsed,
+  take: payload.limit,
   skip: skip,
   sort: 'createdAt',
   order: 'DESC',
@@ -88,7 +82,7 @@ describe('ListFeaturesService', () => {
 
     expect(featureRepository.findAll).toHaveBeenCalledTimes(1);
 
-    expect(pagination.current).toEqual(pageParsed);
+    expect(pagination.current).toEqual(payload.page);
     expect(items).toHaveLength(2);
     expect(totalItems).toEqual(2);
     expect(items[0].id).toEqual(featureOne.id);
