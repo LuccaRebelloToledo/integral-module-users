@@ -4,15 +4,13 @@ import express from 'express';
 import 'express-async-errors';
 
 import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 import compression from 'compression';
 import helmet from 'helmet';
 
 import cors from 'cors';
 import { corsConfig } from '@config/cors.config';
-
-import cookieParser from 'cookie-parser';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '@config/swagger.json';
@@ -31,7 +29,7 @@ Sentry.init({
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Sentry.Integrations.Express({ app }),
-    new ProfilingIntegration(),
+    nodeProfilingIntegration(),
   ],
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
@@ -48,7 +46,6 @@ app.use(
   }),
 );
 app.use(cors(corsConfig));
-app.use(cookieParser());
 
 app.use(express.json());
 
