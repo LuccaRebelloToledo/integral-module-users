@@ -3,10 +3,11 @@ FROM node:lts-alpine as build
 WORKDIR /build
 
 COPY package*.json .
-RUN npm ci
+RUN npm install
 
 COPY src/ src/
 COPY tsconfig.json tsconfig.json
+COPY tsconfig.build.json tsconfig.build.json
 
 RUN npm run build
 
@@ -20,6 +21,6 @@ RUN npm ci --omit=dev
 
 COPY --from=build build/dist dist/
 
-CMD ["npm", "start"]
+CMD ["node", "./dist/shared/infra/http/index.js"]
 
 EXPOSE 4000
