@@ -48,7 +48,7 @@ export default class CreateUsersService {
       );
 
       const featureGroups = await listFeatureGroupsByKeyOrNameService.execute({
-        key: 'MEMBER',
+        key: 'ADMIN',
       });
 
       featureGroupId = featureGroups[0].id;

@@ -33,8 +33,8 @@ describe('CreateUsersService', () => {
 
     await featureGroupRepository.create({
       id: '2',
-      key: 'MEMBER',
-      name: 'MEMBER',
+      key: 'ADMIN',
+      name: 'ADMIN',
       features: [],
     });
 
