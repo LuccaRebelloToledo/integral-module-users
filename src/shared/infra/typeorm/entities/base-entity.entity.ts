@@ -1,4 +1,9 @@
-import { PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 export default abstract class BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 21 })
@@ -9,4 +14,7 @@ export default abstract class BaseEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date;
 }

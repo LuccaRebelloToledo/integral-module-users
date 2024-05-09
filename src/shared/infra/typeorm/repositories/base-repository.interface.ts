@@ -4,4 +4,5 @@ export default interface BaseRepositoryInterface<T> {
   create(entityDataDto: unknown): Promise<T>;
   save(entityData: T): Promise<T>;
   delete(entityData: T): Promise<void>;
+  softDelete(entityData: T): Promise<void>;
 }
