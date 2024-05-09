@@ -94,4 +94,8 @@ export default class FeatureGroupRepository
   public async delete(featureGroup: FeatureGroup): Promise<void> {
     await this.featureGroupRepository.delete(featureGroup.id);
   }
+
+  public async softDelete(featureGroup: FeatureGroup): Promise<void> {
+    await this.featureGroupRepository.softDelete(featureGroup.id);
+  }
 }

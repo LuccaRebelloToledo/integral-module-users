@@ -81,11 +81,15 @@ export default class UserRepository implements UserRepositoryInterface {
     return await this.save(user);
   }
 
-  public async save(userData: User): Promise<User> {
-    return await this.userRepository.save(userData);
+  public async save(user: User): Promise<User> {
+    return await this.userRepository.save(user);
   }
 
-  public async delete(userData: User): Promise<void> {
-    await this.userRepository.delete(userData.id);
+  public async delete(user: User): Promise<void> {
+    await this.userRepository.delete(user.id);
+  }
+
+  public async softDelete(user: User): Promise<void> {
+    await this.userRepository.softDelete(user.id);
   }
 }

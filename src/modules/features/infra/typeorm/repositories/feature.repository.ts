@@ -119,4 +119,8 @@ export default class FeatureRepository implements FeatureRepositoryInterface {
   public async delete(feature: Feature): Promise<void> {
     await this.featureRepository.delete(feature.id);
   }
+
+  public async softDelete(feature: Feature): Promise<void> {
+    await this.featureRepository.softDelete(feature.id);
+  }
 }
