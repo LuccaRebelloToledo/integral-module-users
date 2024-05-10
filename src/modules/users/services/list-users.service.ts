@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import UserRepositoryInterface from '../repositories/user.repository.interface';
+import UsersRepositoryInterface from '../repositories/users.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -16,8 +16,8 @@ import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-d
 @injectable()
 export default class ListUsersService {
   constructor(
-    @inject('UserRepository')
-    private userRepository: UserRepositoryInterface,
+    @inject('UsersRepository')
+    private usersRepository: UsersRepositoryInterface,
   ) {}
 
   public async execute({
@@ -30,7 +30,7 @@ export default class ListUsersService {
   }: ListUsersServiceParamsDTO): Promise<ListUsersServiceResponseDTO> {
     const skip = calculateSkip(page, limit);
 
-    const { items, total } = await this.userRepository.findAll({
+    const { items, total } = await this.usersRepository.findAll({
       take: limit,
       skip,
       sort,

@@ -6,7 +6,7 @@ import ListUsersRepositoryParamsDTO from '../dtos/list-users-repository-params.d
 import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
 import CreateUsersDTO from '../dtos/create-users.dto';
 
-export default interface UserRepositoryInterface
+export default interface UsersRepositoryInterface
   extends BaseRepositoryInterface<User> {
   findAll(
     params: ListUsersRepositoryParamsDTO,

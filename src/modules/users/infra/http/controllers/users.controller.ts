@@ -15,7 +15,7 @@ import DeleteUsersService from '@modules/users/services/delete-users.service';
 
 import UserPaginationControllerParamsDTO from '@modules/users/dtos/user-pagination-controller-params.dto';
 
-export default class UserController {
+export default class UsersController {
   public async list(request: Request, response: Response): Promise<Response> {
     const {
       page,

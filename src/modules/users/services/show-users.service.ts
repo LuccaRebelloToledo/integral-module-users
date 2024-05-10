@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import UserRepositoryInterface from '../repositories/user.repository.interface';
+import UsersRepositoryInterface from '../repositories/users.repository.interface';
 import User from '../infra/typeorm/entities/user.entity';
 
 import AppError from '@shared/errors/app-error';
@@ -11,12 +11,12 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 @injectable()
 export default class ShowUsersService {
   constructor(
-    @inject('UserRepository')
-    private userRepository: UserRepositoryInterface,
+    @inject('UsersRepository')
+    private usersRepository: UsersRepositoryInterface,
   ) {}
 
   public async execute(userId: string): Promise<User> {
-    const user = await this.userRepository.findById(userId);
+    const user = await this.usersRepository.findById(userId);
 
     if (!user) {
       throw new AppError(AppErrorTypes.users.notFound, NOT_FOUND);

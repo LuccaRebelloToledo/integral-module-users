@@ -1,13 +1,13 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import UserRepository from '../infra/typeorm/repositories/user.repository';
+import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 
 import ShowUsersService from './show-users.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let userRepository: UserRepository;
+let usersRepository: UsersRepository;
 let featureGroupRepository: FeatureGroupRepository;
 let showUsersService: ShowUsersService;
 
@@ -15,9 +15,9 @@ describe('ShowUsersService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    userRepository = new UserRepository();
+    usersRepository = new UsersRepository();
     featureGroupRepository = new FeatureGroupRepository();
-    showUsersService = new ShowUsersService(userRepository);
+    showUsersService = new ShowUsersService(usersRepository);
 
     await featureGroupRepository.create({
       id: '1',
@@ -32,7 +32,7 @@ describe('ShowUsersService', () => {
   });
 
   test('should be defined', () => {
-    expect(userRepository).toBeDefined();
+    expect(usersRepository).toBeDefined();
     expect(featureGroupRepository).toBeDefined();
     expect(showUsersService).toBeDefined();
   });
@@ -40,19 +40,19 @@ describe('ShowUsersService', () => {
   test('should throw an error if no user is found', async () => {
     const userId = 'non-existing-user-id';
 
-    jest.spyOn(userRepository, 'findById');
+    jest.spyOn(usersRepository, 'findById');
 
     await expect(showUsersService.execute(userId)).rejects.toThrow(
       AppErrorTypes.users.notFound,
     );
 
-    expect(userRepository.findById).toHaveBeenCalledWith(userId);
+    expect(usersRepository.findById).toHaveBeenCalledWith(userId);
 
-    expect(userRepository.findById).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should return a user if a user is found by id', async () => {
-    const createdUser = await userRepository.create({
+    const createdUser = await usersRepository.create({
       id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -60,14 +60,14 @@ describe('ShowUsersService', () => {
       featureGroupId: '1',
     });
 
-    jest.spyOn(userRepository, 'findById');
+    jest.spyOn(usersRepository, 'findById');
 
     const userId = '1';
 
     const user = await showUsersService.execute(userId);
 
-    expect(userRepository.findById).toHaveBeenCalledWith(userId);
-    expect(userRepository.findById).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findById).toHaveBeenCalledWith(userId);
+    expect(usersRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(user.id).toEqual(createdUser.id);
     expect(user.name).toEqual(createdUser.name);

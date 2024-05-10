@@ -1,6 +1,6 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import UserRepository from '../infra/typeorm/repositories/user.repository';
+import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
@@ -10,7 +10,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { container } from 'tsyringe';
 
-let userRepository: UserRepository;
+let usersRepository: UsersRepository;
 let featureGroupRepository: FeatureGroupRepository;
 let hashProvider: BCryptHashProvider;
 let createUsersService: CreateUsersService;
@@ -19,10 +19,10 @@ describe('CreateUsersService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    userRepository = new UserRepository();
+    usersRepository = new UsersRepository();
     featureGroupRepository = new FeatureGroupRepository();
     hashProvider = new BCryptHashProvider();
-    createUsersService = new CreateUsersService(userRepository, hashProvider);
+    createUsersService = new CreateUsersService(usersRepository, hashProvider);
 
     await featureGroupRepository.create({
       id: '1',
@@ -38,7 +38,7 @@ describe('CreateUsersService', () => {
       features: [],
     });
 
-    await userRepository.create({
+    await usersRepository.create({
       id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -58,7 +58,7 @@ describe('CreateUsersService', () => {
   });
 
   test('should be defined', () => {
-    expect(userRepository).toBeDefined();
+    expect(usersRepository).toBeDefined();
     expect(featureGroupRepository).toBeDefined();
     expect(hashProvider).toBeDefined();
     expect(createUsersService).toBeDefined();
@@ -72,15 +72,15 @@ describe('CreateUsersService', () => {
       featureGroupId: '1',
     };
 
-    jest.spyOn(userRepository, 'findByEmail');
+    jest.spyOn(usersRepository, 'findByEmail');
 
     await expect(createUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.users.emailAlreadyInUse,
     );
 
-    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
+    expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
 
-    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if no feature group is found by id', async () => {
@@ -128,8 +128,8 @@ describe('CreateUsersService', () => {
     };
 
     jest.spyOn(featureGroupRepository, 'findById');
-    jest.spyOn(userRepository, 'create');
-    jest.spyOn(userRepository, 'save');
+    jest.spyOn(usersRepository, 'create');
+    jest.spyOn(usersRepository, 'save');
 
     const userCreated = await createUsersService.execute(userPayload);
 
@@ -149,9 +149,9 @@ describe('CreateUsersService', () => {
 
     expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
 
-    expect(userRepository.create).toHaveBeenCalledTimes(1);
+    expect(usersRepository.create).toHaveBeenCalledTimes(1);
 
-    expect(userRepository.save).toHaveBeenCalledTimes(1);
+    expect(usersRepository.save).toHaveBeenCalledTimes(1);
   });
 
   test('should be create a user no having featureGroupId', async () => {
@@ -162,8 +162,8 @@ describe('CreateUsersService', () => {
     };
 
     jest.spyOn(featureGroupRepository, 'findByKeyOrName');
-    jest.spyOn(userRepository, 'create');
-    jest.spyOn(userRepository, 'save');
+    jest.spyOn(usersRepository, 'create');
+    jest.spyOn(usersRepository, 'save');
 
     const userCreated = await createUsersService.execute(userPayload);
 
@@ -178,8 +178,8 @@ describe('CreateUsersService', () => {
 
     expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
 
-    expect(userRepository.create).toHaveBeenCalledTimes(1);
+    expect(usersRepository.create).toHaveBeenCalledTimes(1);
 
-    expect(userRepository.save).toHaveBeenCalledTimes(1);
+    expect(usersRepository.save).toHaveBeenCalledTimes(1);
   });
 });

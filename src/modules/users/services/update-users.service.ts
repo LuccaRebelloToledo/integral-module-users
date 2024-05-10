@@ -2,7 +2,7 @@ import { container, inject, injectable } from 'tsyringe';
 
 import UpdateUsersDTO from '../dtos/update-users.dto';
 
-import UserRepositoryInterface from '../repositories/user.repository.interface';
+import UsersRepositoryInterface from '../repositories/users.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
 import User from '../infra/typeorm/entities/user.entity';
 
@@ -22,8 +22,8 @@ import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-i
 @injectable()
 export default class UpdateUsersService {
   constructor(
-    @inject('UserRepository')
-    private userRepository: UserRepositoryInterface,
+    @inject('UsersRepository')
+    private usersRepository: UsersRepositoryInterface,
 
     @inject('BCryptHashProvider')
     private bcryptHashProvider: HashProviderInterface,
@@ -57,7 +57,7 @@ export default class UpdateUsersService {
       await this.updatePassword(user, password);
     }
 
-    const updatedUser = await this.userRepository.save(user);
+    const updatedUser = await this.usersRepository.save(user);
 
     return updatedUser;
   }
@@ -71,7 +71,7 @@ export default class UpdateUsersService {
   }
 
   private async updateEmail(user: User, email: string) {
-    const userWithEmail = await this.userRepository.findByEmail(email);
+    const userWithEmail = await this.usersRepository.findByEmail(email);
 
     if (userWithEmail) {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse, CONFLICT);

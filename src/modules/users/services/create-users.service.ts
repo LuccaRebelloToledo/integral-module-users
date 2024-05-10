@@ -2,7 +2,7 @@ import { container, inject, injectable } from 'tsyringe';
 
 import CreateUsersServiceDTO from '../dtos/create-users-service.dto';
 
-import UserRepositoryInterface from '../repositories/user.repository.interface';
+import UsersRepositoryInterface from '../repositories/users.repository.interface';
 import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
 import User from '../infra/typeorm/entities/user.entity';
 
@@ -19,8 +19,8 @@ import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constant
 @injectable()
 export default class CreateUsersService {
   constructor(
-    @inject('UserRepository')
-    private userRepository: UserRepositoryInterface,
+    @inject('UsersRepository')
+    private usersRepository: UsersRepositoryInterface,
 
     @inject('BCryptHashProvider')
     private bcryptHashProvider: HashProviderInterface,
@@ -32,7 +32,7 @@ export default class CreateUsersService {
     password,
     featureGroupId,
   }: CreateUsersServiceDTO): Promise<User> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.usersRepository.findByEmail(email);
 
     if (user) {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse, CONFLICT);
@@ -57,7 +57,7 @@ export default class CreateUsersService {
     const encryptedPassword =
       await this.bcryptHashProvider.generateHash(password);
 
-    return await this.userRepository.create({
+    return await this.usersRepository.create({
       id: generateNanoId(),
       name,
       email,

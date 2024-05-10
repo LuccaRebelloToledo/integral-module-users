@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
-import UserRepositoryInterface from '@modules/users/repositories/user.repository.interface';
-import UserRepository from '@modules/users/infra/typeorm/repositories/user.repository';
+import UsersRepositoryInterface from '@modules/users/repositories/users.repository.interface';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/users.repository';
 
 import HashProviderInterface from '@modules/users/providers/hash-provider/models/hash.provider.interface';
 import BCryptHashProvider from '@modules/users/providers/hash-provider/implementations/bcrypt-hash.provider';
@@ -12,9 +12,9 @@ import FeatureRepository from '@modules/features/infra/typeorm/repositories/feat
 import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 
-container.registerSingleton<UserRepositoryInterface>(
-  'UserRepository',
-  UserRepository,
+container.registerSingleton<UsersRepositoryInterface>(
+  'UsersRepository',
+  UsersRepository,
 );
 
 container.registerSingleton<HashProviderInterface>(

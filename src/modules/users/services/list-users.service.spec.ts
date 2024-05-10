@@ -1,6 +1,6 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import UserRepository from '../infra/typeorm/repositories/user.repository';
+import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 import ListUsersService from './list-users.service';
 
@@ -8,7 +8,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
 
-let userRepository: UserRepository;
+let usersRepository: UsersRepository;
 let featureGroupRepository: FeatureGroupRepository;
 let listUsersService: ListUsersService;
 
@@ -36,9 +36,9 @@ describe('ListUsersService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    userRepository = new UserRepository();
+    usersRepository = new UsersRepository();
     featureGroupRepository = new FeatureGroupRepository();
-    listUsersService = new ListUsersService(userRepository);
+    listUsersService = new ListUsersService(usersRepository);
 
     await featureGroupRepository.create({
       id: '1',
@@ -53,25 +53,25 @@ describe('ListUsersService', () => {
   });
 
   it('should be defined', () => {
-    expect(userRepository).toBeDefined();
+    expect(usersRepository).toBeDefined();
     expect(featureGroupRepository).toBeDefined();
     expect(listUsersService).toBeDefined();
   });
 
   test('should throw an error if no user is found', async () => {
-    jest.spyOn(userRepository, 'findAll');
+    jest.spyOn(usersRepository, 'findAll');
 
     await expect(listUsersService.execute(payload)).rejects.toThrow(
       AppErrorTypes.users.notFound,
     );
 
-    expect(userRepository.findAll).toHaveBeenCalledWith(payloadParsed);
+    expect(usersRepository.findAll).toHaveBeenCalledWith(payloadParsed);
 
-    expect(userRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findAll).toHaveBeenCalledTimes(1);
   });
 
   it('should be return a list of users', async () => {
-    const userOne = await userRepository.create({
+    const userOne = await usersRepository.create({
       id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -79,7 +79,7 @@ describe('ListUsersService', () => {
       featureGroupId: '1',
     });
 
-    const userTwo = await userRepository.create({
+    const userTwo = await usersRepository.create({
       id: '2',
       name: 'John Doe',
       email: 'johndoe2@example.com',
@@ -87,14 +87,14 @@ describe('ListUsersService', () => {
       featureGroupId: '1',
     });
 
-    jest.spyOn(userRepository, 'findAll');
+    jest.spyOn(usersRepository, 'findAll');
 
     const { pagination, totalItems, items } =
       await listUsersService.execute(payload);
 
-    expect(userRepository.findAll).toHaveBeenCalledWith(payloadParsed);
+    expect(usersRepository.findAll).toHaveBeenCalledWith(payloadParsed);
 
-    expect(userRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findAll).toHaveBeenCalledTimes(1);
 
     expect(pagination.current).toEqual(payload.page);
     expect(items).toHaveLength(2);

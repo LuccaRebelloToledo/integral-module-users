@@ -1,28 +1,28 @@
 import { Router } from 'express';
 
-import SessionController from '../controllers/session.controller';
+import SessionsController from '../controllers/sessions.controller';
 
 import { Segments, celebrate } from 'celebrate';
 
 import { signUpSchema, signInSchema } from './schemas/user.schemas';
 
-const sessionRoutes = Router();
-const sessionController = new SessionController();
+const sessionsRouter = Router();
+const sessionsController = new SessionsController();
 
-sessionRoutes.post(
+sessionsRouter.post(
   '/sign-up',
   celebrate({
     [Segments.BODY]: signUpSchema,
   }),
-  sessionController.signUp,
+  sessionsController.signUp,
 );
 
-sessionRoutes.post(
+sessionsRouter.post(
   '/sign-in',
   celebrate({
     [Segments.BODY]: signInSchema,
   }),
-  sessionController.signIn,
+  sessionsController.signIn,
 );
 
-export default sessionRoutes;
+export default sessionsRouter;

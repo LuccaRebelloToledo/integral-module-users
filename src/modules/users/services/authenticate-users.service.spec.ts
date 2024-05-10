@@ -1,6 +1,6 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import UserRepository from '../infra/typeorm/repositories/user.repository';
+import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeatureRepository from '@modules/features/infra/typeorm/repositories/feature.repository';
 import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
 import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
@@ -14,7 +14,7 @@ import authConfig from '@config/auth.config';
 
 import { container } from 'tsyringe';
 
-let userRepository: UserRepository;
+let usersRepository: UsersRepository;
 let featureRepository: FeatureRepository;
 let featureGroupRepository: FeatureGroupRepository;
 let hashProvider: BCryptHashProvider;
@@ -25,12 +25,12 @@ describe('AuthenticateUsersService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    userRepository = new UserRepository();
+    usersRepository = new UsersRepository();
     featureRepository = new FeatureRepository();
     featureGroupRepository = new FeatureGroupRepository();
     hashProvider = new BCryptHashProvider();
     authenticateUsersService = new AuthenticateUsersService(
-      userRepository,
+      usersRepository,
       hashProvider,
     );
 
@@ -43,7 +43,7 @@ describe('AuthenticateUsersService', () => {
 
     encryptedPassword = await hashProvider.generateHash('123456789');
 
-    await userRepository.create({
+    await usersRepository.create({
       id: '1',
       name: 'John Doe Invalid',
       email: 'johndoe@example.com',
@@ -64,7 +64,7 @@ describe('AuthenticateUsersService', () => {
       features: [feature],
     });
 
-    await userRepository.create({
+    await usersRepository.create({
       id: '2',
       name: 'John Doe Valid',
       email: 'johndoe_valid@example.com',
@@ -84,7 +84,7 @@ describe('AuthenticateUsersService', () => {
   });
 
   test('should be defined', () => {
-    expect(UserRepository).toBeDefined();
+    expect(usersRepository).toBeDefined();
     expect(FeatureRepository).toBeDefined();
     expect(featureGroupRepository).toBeDefined();
     expect(hashProvider).toBeDefined();
@@ -97,15 +97,15 @@ describe('AuthenticateUsersService', () => {
       password: '123456',
     };
 
-    jest.spyOn(userRepository, 'findByEmail');
+    jest.spyOn(usersRepository, 'findByEmail');
 
     await expect(authenticateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.sessions.invalidCredentials,
     );
 
-    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
+    expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
 
-    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if password is incorrect', async () => {
@@ -134,15 +134,15 @@ describe('AuthenticateUsersService', () => {
       password: '123456789',
     };
 
-    jest.spyOn(userRepository, 'findByEmail');
+    jest.spyOn(usersRepository, 'findByEmail');
 
     await expect(authenticateUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.sessions.missingUserFeatureGroup,
     );
 
-    expect(userRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
+    expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
 
-    expect(userRepository.findByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
   });
 
   test('should be generate a token for the user', async () => {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import UserController from '../controllers/user.controller';
+import UsersController from '../controllers/users.controller';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
@@ -15,55 +15,55 @@ import {
   updateUsersSchema,
 } from './schemas/user.schemas';
 
-const userRoutes = Router();
-const userController = new UserController();
+const usersRouter = Router();
+const usersController = new UsersController();
 
-userRoutes.use(ensureAuthenticated);
+usersRouter.use(ensureAuthenticated);
 
-userRoutes.get(
+usersRouter.get(
   '/',
   celebrate({
     [Segments.QUERY]: userPaginationParamsSchema,
   }),
   ensureAuthorized(['full:users', 'list:users']),
-  userController.list,
+  usersController.list,
 );
 
-userRoutes.get(
+usersRouter.get(
   '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
   ensureAuthorized(['full:users', 'show:users']),
-  userController.show,
+  usersController.show,
 );
 
-userRoutes.post(
+usersRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: createUsersSchema,
   }),
   ensureAuthorized(['full:users', 'create:users']),
-  userController.create,
+  usersController.create,
 );
 
-userRoutes.put(
+usersRouter.put(
   '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
     [Segments.BODY]: updateUsersSchema,
   }),
   ensureAuthorized(['full:users', 'update:users']),
-  userController.update,
+  usersController.update,
 );
 
-userRoutes.delete(
+usersRouter.delete(
   '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
   ensureAuthorized(['full:users', 'delete:users']),
-  userController.delete,
+  usersController.delete,
 );
 
-export default userRoutes;
+export default usersRouter;

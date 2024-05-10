@@ -7,7 +7,7 @@ import { NO_CONTENT } from '@shared/infra/http/constants/http-status-code.consta
 import CreateUsersService from '@modules/users/services/create-users.service';
 import AuthenticateUsersService from '@modules/users/services/authenticate-users.service';
 
-export default class SessionController {
+export default class SessionsController {
   public async signUp(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
 

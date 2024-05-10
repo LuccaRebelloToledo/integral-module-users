@@ -2,18 +2,18 @@ import { getActiveDataSource } from '@shared/utils/get-active-data-source.utils'
 
 import { ILike, Repository } from 'typeorm';
 
-import UserRepositoryInterface from '@modules/users/repositories/user.repository.interface';
+import UsersRepositoryInterface from '@modules/users/repositories/users.repository.interface';
 import User from '../entities/user.entity';
 
 import ListUsersRepositoryParamsDTO from '@modules/users/dtos/list-users-repository-params.dto';
 import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
 import CreateUsersDTO from '@modules/users/dtos/create-users.dto';
 
-export default class UserRepository implements UserRepositoryInterface {
-  private userRepository: Repository<User>;
+export default class UsersRepository implements UsersRepositoryInterface {
+  private usersRepository: Repository<User>;
 
   constructor() {
-    this.userRepository = getActiveDataSource().getRepository(User);
+    this.usersRepository = getActiveDataSource().getRepository(User);
   }
 
   public async findAll({
@@ -24,7 +24,7 @@ export default class UserRepository implements UserRepositoryInterface {
     name,
     email,
   }: ListUsersRepositoryParamsDTO): Promise<ListRepositoryResponseDTO<User>> {
-    const query = this.userRepository
+    const query = this.usersRepository
       .createQueryBuilder('users')
       .leftJoinAndSelect('users.featureGroup', 'featureGroup')
       .leftJoinAndSelect('users.standaloneFeatures', 'standaloneFeatures')
@@ -49,7 +49,7 @@ export default class UserRepository implements UserRepositoryInterface {
   }
 
   public async findById(id: string): Promise<User | null> {
-    return await this.userRepository.findOne({
+    return await this.usersRepository.findOne({
       where: {
         id: id,
       },
@@ -58,7 +58,7 @@ export default class UserRepository implements UserRepositoryInterface {
   }
 
   public async findByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOne({
+    return await this.usersRepository.findOne({
       where: {
         email: email,
       },
@@ -76,20 +76,20 @@ export default class UserRepository implements UserRepositoryInterface {
   }
 
   public async create(userData: CreateUsersDTO): Promise<User> {
-    const user = this.userRepository.create(userData);
+    const user = this.usersRepository.create(userData);
 
     return await this.save(user);
   }
 
   public async save(user: User): Promise<User> {
-    return await this.userRepository.save(user);
+    return await this.usersRepository.save(user);
   }
 
   public async delete(user: User): Promise<void> {
-    await this.userRepository.delete(user.id);
+    await this.usersRepository.delete(user.id);
   }
 
   public async softDelete(user: User): Promise<void> {
-    await this.userRepository.softDelete(user.id);
+    await this.usersRepository.softDelete(user.id);
   }
 }
