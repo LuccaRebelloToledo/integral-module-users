@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/node';
 
 import { exit } from 'node:process';
 
-export const gracefulShutdown = () => {
+export const gracefulShutdown = async () => {
   try {
     console.error('GracefulShutdown is Started!');
 

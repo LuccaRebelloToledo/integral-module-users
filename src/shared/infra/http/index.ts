@@ -1,7 +1,7 @@
 import { AppDataSource } from '../typeorm/data-sources/data-source';
 
 import app from './app';
-import initializeServer from './server';
+import { initializeServer } from './server';
 
 import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';
 
@@ -16,7 +16,7 @@ const startApp = async () => {
       console.error(`${error.message} at ${new Date()} !`);
     }
 
-    gracefulShutdown();
+    await gracefulShutdown();
   }
 };
 

@@ -11,35 +11,33 @@ import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';
 const port: number = env.PORT ?? 4000;
 export let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 
-const initializeServer = async (app: Express): Promise<void> => {
+export const initializeServer = async (app: Express): Promise<void> => {
   server = app.listen(port, () => {
     console.log(`HTTP Server listening on port ${port} !`);
   });
 
-  process.on('SIGTERM', () => {
+  process.on('SIGTERM', async () => {
     console.log('SIGTERM signal received!');
 
-    gracefulShutdown();
+    await gracefulShutdown();
   });
 
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     console.log('SIGINT signal received!');
 
-    gracefulShutdown();
+    await gracefulShutdown();
   });
 
-  process.on('uncaughtException', (error) => {
+  process.on('uncaughtException', async (error) => {
     console.error(
       `Uncaught Exception error ${error.message} at ${new Date()} !`,
     );
     Sentry.captureException(error);
 
-    gracefulShutdown();
+    await gracefulShutdown();
   });
 
   process.on('unhandledRejection', (error) => {
     throw error;
   });
 };
-
-export default initializeServer;
