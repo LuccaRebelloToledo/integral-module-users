@@ -1,35 +1,45 @@
+import { Express } from 'express';
+
+import { Server, IncomingMessage, ServerResponse } from 'node:http';
+
 import { env } from '../environments/environments';
 
-import app from './app';
-
 import * as Sentry from '@sentry/node';
+
 import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';
 
-const port = env.PORT ?? 4000;
+const port: number = env.PORT ?? 4000;
+export let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 
-export const server = app.listen(port, () => {
-  console.log(`HTTP Server listening on port ${port} !`);
-});
+const initializeServer = async (app: Express): Promise<void> => {
+  server = app.listen(port, () => {
+    console.log(`HTTP Server listening on port ${port} !`);
+  });
 
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received!');
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received!');
 
-  gracefulShutdown();
-});
+    gracefulShutdown();
+  });
 
-process.on('SIGINT', () => {
-  console.log('SIGINT signal received!');
+  process.on('SIGINT', () => {
+    console.log('SIGINT signal received!');
 
-  gracefulShutdown();
-});
+    gracefulShutdown();
+  });
 
-process.on('uncaughtException', (error) => {
-  console.error(`Uncaught Exception error ${error.message} at ${new Date()} !`);
-  Sentry.captureException(error);
+  process.on('uncaughtException', (error) => {
+    console.error(
+      `Uncaught Exception error ${error.message} at ${new Date()} !`,
+    );
+    Sentry.captureException(error);
 
-  gracefulShutdown();
-});
+    gracefulShutdown();
+  });
 
-process.on('unhandledRejection', (error) => {
-  throw error;
-});
+  process.on('unhandledRejection', (error) => {
+    throw error;
+  });
+};
+
+export default initializeServer;

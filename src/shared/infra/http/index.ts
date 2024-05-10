@@ -1,15 +1,23 @@
 import { AppDataSource } from '../typeorm/data-sources/data-source';
 
+import app from './app';
+import initializeServer from './server';
+
 import { gracefulShutdown } from './graceful-shutdown/graceful-shutdown';
 
-import './server';
+const startApp = async () => {
+  try {
+    await initializeServer(app);
 
-AppDataSource.initialize()
-  .then(() => {
+    await AppDataSource.initialize();
     console.log('Database connected!');
-  })
-  .catch((error) => {
-    console.error(`Database connection failed! ${error.message}`);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`${error.message} at ${new Date()} !`);
+    }
 
     gracefulShutdown();
-  });
+  }
+};
+
+startApp();
