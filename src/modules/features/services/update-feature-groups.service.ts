@@ -1,15 +1,14 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import UpdateFeatureGroupsServiceDTO from '../dtos/update-feature-groups-service.dto';
 
-import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
+import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
+
+import ShowFeatureGroupsService from './show-feature-groups.service';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
-import {
-  CONFLICT,
-  NOT_FOUND,
-} from '@shared/infra/http/constants/http-status-code.constants';
+import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
@@ -18,8 +17,8 @@ import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-i
 @injectable()
 export default class UpdateFeatureGroupsService {
   constructor(
-    @inject('FeatureGroupRepository')
-    private featureGroupRepository: FeatureGroupRepositoryInterface,
+    @inject('FeatureGroupsRepository')
+    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
   ) {}
 
   public async execute({
@@ -48,25 +47,22 @@ export default class UpdateFeatureGroupsService {
       featureGroup.features = features;
     }
 
-    return await this.featureGroupRepository.save(featureGroup);
+    return await this.featureGroupsRepository.save(featureGroup);
   }
 
   private async validateFeatureGroup(
     featureGroupId: string,
   ): Promise<FeatureGroup> {
-    const featureGroup =
-      await this.featureGroupRepository.findById(featureGroupId);
+    const showFeatureGroupsService = container.resolve(
+      ShowFeatureGroupsService,
+    );
 
-    if (!featureGroup) {
-      throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);
-    }
-
-    return featureGroup;
+    return await showFeatureGroupsService.execute(featureGroupId);
   }
 
   private async validateKeyAndName(key?: string, name?: string): Promise<void> {
     const checkFeatureGroupsExists =
-      await this.featureGroupRepository.findByKeyOrName({ key, name });
+      await this.featureGroupsRepository.findByKeyOrName({ key, name });
 
     if (checkFeatureGroupsExists.length) {
       const featureExistsByKey = checkFeatureGroupsExists.find(

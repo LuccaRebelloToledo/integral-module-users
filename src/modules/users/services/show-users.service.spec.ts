@@ -1,14 +1,14 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
-import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
 
 import ShowUsersService from './show-users.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
 let usersRepository: UsersRepository;
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let showUsersService: ShowUsersService;
 
 describe('ShowUsersService', () => {
@@ -16,10 +16,10 @@ describe('ShowUsersService', () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     showUsersService = new ShowUsersService(usersRepository);
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
@@ -33,7 +33,7 @@ describe('ShowUsersService', () => {
 
   test('should be defined', () => {
     expect(usersRepository).toBeDefined();
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(showUsersService).toBeDefined();
   });
 

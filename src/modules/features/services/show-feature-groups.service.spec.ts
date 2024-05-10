@@ -1,13 +1,13 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeatureGroupRepository from '../infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
 import ShowFeatureGroupsService from './show-feature-groups.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let featureGroup: FeatureGroup;
 let showFeatureGroupsService: ShowFeatureGroupsService;
 
@@ -15,12 +15,12 @@ describe('ShowFeatureGroupsService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     showFeatureGroupsService = new ShowFeatureGroupsService(
-      featureGroupRepository,
+      featureGroupsRepository,
     );
 
-    featureGroup = await featureGroupRepository.create({
+    featureGroup = await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
@@ -33,7 +33,7 @@ describe('ShowFeatureGroupsService', () => {
   });
 
   test('should be defined', () => {
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(showFeatureGroupsService).toBeDefined();
     expect(featureGroup).toBeDefined();
   });
@@ -43,15 +43,15 @@ describe('ShowFeatureGroupsService', () => {
       id: 'non-existing-feature-group-id',
     };
 
-    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureGroupsRepository, 'findById');
 
     await expect(showFeatureGroupsService.execute(payload.id)).rejects.toThrow(
       AppErrorTypes.featureGroups.notFound,
     );
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledWith(payload.id);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(payload.id);
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should return a feature group if a feature group is found by id', async () => {
@@ -59,14 +59,14 @@ describe('ShowFeatureGroupsService', () => {
       id: '1',
     };
 
-    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureGroupsRepository, 'findById');
 
     const featureGroupFound = await showFeatureGroupsService.execute(
       payload.id,
     );
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledWith(payload.id);
-    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(payload.id);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(featureGroupFound.id).toEqual(featureGroup.id);
     expect(featureGroupFound.name).toEqual(featureGroup.name);

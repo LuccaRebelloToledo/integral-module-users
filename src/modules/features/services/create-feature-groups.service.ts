@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
 
-import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
+import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
 
 import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
 
@@ -17,8 +17,8 @@ import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-i
 @injectable()
 export default class CreateFeatureGroupsService {
   constructor(
-    @inject('FeatureGroupRepository')
-    private featureGroupRepository: FeatureGroupRepositoryInterface,
+    @inject('FeatureGroupsRepository')
+    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
   ) {}
 
   public async execute({
@@ -30,7 +30,7 @@ export default class CreateFeatureGroupsService {
 
     const features = await getFeaturesByFeatureIds(featureIds);
 
-    const featureGroup = await this.featureGroupRepository.create({
+    const featureGroup = await this.featureGroupsRepository.create({
       id: generateNanoId(),
       key,
       name,
@@ -45,7 +45,7 @@ export default class CreateFeatureGroupsService {
     name: string,
   ): Promise<void> {
     const existingFeatureGroups =
-      await this.featureGroupRepository.findByKeyOrName({ key, name });
+      await this.featureGroupsRepository.findByKeyOrName({ key, name });
 
     if (existingFeatureGroups.length) {
       const existingFeatureGroup = existingFeatureGroups.find(

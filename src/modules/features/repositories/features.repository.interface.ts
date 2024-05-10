@@ -7,7 +7,7 @@ import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto
 import FindFeaturesByKeyOrNameDTO from '../dtos/find-features-by-key-or-name.dto';
 import CreateFeaturesDTO from '../dtos/create-features.dto';
 
-export default interface FeatureRepositoryInterface
+export default interface FeaturesRepositoryInterface
   extends BaseRepositoryInterface<Feature> {
   findAll(
     params: ListFeaturesRepositoryParamsDTO,

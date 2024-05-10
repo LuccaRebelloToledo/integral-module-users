@@ -1,7 +1,7 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
-import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
 import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
 import CreateUsersService from './create-users.service';
@@ -11,7 +11,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 import { container } from 'tsyringe';
 
 let usersRepository: UsersRepository;
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let hashProvider: BCryptHashProvider;
 let createUsersService: CreateUsersService;
 
@@ -20,18 +20,18 @@ describe('CreateUsersService', () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     hashProvider = new BCryptHashProvider();
     createUsersService = new CreateUsersService(usersRepository, hashProvider);
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
       features: [],
     });
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '2',
       key: 'ADMIN',
       name: 'ADMIN',
@@ -48,8 +48,8 @@ describe('CreateUsersService', () => {
 
     container.reset();
 
-    container.register('FeatureGroupRepository', {
-      useValue: featureGroupRepository,
+    container.register('FeatureGroupsRepository', {
+      useValue: featureGroupsRepository,
     });
   });
 
@@ -59,7 +59,7 @@ describe('CreateUsersService', () => {
 
   test('should be defined', () => {
     expect(usersRepository).toBeDefined();
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(hashProvider).toBeDefined();
     expect(createUsersService).toBeDefined();
   });
@@ -91,17 +91,17 @@ describe('CreateUsersService', () => {
       featureGroupId: '3',
     };
 
-    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureGroupsRepository, 'findById');
 
     await expect(createUsersService.execute(userPayload)).rejects.toThrow(
       AppErrorTypes.featureGroups.notFound,
     );
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(
       userPayload.featureGroupId,
     );
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should be encrypt the password', async () => {
@@ -127,7 +127,7 @@ describe('CreateUsersService', () => {
       featureGroupId: '1',
     };
 
-    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureGroupsRepository, 'findById');
     jest.spyOn(usersRepository, 'create');
     jest.spyOn(usersRepository, 'save');
 
@@ -143,11 +143,11 @@ describe('CreateUsersService', () => {
 
     expect(userCreated).toHaveProperty('updatedAt');
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledWith(
+    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(
       userPayload.featureGroupId,
     );
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(usersRepository.create).toHaveBeenCalledTimes(1);
 
@@ -161,7 +161,7 @@ describe('CreateUsersService', () => {
       password: '123456',
     };
 
-    jest.spyOn(featureGroupRepository, 'findByKeyOrName');
+    jest.spyOn(featureGroupsRepository, 'findByKeyOrName');
     jest.spyOn(usersRepository, 'create');
     jest.spyOn(usersRepository, 'save');
 
@@ -176,7 +176,7 @@ describe('CreateUsersService', () => {
 
     expect(userCreated).toHaveProperty('updatedAt');
 
-    expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
 
     expect(usersRepository.create).toHaveBeenCalledTimes(1);
 

@@ -1,7 +1,7 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
-import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
 import ListUsersService from './list-users.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -9,7 +9,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
 
 let usersRepository: UsersRepository;
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let listUsersService: ListUsersService;
 
 const payload = {
@@ -37,10 +37,10 @@ describe('ListUsersService', () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     listUsersService = new ListUsersService(usersRepository);
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
@@ -54,7 +54,7 @@ describe('ListUsersService', () => {
 
   it('should be defined', () => {
     expect(usersRepository).toBeDefined();
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(listUsersService).toBeDefined();
   });
 

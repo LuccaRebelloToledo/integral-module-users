@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
+import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -15,8 +15,8 @@ import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-d
 @injectable()
 export default class ListFeatureGroupsService {
   constructor(
-    @inject('FeatureGroupRepository')
-    private featureGroupRepository: FeatureGroupRepositoryInterface,
+    @inject('FeatureGroupsRepository')
+    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
   ) {}
 
   public async execute({
@@ -29,7 +29,7 @@ export default class ListFeatureGroupsService {
   }: ListFeatureGroupsServiceParamsDTO): Promise<ListFeatureGroupsServiceResponseDTO> {
     const skip = calculateSkip(page, limit);
 
-    const { items, total } = await this.featureGroupRepository.findAll({
+    const { items, total } = await this.featureGroupsRepository.findAll({
       take: limit,
       skip,
       sort,

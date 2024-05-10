@@ -1,6 +1,6 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeatureGroupRepository from '../infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 
 import DeleteFeatureGroupsService from './delete-feature-groups.service';
 
@@ -8,19 +8,19 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { container } from 'tsyringe';
 
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let deleteFeatureGroupsService: DeleteFeatureGroupsService;
 
 describe('DeleteFeatureGroupsService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     deleteFeatureGroupsService = new DeleteFeatureGroupsService(
-      featureGroupRepository,
+      featureGroupsRepository,
     );
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
@@ -29,8 +29,8 @@ describe('DeleteFeatureGroupsService', () => {
 
     container.reset();
 
-    container.register('FeatureGroupRepository', {
-      useValue: featureGroupRepository,
+    container.register('FeatureGroupsRepository', {
+      useValue: featureGroupsRepository,
     });
   });
 
@@ -39,7 +39,7 @@ describe('DeleteFeatureGroupsService', () => {
   });
 
   test('should be defined', () => {
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(deleteFeatureGroupsService).toBeDefined();
   });
 
@@ -48,15 +48,15 @@ describe('DeleteFeatureGroupsService', () => {
       id: 'non-existing-feature-group-id',
     };
 
-    jest.spyOn(featureGroupRepository, 'findById');
+    jest.spyOn(featureGroupsRepository, 'findById');
 
     await expect(
       deleteFeatureGroupsService.execute(payload.id),
     ).rejects.toThrow(AppErrorTypes.featureGroups.notFound);
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledWith(payload.id);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(payload.id);
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should be delete a feature group if a feature group is found by id', async () => {
@@ -64,20 +64,20 @@ describe('DeleteFeatureGroupsService', () => {
       id: '1',
     };
 
-    jest.spyOn(featureGroupRepository, 'findById');
-    jest.spyOn(featureGroupRepository, 'delete');
+    jest.spyOn(featureGroupsRepository, 'findById');
+    jest.spyOn(featureGroupsRepository, 'delete');
 
     await deleteFeatureGroupsService.execute(payload.id),
-      expect(featureGroupRepository.findById).toHaveBeenCalledWith(payload.id);
+      expect(featureGroupsRepository.findById).toHaveBeenCalledWith(payload.id);
 
-    expect(featureGroupRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
 
-    expect(featureGroupRepository.delete).toHaveBeenCalledWith(
+    expect(featureGroupsRepository.delete).toHaveBeenCalledWith(
       expect.objectContaining({
         id: payload.id,
       }),
     );
 
-    expect(featureGroupRepository.delete).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.delete).toHaveBeenCalledTimes(1);
   });
 });

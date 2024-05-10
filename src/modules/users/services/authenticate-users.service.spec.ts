@@ -1,8 +1,8 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
-import FeatureRepository from '@modules/features/infra/typeorm/repositories/feature.repository';
-import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
+import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
+import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
 import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -15,8 +15,8 @@ import authConfig from '@config/auth.config';
 import { container } from 'tsyringe';
 
 let usersRepository: UsersRepository;
-let featureRepository: FeatureRepository;
-let featureGroupRepository: FeatureGroupRepository;
+let featuresRepository: FeaturesRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let hashProvider: BCryptHashProvider;
 let authenticateUsersService: AuthenticateUsersService;
 let encryptedPassword: string;
@@ -26,15 +26,15 @@ describe('AuthenticateUsersService', () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
-    featureRepository = new FeatureRepository();
-    featureGroupRepository = new FeatureGroupRepository();
+    featuresRepository = new FeaturesRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     hashProvider = new BCryptHashProvider();
     authenticateUsersService = new AuthenticateUsersService(
       usersRepository,
       hashProvider,
     );
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
@@ -51,13 +51,13 @@ describe('AuthenticateUsersService', () => {
       featureGroupId: '1',
     });
 
-    const feature = await featureRepository.create({
+    const feature = await featuresRepository.create({
       id: '1',
       key: 'feature-key',
       name: 'Feature Name',
     });
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '2',
       key: 'feature-group-key-2',
       name: 'Feature Group Name 2',
@@ -74,8 +74,8 @@ describe('AuthenticateUsersService', () => {
 
     container.reset();
 
-    container.register('FeatureRepository', {
-      useValue: featureRepository,
+    container.register('FeaturesRepository', {
+      useValue: featuresRepository,
     });
   });
 
@@ -85,8 +85,8 @@ describe('AuthenticateUsersService', () => {
 
   test('should be defined', () => {
     expect(usersRepository).toBeDefined();
-    expect(FeatureRepository).toBeDefined();
-    expect(featureGroupRepository).toBeDefined();
+    expect(featuresRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(hashProvider).toBeDefined();
     expect(authenticateUsersService).toBeDefined();
   });

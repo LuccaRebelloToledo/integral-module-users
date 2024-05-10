@@ -1,19 +1,19 @@
 import { Router } from 'express';
 
-import featuresRoutes from '@modules/features/infra/http/routes/feature.routes';
-import featureGroupsRoutes from '@modules/features/infra/http/routes/feature-group.routes';
-import userRoutes from '@modules/users/infra/http/routes/user.routes';
-import sessionRoutes from '@modules/users/infra/http/routes/session.routes';
+import featuresRouter from '@modules/features/infra/http/routes/features.routes';
+import featureGroupsRouter from '@modules/features/infra/http/routes/feature-groups.routes';
+import sessionsRouter from '@modules/users/infra/http/routes/sessions.routes';
+import usersRouter from '@modules/users/infra/http/routes/users.routes';
 
 import AppError from '@shared/errors/app-error';
 import { NOT_FOUND } from '../constants/http-status-code.constants';
 
 const routes = Router();
 
-routes.use('/features', featuresRoutes);
-routes.use('/feature-groups', featureGroupsRoutes);
-routes.use('/users', userRoutes);
-routes.use('/sessions', sessionRoutes);
+routes.use('/features', featuresRouter);
+routes.use('/feature-groups', featureGroupsRouter);
+routes.use('/users', usersRouter);
+routes.use('/sessions', sessionsRouter);
 
 routes.all('*', async () => {
   throw new AppError(

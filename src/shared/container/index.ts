@@ -1,20 +1,25 @@
 import { container } from 'tsyringe';
 
-import UsersRepositoryInterface from '@modules/users/repositories/users.repository.interface';
-import UsersRepository from '@modules/users/infra/typeorm/repositories/users.repository';
+import FeaturesRepositoryInterface from '@modules/features/repositories/features.repository.interface';
+import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
+
+import FeatureGroupsRepositoryInterface from '@modules/features/repositories/feature-groups.repository.interface';
+import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
 
 import HashProviderInterface from '@modules/users/providers/hash-provider/models/hash.provider.interface';
 import BCryptHashProvider from '@modules/users/providers/hash-provider/implementations/bcrypt-hash.provider';
 
-import FeatureRepositoryInterface from '@modules/features/repositories/feature.repository.interface';
-import FeatureRepository from '@modules/features/infra/typeorm/repositories/feature.repository';
+import UsersRepositoryInterface from '@modules/users/repositories/users.repository.interface';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/users.repository';
 
-import FeatureGroupRepositoryInterface from '@modules/features/repositories/feature-group.repository.interface';
-import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
+container.registerSingleton<FeaturesRepositoryInterface>(
+  'FeaturesRepository',
+  FeaturesRepository,
+);
 
-container.registerSingleton<UsersRepositoryInterface>(
-  'UsersRepository',
-  UsersRepository,
+container.registerSingleton<FeatureGroupsRepositoryInterface>(
+  'FeatureGroupsRepository',
+  FeatureGroupsRepository,
 );
 
 container.registerSingleton<HashProviderInterface>(
@@ -22,12 +27,7 @@ container.registerSingleton<HashProviderInterface>(
   BCryptHashProvider,
 );
 
-container.registerSingleton<FeatureRepositoryInterface>(
-  'FeatureRepository',
-  FeatureRepository,
-);
-
-container.registerSingleton<FeatureGroupRepositoryInterface>(
-  'FeatureGroupRepository',
-  FeatureGroupRepository,
+container.registerSingleton<UsersRepositoryInterface>(
+  'UsersRepository',
+  UsersRepository,
 );

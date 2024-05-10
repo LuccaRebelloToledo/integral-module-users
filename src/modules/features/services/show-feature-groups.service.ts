@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import FeatureGroupRepositoryInterface from '../repositories/feature-group.repository.interface';
+import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -11,13 +11,13 @@ import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 @injectable()
 export default class ShowFeatureGroupsService {
   constructor(
-    @inject('FeatureGroupRepository')
-    private featureGroupRepository: FeatureGroupRepositoryInterface,
+    @inject('FeatureGroupsRepository')
+    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
   ) {}
 
   public async execute(featureGroupId: string): Promise<FeatureGroup> {
     const featureGroup =
-      await this.featureGroupRepository.findById(featureGroupId);
+      await this.featureGroupsRepository.findById(featureGroupId);
 
     if (!featureGroup) {
       throw new AppError(AppErrorTypes.featureGroups.notFound, NOT_FOUND);

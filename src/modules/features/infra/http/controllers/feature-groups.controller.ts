@@ -18,7 +18,7 @@ import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto'
 
 import FeatureGroupPaginationControllerParamsDTO from '@modules/features/dtos/feature-groups-pagination-controller-params.dto';
 
-export default class FeatureGroupController {
+export default class FeatureGroupsController {
   public async list(request: Request, response: Response): Promise<Response> {
     const {
       page,

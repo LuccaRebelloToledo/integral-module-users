@@ -1,15 +1,15 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeatureRepository from '../infra/typeorm/repositories/feature.repository';
-import FeatureGroupRepository from '../infra/typeorm/repositories/feature-group.repository';
+import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
+import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import Feature from '../infra/typeorm/entities/feature.entity';
 
 import ListFeaturesByFeatureGroupIdService from './list-features-by-feature-group-id.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featureRepository: FeatureRepository;
-let featureGroupRepository: FeatureGroupRepository;
+let featuresRepository: FeaturesRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let feature: Feature;
 let listFeaturesByFeatureGroupIdService: ListFeaturesByFeatureGroupIdService;
 
@@ -17,18 +17,18 @@ describe('ListFeaturesByFeatureGroupIdService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    featureRepository = new FeatureRepository();
-    featureGroupRepository = new FeatureGroupRepository();
+    featuresRepository = new FeaturesRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     listFeaturesByFeatureGroupIdService =
-      new ListFeaturesByFeatureGroupIdService(featureRepository);
+      new ListFeaturesByFeatureGroupIdService(featuresRepository);
 
-    feature = await featureRepository.create({
+    feature = await featuresRepository.create({
       id: '1',
       key: 'feature-key',
       name: 'feature-name',
     });
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
@@ -41,8 +41,8 @@ describe('ListFeaturesByFeatureGroupIdService', () => {
   });
 
   test('should be defined', () => {
-    expect(featureRepository).toBeDefined();
-    expect(featureGroupRepository).toBeDefined();
+    expect(featuresRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(listFeaturesByFeatureGroupIdService).toBeDefined();
     expect(feature).toBeDefined();
   });
@@ -52,18 +52,18 @@ describe('ListFeaturesByFeatureGroupIdService', () => {
       id: 'non-existing-feature--group-id',
     };
 
-    jest.spyOn(featureRepository, 'findAllFeaturesByFeatureGroupId');
+    jest.spyOn(featuresRepository, 'findAllFeaturesByFeatureGroupId');
 
     await expect(
       listFeaturesByFeatureGroupIdService.execute(payload.id),
     ).rejects.toThrow(AppErrorTypes.features.notFound);
 
     expect(
-      featureRepository.findAllFeaturesByFeatureGroupId,
+      featuresRepository.findAllFeaturesByFeatureGroupId,
     ).toHaveBeenCalledWith(payload.id);
 
     expect(
-      featureRepository.findAllFeaturesByFeatureGroupId,
+      featuresRepository.findAllFeaturesByFeatureGroupId,
     ).toHaveBeenCalledTimes(1);
   });
 
@@ -72,17 +72,17 @@ describe('ListFeaturesByFeatureGroupIdService', () => {
       id: feature.id,
     };
 
-    jest.spyOn(featureRepository, 'findAllFeaturesByFeatureGroupId');
+    jest.spyOn(featuresRepository, 'findAllFeaturesByFeatureGroupId');
 
     const features = await listFeaturesByFeatureGroupIdService.execute(
       payload.id,
     );
 
     expect(
-      featureRepository.findAllFeaturesByFeatureGroupId,
+      featuresRepository.findAllFeaturesByFeatureGroupId,
     ).toHaveBeenCalledWith(payload.id);
     expect(
-      featureRepository.findAllFeaturesByFeatureGroupId,
+      featuresRepository.findAllFeaturesByFeatureGroupId,
     ).toHaveBeenCalledTimes(1);
 
     expect(features[0].id).toEqual(feature.id);

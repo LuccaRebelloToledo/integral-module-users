@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import FeatureController from '../controllers/feature.controller';
+import FeaturesController from '../controllers/features.controller';
 
 import ensureAuthenticated from '@shared/infra/http/middlewares/ensure-authenticated.middleware';
 import ensureAuthorized from '@shared/infra/http/middlewares/ensure-authorized.middleware';
@@ -14,54 +14,54 @@ import {
   listByKeyOrNameSchema,
 } from './schemas/feature.schemas';
 
-const featuresRoutes = Router();
-const featureController = new FeatureController();
+const featuresRouter = Router();
+const featuresController = new FeaturesController();
 
-featuresRoutes.use(ensureAuthenticated);
+featuresRouter.use(ensureAuthenticated);
 
-featuresRoutes.get(
+featuresRouter.get(
   '/',
   celebrate({
     [Segments.QUERY]: featurePaginationParamsSchema,
   }),
   ensureAuthorized(['full:features', 'list:features']),
-  featureController.list,
+  featuresController.list,
 );
 
-featuresRoutes.get(
+featuresRouter.get(
   '/users/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
   ensureAuthorized(['full:features', 'list-users:features']),
-  featureController.listByUserId,
+  featuresController.listByUserId,
 );
 
-featuresRoutes.get(
+featuresRouter.get(
   '/feature-groups/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
   ensureAuthorized(['full:features', 'list-feature-groups:features']),
-  featureController.listByFeatureGroupId,
+  featuresController.listByFeatureGroupId,
 );
 
-featuresRoutes.get(
+featuresRouter.get(
   '/key-or-name',
   celebrate({
     [Segments.QUERY]: listByKeyOrNameSchema,
   }),
   ensureAuthorized(['full:features', 'list-key-or-name:features']),
-  featureController.listByKeyOrName,
+  featuresController.listByKeyOrName,
 );
 
-featuresRoutes.get(
+featuresRouter.get(
   '/:id',
   celebrate({
     [Segments.PARAMS]: idParamSchema,
   }),
   ensureAuthorized(['full:features', 'show:features']),
-  featureController.show,
+  featuresController.show,
 );
 
-export default featuresRoutes;
+export default featuresRouter;

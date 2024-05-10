@@ -1,7 +1,7 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
-import FeatureGroupRepository from '@modules/features/infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
 
 import DeleteUsersService from './delete-users.service';
 
@@ -10,7 +10,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 import { container } from 'tsyringe';
 
 let usersRepository: UsersRepository;
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let deleteUsersService: DeleteUsersService;
 
 describe('DeleteUsersService', () => {
@@ -18,10 +18,10 @@ describe('DeleteUsersService', () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     deleteUsersService = new DeleteUsersService(usersRepository);
 
-    await featureGroupRepository.create({
+    await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'Feature Group Name',
@@ -49,7 +49,7 @@ describe('DeleteUsersService', () => {
 
   test('should be defined', () => {
     expect(usersRepository).toBeDefined();
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(deleteUsersService).toBeDefined();
   });
 

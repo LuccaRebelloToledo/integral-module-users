@@ -1,18 +1,18 @@
 import { inject, injectable } from 'tsyringe';
 
-import FeatureRepositoryInterface from '../repositories/feature.repository.interface';
+import FeaturesRepositoryInterface from '../repositories/features.repository.interface';
 
 import Feature from '../infra/typeorm/entities/feature.entity';
 
 @injectable()
 export default class ListFeaturesByUserIdService {
   constructor(
-    @inject('FeatureRepository')
-    private featureRepository: FeatureRepositoryInterface,
+    @inject('FeaturesRepository')
+    private featuresRepository: FeaturesRepositoryInterface,
   ) {}
 
   public async execute(userId: string): Promise<Feature[]> {
-    const features = await this.featureRepository.findAllByUserId(userId);
+    const features = await this.featuresRepository.findAllByUserId(userId);
 
     return features;
   }

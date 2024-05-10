@@ -1,13 +1,13 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeatureGroupRepository from '../infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
 import ListFeatureGroupsByKeyOrNameService from './list-feature-groups-by-key-or-name.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let featureGroup: FeatureGroup;
 let listFeatureGroupsByKeyOrNameService: ListFeatureGroupsByKeyOrNameService;
 
@@ -15,11 +15,11 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     listFeatureGroupsByKeyOrNameService =
-      new ListFeatureGroupsByKeyOrNameService(featureGroupRepository);
+      new ListFeatureGroupsByKeyOrNameService(featureGroupsRepository);
 
-    featureGroup = await featureGroupRepository.create({
+    featureGroup = await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
@@ -32,7 +32,7 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
   });
 
   test('should be defined', () => {
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(listFeatureGroupsByKeyOrNameService).toBeDefined();
     expect(featureGroup).toBeDefined();
   });
@@ -43,7 +43,7 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
       name: 'non-existing-feature-group-name',
     };
 
-    jest.spyOn(featureGroupRepository, 'findByKeyOrName');
+    jest.spyOn(featureGroupsRepository, 'findByKeyOrName');
 
     await expect(
       listFeatureGroupsByKeyOrNameService.execute({
@@ -52,12 +52,12 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
       }),
     ).rejects.toThrow(AppErrorTypes.featureGroups.notFound);
 
-    expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledWith({
+    expect(featureGroupsRepository.findByKeyOrName).toHaveBeenCalledWith({
       key: payload.key,
       name: payload.name,
     });
 
-    expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
   });
 
   test('should return a feature group if a feature group is found by key or name', async () => {
@@ -66,7 +66,7 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
       name: 'non-existing-feature-group-name',
     };
 
-    jest.spyOn(featureGroupRepository, 'findByKeyOrName');
+    jest.spyOn(featureGroupsRepository, 'findByKeyOrName');
 
     const featureGroupFound = await listFeatureGroupsByKeyOrNameService.execute(
       {
@@ -75,12 +75,12 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
       },
     );
 
-    expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledWith({
+    expect(featureGroupsRepository.findByKeyOrName).toHaveBeenCalledWith({
       key: payload.key,
       name: payload.name,
     });
 
-    expect(featureGroupRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
 
     expect(featureGroupFound[0].id).toEqual(featureGroup.id);
     expect(featureGroupFound[0].name).toEqual(featureGroup.name);

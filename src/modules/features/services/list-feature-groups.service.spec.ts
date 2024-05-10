@@ -1,6 +1,6 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeatureGroupRepository from '../infra/typeorm/repositories/feature-group.repository';
+import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 
 import ListFeatureGroupsService from './list-feature-groups.service';
 
@@ -8,7 +8,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { calculateSkip } from '@shared/utils/calculate-skip.utils';
 
-let featureGroupRepository: FeatureGroupRepository;
+let featureGroupsRepository: FeatureGroupsRepository;
 let listFeatureGroupsService: ListFeatureGroupsService;
 
 const payload = {
@@ -35,9 +35,9 @@ describe('ListFeatureGroupsService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    featureGroupRepository = new FeatureGroupRepository();
+    featureGroupsRepository = new FeatureGroupsRepository();
     listFeatureGroupsService = new ListFeatureGroupsService(
-      featureGroupRepository,
+      featureGroupsRepository,
     );
   });
 
@@ -46,45 +46,45 @@ describe('ListFeatureGroupsService', () => {
   });
 
   test('should be defined', () => {
-    expect(featureGroupRepository).toBeDefined();
+    expect(featureGroupsRepository).toBeDefined();
     expect(listFeatureGroupsService).toBeDefined();
   });
 
   test('should throw an error if no feature group is found', async () => {
-    jest.spyOn(featureGroupRepository, 'findAll');
+    jest.spyOn(featureGroupsRepository, 'findAll');
 
     await expect(listFeatureGroupsService.execute(payload)).rejects.toThrow(
       AppErrorTypes.featureGroups.notFound,
     );
 
-    expect(featureGroupRepository.findAll).toHaveBeenCalledWith(payloadParsed);
+    expect(featureGroupsRepository.findAll).toHaveBeenCalledWith(payloadParsed);
 
-    expect(featureGroupRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findAll).toHaveBeenCalledTimes(1);
   });
 
   test('should be return a list of feature groups', async () => {
-    const featureGroupOne = await featureGroupRepository.create({
+    const featureGroupOne = await featureGroupsRepository.create({
       id: '1',
       key: 'feature-group-key-1',
       name: 'Feature Group Name-1',
       features: [],
     });
 
-    const featureGroupTwo = await featureGroupRepository.create({
+    const featureGroupTwo = await featureGroupsRepository.create({
       id: '2',
       key: 'feature-group-key-2',
       name: 'Feature Group Name-2',
       features: [],
     });
 
-    jest.spyOn(featureGroupRepository, 'findAll');
+    jest.spyOn(featureGroupsRepository, 'findAll');
 
     const { pagination, totalItems, items } =
       await listFeatureGroupsService.execute(payload);
 
-    expect(featureGroupRepository.findAll).toHaveBeenCalledWith(payloadParsed);
+    expect(featureGroupsRepository.findAll).toHaveBeenCalledWith(payloadParsed);
 
-    expect(featureGroupRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(featureGroupsRepository.findAll).toHaveBeenCalledTimes(1);
 
     expect(pagination.current).toEqual(payload.page);
     expect(items).toHaveLength(2);

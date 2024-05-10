@@ -1,13 +1,13 @@
 import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeatureRepository from '../infra/typeorm/repositories/feature.repository';
+import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
 import Feature from '../infra/typeorm/entities/feature.entity';
 
 import ShowFeaturesService from './show-features.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featureRepository: FeatureRepository;
+let featuresRepository: FeaturesRepository;
 let feature: Feature;
 let showFeaturesService: ShowFeaturesService;
 
@@ -15,10 +15,10 @@ describe('ShowFeaturesService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
-    featureRepository = new FeatureRepository();
-    showFeaturesService = new ShowFeaturesService(featureRepository);
+    featuresRepository = new FeaturesRepository();
+    showFeaturesService = new ShowFeaturesService(featuresRepository);
 
-    feature = await featureRepository.create({
+    feature = await featuresRepository.create({
       id: '1',
       key: 'feature-key',
       name: 'feature-name',
@@ -30,7 +30,7 @@ describe('ShowFeaturesService', () => {
   });
 
   test('should be defined', () => {
-    expect(featureRepository).toBeDefined();
+    expect(featuresRepository).toBeDefined();
     expect(showFeaturesService).toBeDefined();
     expect(feature).toBeDefined();
   });
@@ -40,15 +40,15 @@ describe('ShowFeaturesService', () => {
       id: 'non-existing-feature-id',
     };
 
-    jest.spyOn(featureRepository, 'findById');
+    jest.spyOn(featuresRepository, 'findById');
 
     await expect(showFeaturesService.execute(payload.id)).rejects.toThrow(
       AppErrorTypes.features.notFound,
     );
 
-    expect(featureRepository.findById).toHaveBeenCalledWith(payload.id);
+    expect(featuresRepository.findById).toHaveBeenCalledWith(payload.id);
 
-    expect(featureRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featuresRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should return a feature if a feature is found by id', async () => {
@@ -56,12 +56,12 @@ describe('ShowFeaturesService', () => {
       id: '1',
     };
 
-    jest.spyOn(featureRepository, 'findById');
+    jest.spyOn(featuresRepository, 'findById');
 
     const featureFound = await showFeaturesService.execute(payload.id);
 
-    expect(featureRepository.findById).toHaveBeenCalledWith(payload.id);
-    expect(featureRepository.findById).toHaveBeenCalledTimes(1);
+    expect(featuresRepository.findById).toHaveBeenCalledWith(payload.id);
+    expect(featuresRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(featureFound.id).toEqual(feature.id);
     expect(featureFound.name).toEqual(feature.name);
