@@ -8,10 +8,7 @@
 
   "testMatch": ["**/*.spec.ts", "**/*.e2e-spec.ts"],
 
-  "collectCoverageFrom": [
-    "<rootDir>/src/modules/**/services/*.ts",
-    "<rootDir>/src/modules/**/infra/http/routes/*.ts"
-  ],
+  "collectCoverageFrom": ["<rootDir>/src/modules/**/services/*.ts"],
 
   "coverageDirectory": "coverage",
 
