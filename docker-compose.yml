@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: 1_postgresql
+    container_name: postgresql
     image: bitnami/postgresql:latest
     environment:
       POSTGRESQL_DATABASE: ${PG_DB}
@@ -12,7 +12,7 @@ services:
       - postgres_data:/bitnami/postgresql
 
   redis:
-    container_name: 1_redis
+    container_name: redis
     image: bitnami/redis:latest
     environment:
       REDIS_PASSWORD: ${REDIS_PASS}
