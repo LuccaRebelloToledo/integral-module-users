@@ -17,7 +17,6 @@ export default class FeatureGroup extends BaseEntity {
     cascade: true,
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
-    eager: true,
   })
   @JoinTable({
     name: 'grouped_features',

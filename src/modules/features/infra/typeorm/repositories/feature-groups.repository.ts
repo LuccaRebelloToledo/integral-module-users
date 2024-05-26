@@ -1,17 +1,17 @@
-import { getActiveDataSource } from '@shared/utils/get-active-data-source.utils';
+import getActiveDataSource from '@shared/utils/get-active-data-source.utils';
 
 import { ILike, Repository } from 'typeorm';
 
-import FeatureGroupsRepositoryInterface from '@modules/features/repositories/feature-groups.repository.interface';
+import IFeatureGroupsRepository from '@modules/features/repositories/feature-groups.repository.interface';
 import FeatureGroup from '../entities/feature-group.entity';
 
-import ListFeatureGroupsRepositoryParamsDTO from '@modules/features/dtos/list-feature-groups-repository-params.dto';
-import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
-import FindFeatureGroupsByKeyOrNameDTO from '@modules/features/dtos/find-feature-groups-by-key-or-name.dto';
-import CreateFeatureGroupsDTO from '@modules/features/dtos/create-feature-groups.dto';
+import ListFeatureGroupsRepositoryParamsDto from '@modules/features/dtos/list-feature-groups-repository-params.dto';
+import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
+import FindByKeyOrNameDto from '@modules/features/dtos/find-by-key-or-name.dto';
+import CreateFeatureGroupsDto from '@modules/features/dtos/create-feature-groups.dto';
 
 export default class FeatureGroupsRepository
-  implements FeatureGroupsRepositoryInterface
+  implements IFeatureGroupsRepository
 {
   private featureGroupsRepository: Repository<FeatureGroup>;
 
@@ -27,12 +27,11 @@ export default class FeatureGroupsRepository
     order,
     key,
     name,
-  }: ListFeatureGroupsRepositoryParamsDTO): Promise<
-    ListRepositoryResponseDTO<FeatureGroup>
+  }: ListFeatureGroupsRepositoryParamsDto): Promise<
+    ListRepositoryResponseDto<FeatureGroup>
   > {
     const query = this.featureGroupsRepository
       .createQueryBuilder('feature_groups')
-      .leftJoinAndSelect('feature_groups.features', 'features')
       .take(take)
       .skip(skip)
       .orderBy(`feature_groups.${sort}`, order as 'ASC' | 'DESC');
@@ -58,13 +57,14 @@ export default class FeatureGroupsRepository
       where: {
         id: featureGroupId,
       },
+      relations: ['features'],
     });
   }
 
   public async findByKeyOrName({
     key,
     name,
-  }: FindFeatureGroupsByKeyOrNameDTO): Promise<FeatureGroup[]> {
+  }: FindByKeyOrNameDto): Promise<FeatureGroup | null> {
     const query =
       this.featureGroupsRepository.createQueryBuilder('feature_groups');
 
@@ -76,13 +76,13 @@ export default class FeatureGroupsRepository
       query.orWhere({ name: ILike(`%${name}%`) });
     }
 
-    return await query.getMany();
+    return await query.getOne();
   }
 
   public async create(
-    featureGroupData: CreateFeatureGroupsDTO,
+    featureGroupDto: CreateFeatureGroupsDto,
   ): Promise<FeatureGroup> {
-    const featureGroup = this.featureGroupsRepository.create(featureGroupData);
+    const featureGroup = this.featureGroupsRepository.create(featureGroupDto);
 
     return await this.save(featureGroup);
   }
@@ -91,11 +91,11 @@ export default class FeatureGroupsRepository
     return await this.featureGroupsRepository.save(featureGroup);
   }
 
-  public async delete(featureGroup: FeatureGroup): Promise<void> {
-    await this.featureGroupsRepository.delete(featureGroup.id);
+  public async delete(id: string): Promise<void> {
+    await this.featureGroupsRepository.delete(id);
   }
 
-  public async softDelete(featureGroup: FeatureGroup): Promise<void> {
-    await this.featureGroupsRepository.softDelete(featureGroup.id);
+  public async softDelete(id: string): Promise<void> {
+    await this.featureGroupsRepository.softDelete(id);
   }
 }

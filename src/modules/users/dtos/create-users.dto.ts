@@ -1,7 +1,5 @@
-export default interface CreateUsersDTO {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
+import CreateUsersServiceDto from './create-users-service.dto';
+
+export default interface CreateUsersDTO extends CreateUsersServiceDto {
   featureGroupId: string;
 }

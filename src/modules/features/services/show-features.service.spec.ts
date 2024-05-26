@@ -1,4 +1,4 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
 import Feature from '../infra/typeorm/entities/feature.entity';
@@ -7,11 +7,11 @@ import ShowFeaturesService from './show-features.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featuresRepository: FeaturesRepository;
-let feature: Feature;
-let showFeaturesService: ShowFeaturesService;
-
 describe('ShowFeaturesService', () => {
+  let featuresRepository: FeaturesRepository;
+  let showFeaturesService: ShowFeaturesService;
+  let feature: Feature;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -19,7 +19,6 @@ describe('ShowFeaturesService', () => {
     showFeaturesService = new ShowFeaturesService(featuresRepository);
 
     feature = await featuresRepository.create({
-      id: '1',
       key: 'feature-key',
       name: 'feature-name',
     });
@@ -53,7 +52,7 @@ describe('ShowFeaturesService', () => {
 
   test('should return a feature if a feature is found by id', async () => {
     const payload = {
-      id: '1',
+      id: feature.id,
     };
 
     jest.spyOn(featuresRepository, 'findById');

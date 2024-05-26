@@ -1,9 +1,8 @@
-// eslint-disable-next-line node/no-unpublished-import
 import request from 'supertest';
 
 import app from '@shared/infra/http/app';
 
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
@@ -14,21 +13,17 @@ import {
   OK,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
-let featuresRepository: FeaturesRepository;
-let featureGroupsRepository: FeatureGroupsRepository;
+import User from '../../typeorm/entities/user.entity';
 
-let token: string;
-let idUser: string;
-const basePath = '/users';
+describe('e2e - Users', () => {
+  let featuresRepository: FeaturesRepository;
+  let featureGroupsRepository: FeatureGroupsRepository;
 
-const payloadNewUser = {
-  name: 'User Test 2',
-  email: 'lucca2@test.com',
-  password: 'Lucca@321',
-  featureGroupId: '1o9xrUxw2KVRpNmNTiZPx',
-};
+  let token: string;
+  let user: User;
 
-describe('UsersE2E', () => {
+  const USER_PATH = '/users';
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -36,19 +31,18 @@ describe('UsersE2E', () => {
     featureGroupsRepository = new FeatureGroupsRepository();
 
     const feature = await featuresRepository.create({
-      id: '1',
       key: 'full:users',
       name: 'Full access to users',
     });
 
     await featureGroupsRepository.create({
-      id: '1o9xrUxw2KVRpNmNTiZPx',
       key: 'ADMIN',
       name: 'ADMIN',
       features: [feature],
     });
 
     const sessionsPath = '/sessions';
+
     await request(app).post(`${sessionsPath}/sign-up`).send({
       name: 'User Test',
       email: 'lucca@test.com',
@@ -61,6 +55,7 @@ describe('UsersE2E', () => {
     });
 
     const { token: userToken } = response.body;
+
     token = userToken;
   });
 
@@ -77,20 +72,28 @@ describe('UsersE2E', () => {
 
   test('should be create a user', async () => {
     const response = await request(app)
-      .post(`${basePath}/`)
+      .post(`${USER_PATH}`)
       .set('Authorization', token)
-      .send(payloadNewUser);
+      .send({
+        name: 'User Test 2',
+        email: 'lucca2@test.com',
+        password: 'Lucca@321',
+      });
 
     expect(response.status).toBe(CREATED);
-    expect(response.body).toEqual('');
+    expect(response.body).toBeDefined();
+
+    console.log(response.body);
+
+    user = response.body;
   });
 
   test('should be list a users', async () => {
     const response = await request(app)
-      .get(`${basePath}/`)
+      .get(`${USER_PATH}`)
       .set('Authorization', token)
       .query({
-        email: payloadNewUser.email,
+        email: user.email,
       });
 
     expect(response.status).toBe(OK);
@@ -106,16 +109,12 @@ describe('UsersE2E', () => {
 
     expect(totalItems).toBe(1);
     expect(items.length).toBe(1);
-    expect(items[0]).toEqual(
-      expect.objectContaining({ email: payloadNewUser.email }),
-    );
-
-    idUser = items[0].id;
+    expect(items[0]).toEqual(expect.objectContaining({ email: user.email }));
   });
 
   test('should be show a user', async () => {
     const response = await request(app)
-      .get(`${basePath}/${idUser}`)
+      .get(`${USER_PATH}/${user.id}`)
       .set('Authorization', token);
 
     expect(response.status).toBe(OK);
@@ -127,7 +126,7 @@ describe('UsersE2E', () => {
 
   test('should be update a user', async () => {
     const response = await request(app)
-      .put(`${basePath}/${idUser}`)
+      .put(`${USER_PATH}/${user.id}`)
       .set('Authorization', token)
       .send({
         name: 'Lucca Toledo',
@@ -139,14 +138,14 @@ describe('UsersE2E', () => {
     expect(response.body).toHaveProperty('name');
     expect(response.body).toHaveProperty('email');
 
-    expect(response.body.id).toBe(idUser);
+    expect(response.body.id).toBe(user.id);
     expect(response.body.name).toBe('Lucca Toledo');
-    expect(response.body.email).toBe(payloadNewUser.email);
+    expect(response.body.email).toBe(user.email);
   });
 
   test('should be delete a user', async () => {
     const response = await request(app)
-      .delete(`${basePath}/${idUser}`)
+      .delete(`${USER_PATH}/${user.id}`)
       .set('Authorization', token);
 
     expect(response.status).toBe(NO_CONTENT);

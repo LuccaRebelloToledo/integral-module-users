@@ -1,33 +1,32 @@
 import { container, inject, injectable } from 'tsyringe';
 
+import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
+import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+
 import UpdateFeatureGroupsServiceDTO from '../dtos/update-feature-groups-service.dto';
 
-import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
-
 import ShowFeatureGroupsService from './show-feature-groups.service';
+
+import getFeaturesByFeatureIds from '@shared/utils/get-features-by-feature-ids.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
-
-import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-ids.utils';
-
 @injectable()
 export default class UpdateFeatureGroupsService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
+    private featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
   public async execute({
-    featureGroupId,
+    id,
     key,
     name,
     featureIds,
   }: UpdateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
-    const featureGroup = await this.validateFeatureGroup(featureGroupId);
+    const featureGroup = await this.validateFeatureGroup(id);
 
     if (key || name) {
       await this.validateKeyAndName(key, name);
@@ -61,15 +60,13 @@ export default class UpdateFeatureGroupsService {
   }
 
   private async validateKeyAndName(key?: string, name?: string): Promise<void> {
-    const checkFeatureGroupsExists =
-      await this.featureGroupsRepository.findByKeyOrName({ key, name });
+    const featureGroup = await this.featureGroupsRepository.findByKeyOrName({
+      key,
+      name,
+    });
 
-    if (checkFeatureGroupsExists.length) {
-      const featureExistsByKey = checkFeatureGroupsExists.find(
-        (feature) => feature.key === key,
-      );
-
-      if (featureExistsByKey) {
+    if (featureGroup) {
+      if (featureGroup.key === key) {
         throw new AppError(
           AppErrorTypes.featureGroups.keyAlreadyRegistered,
           CONFLICT,

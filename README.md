@@ -42,7 +42,7 @@ $ npm test
 ```
 
 ### API Documentation
-Refer to the [API Documentation](http://localhost:4000/documentation/) for more details on how to use the APIs.
+Refer to the [API Documentation](http://localhost:4000/api-docs/) for more details on how to use the APIs.
 
 ### Contributing
 Contributions are always welcome. If you find any issues or have any suggestions, feel free to open an issue or submit a pull request.

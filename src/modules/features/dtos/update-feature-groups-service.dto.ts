@@ -1,6 +1,6 @@
-export default interface UpdateFeatureGroupsServiceDTO {
-  featureGroupId: string;
-  key?: string;
-  name?: string;
-  featureIds?: string[];
+import CreateFeatureGroupsServiceDto from './create-feature-groups-service.dto';
+
+export default interface UpdateFeatureGroupsServiceDto
+  extends Partial<CreateFeatureGroupsServiceDto> {
+  id: string;
 }

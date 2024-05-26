@@ -1,7 +1,6 @@
 import Feature from '../infra/typeorm/entities/feature.entity';
 
-export default class CreateFeatureGroupsDTO {
-  id: string;
+export default class CreateFeatureGroupsDto {
   key: string;
   name: string;
   features: Feature[];

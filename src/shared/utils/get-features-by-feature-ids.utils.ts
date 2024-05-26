@@ -4,18 +4,16 @@ import ShowFeaturesService from '@modules/features/services/show-features.servic
 
 import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 
-export const getFeaturesByFeatureIds = async (
+const getFeaturesByFeatureIds = async (
   featureIds: string[],
 ): Promise<Feature[]> => {
   const showFeaturesService = container.resolve(ShowFeaturesService);
 
-  const features: Feature[] = [];
-
-  for (const featureId of featureIds) {
-    const feature = await showFeaturesService.execute(featureId);
-
-    features.push(feature);
-  }
+  const features = await Promise.all(
+    featureIds.map((featureId) => showFeaturesService.execute(featureId)),
+  );
 
   return features;
 };
+
+export default getFeaturesByFeatureIds;

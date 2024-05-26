@@ -1,24 +1,21 @@
 import { inject, injectable } from 'tsyringe';
 
+import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
+import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+
 import CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
 
-import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
-
-import { generateNanoId } from '@shared/utils/generate-nanoid.utils';
+import getFeaturesByFeatureIds from '@shared/utils/get-features-by-feature-ids.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constants';
 
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
-
-import { getFeaturesByFeatureIds } from '@shared/utils/get-features-by-feature-ids.utils';
-
 @injectable()
 export default class CreateFeatureGroupsService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
+    private featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
   public async execute({
@@ -31,7 +28,6 @@ export default class CreateFeatureGroupsService {
     const features = await getFeaturesByFeatureIds(featureIds);
 
     const featureGroup = await this.featureGroupsRepository.create({
-      id: generateNanoId(),
       key,
       name,
       features,
@@ -44,20 +40,19 @@ export default class CreateFeatureGroupsService {
     key: string,
     name: string,
   ): Promise<void> {
-    const existingFeatureGroups =
-      await this.featureGroupsRepository.findByKeyOrName({ key, name });
+    const featureGroup = await this.featureGroupsRepository.findByKeyOrName({
+      key,
+      name,
+    });
 
-    if (existingFeatureGroups.length) {
-      const existingFeatureGroup = existingFeatureGroups.find(
-        (featureGroup) => featureGroup.key === key,
-      );
-
-      if (existingFeatureGroup) {
+    if (featureGroup) {
+      if (featureGroup.key === key) {
         throw new AppError(
           AppErrorTypes.featureGroups.keyAlreadyRegistered,
           CONFLICT,
         );
       }
+
       throw new AppError(
         AppErrorTypes.featureGroups.nameAlreadyRegistered,
         CONFLICT,

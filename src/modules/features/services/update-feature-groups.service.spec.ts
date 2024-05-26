@@ -1,4 +1,6 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
+
+import { container } from 'tsyringe';
 
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
@@ -10,16 +12,14 @@ import UpdateFeatureGroupsService from './update-feature-groups.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { container } from 'tsyringe';
-
-let featureGroupsRepository: FeatureGroupsRepository;
-let featuresRepository: FeaturesRepository;
-let featureOne: Feature;
-let featureTwo: Feature;
-let featureGroup: FeatureGroup;
-let updateFeatureGroupsService: UpdateFeatureGroupsService;
-
 describe('UpdateFeatureGroupsService', () => {
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let featuresRepository: FeaturesRepository;
+  let featureOne: Feature;
+  let featureTwo: Feature;
+  let featureGroup: FeatureGroup;
+  let updateFeatureGroupsService: UpdateFeatureGroupsService;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -30,20 +30,17 @@ describe('UpdateFeatureGroupsService', () => {
     );
 
     featureOne = await featuresRepository.create({
-      id: '1',
       key: 'feature-key',
       name: 'feature-name',
     });
 
     featureGroup = await featureGroupsRepository.create({
-      id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
       features: [featureOne],
     });
 
     featureTwo = await featuresRepository.create({
-      id: '2',
       key: 'feature-key-2',
       name: 'feature-name-2',
     });
@@ -74,7 +71,7 @@ describe('UpdateFeatureGroupsService', () => {
 
   test('should throw an error if no feature group is found', async () => {
     const payload = {
-      featureGroupId: 'non-existing-feature-group-id',
+      id: 'non-existing-feature-group-id',
       key: 'feature-group-key',
       name: 'feature-group-name',
       featureIds: [],
@@ -86,16 +83,14 @@ describe('UpdateFeatureGroupsService', () => {
       AppErrorTypes.featureGroups.notFound,
     );
 
-    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(
-      payload.featureGroupId,
-    );
+    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(payload.id);
 
     expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   test('should throw an error if feature group is found by key', async () => {
     const payload = {
-      featureGroupId: '1',
+      id: featureGroup.id,
       key: 'feature-group-key',
       name: undefined,
       featureIds: [],
@@ -117,7 +112,7 @@ describe('UpdateFeatureGroupsService', () => {
 
   test('should throw an error if feature group is found by name', async () => {
     const payload = {
-      featureGroupId: '1',
+      id: featureGroup.id,
       key: undefined,
       name: 'feature-group-name',
       featureIds: [],
@@ -139,7 +134,7 @@ describe('UpdateFeatureGroupsService', () => {
 
   test('should throw an error if no feature is found', async () => {
     const payload = {
-      featureGroupId: '1',
+      id: featureGroup.id,
       key: 'new-feature-group-key',
       name: 'new-feature-group-name',
       featureIds: ['non-existing-feature-id'],
@@ -160,7 +155,7 @@ describe('UpdateFeatureGroupsService', () => {
 
   test('should be update the feature group', async () => {
     const payload = {
-      featureGroupId: '1',
+      id: featureGroup.id,
       key: 'new-feature-group-key',
       name: 'new-feature-group-name',
       featureIds: [featureTwo.id],

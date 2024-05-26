@@ -1,6 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import FeatureGroupsRepositoryInterface from '../repositories/feature-groups.repository.interface';
+import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
 import ShowFeatureGroupsService from './show-feature-groups.service';
 
@@ -8,16 +8,16 @@ import ShowFeatureGroupsService from './show-feature-groups.service';
 export default class DeleteFeatureGroupsService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: FeatureGroupsRepositoryInterface,
+    private featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
-  public async execute(featureGroupId: string): Promise<void> {
+  public async execute(id: string): Promise<void> {
     const showFeatureGroupsService = container.resolve(
       ShowFeatureGroupsService,
     );
 
-    const featureGroup = await showFeatureGroupsService.execute(featureGroupId);
+    const featureGroup = await showFeatureGroupsService.execute(id);
 
-    await this.featureGroupsRepository.delete(featureGroup);
+    await this.featureGroupsRepository.delete(featureGroup.id);
   }
 }

@@ -13,7 +13,7 @@ import CreateUsersService from '@modules/users/services/create-users.service';
 import UpdateUsersService from '@modules/users/services/update-users.service';
 import DeleteUsersService from '@modules/users/services/delete-users.service';
 
-import UserPaginationControllerParamsDTO from '@modules/users/dtos/user-pagination-controller-params.dto';
+import ListUsersControllerParamsDto from '@modules/users/dtos/list-users-controller-params.dto';
 
 export default class UsersController {
   public async list(request: Request, response: Response): Promise<Response> {
@@ -24,9 +24,10 @@ export default class UsersController {
       sort,
       name,
       email,
-    }: UserPaginationControllerParamsDTO = request.query;
+    }: ListUsersControllerParamsDto = request.query;
 
     const listUsersService = container.resolve(ListUsersService);
+
     const users = await listUsersService.execute({
       page: page!,
       limit: limit!,
@@ -40,50 +41,53 @@ export default class UsersController {
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
-    const { id: userId } = request.params;
+    const { id } = request.params;
 
     const showUsersService = container.resolve(ShowUsersService);
-    const user = await showUsersService.execute(userId);
+
+    const user = await showUsersService.execute(id);
 
     return response.json(user);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { name, email, password, featureGroupId } = request.body;
+    const { name, email, password } = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
-    await createUsersService.execute({
+
+    const user = await createUsersService.execute({
       name,
       email,
       password,
-      featureGroupId,
     });
 
-    return response.status(CREATED).json();
+    return response.status(CREATED).json(user);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const { id: userId } = request.params;
-    const { name, email, password, featureGroupId, featureIds } = request.body;
+    const { id } = request.params;
+
+    const { name, email, password, featureGroupId } = request.body;
 
     const updateUsersService = container.resolve(UpdateUsersService);
+
     const user = await updateUsersService.execute({
-      id: userId,
+      id,
       name,
       email,
       password,
       featureGroupId,
-      featureIds,
     });
 
     return response.json(user);
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
-    const { id: userId } = request.params;
+    const { id } = request.params;
 
     const deleteUsersService = container.resolve(DeleteUsersService);
-    await deleteUsersService.execute(userId);
+
+    await deleteUsersService.execute(id);
 
     return response.status(NO_CONTENT).json();
   }

@@ -1,33 +1,34 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
+
+import { container } from 'tsyringe';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
-import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
-
-import User from '../infra/typeorm/entities/user.entity';
+import HashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
 import UpdateUsersService from './update-users.service';
 
+import User from '../infra/typeorm/entities/user.entity';
+
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { container } from 'tsyringe';
-
-let usersRepository: UsersRepository;
-let featuresRepository: FeaturesRepository;
-let featureGroupsRepository: FeatureGroupsRepository;
-let hashProvider: BCryptHashProvider;
-let updateUsersService: UpdateUsersService;
-let user: User;
-
 describe('UpdateUsersService', () => {
+  let usersRepository: UsersRepository;
+  let featuresRepository: FeaturesRepository;
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let hashProvider: HashProvider;
+  let updateUsersService: UpdateUsersService;
+  let featureGroupId: string;
+  let user: User;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
     featuresRepository = new FeaturesRepository();
     featureGroupsRepository = new FeatureGroupsRepository();
-    hashProvider = new BCryptHashProvider();
+    hashProvider = new HashProvider();
     updateUsersService = new UpdateUsersService(usersRepository, hashProvider);
 
     container.reset();
@@ -45,24 +46,23 @@ describe('UpdateUsersService', () => {
     });
 
     const feature = await featuresRepository.create({
-      id: '1',
       key: 'feature-key',
       name: 'Feature Name',
     });
 
-    await featureGroupsRepository.create({
-      id: '1',
+    const featureGroup = await featureGroupsRepository.create({
       key: 'feature-group-key',
       name: 'Feature Group Name',
       features: [feature],
     });
 
+    featureGroupId = featureGroup.id;
+
     user = await usersRepository.create({
-      id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      featureGroupId: '1',
+      featureGroupId: featureGroup.id,
     });
   });
 
@@ -76,6 +76,7 @@ describe('UpdateUsersService', () => {
     expect(featureGroupsRepository).toBeDefined();
     expect(hashProvider).toBeDefined();
     expect(updateUsersService).toBeDefined();
+    expect(featureGroupId).toBeDefined();
     expect(user).toBeDefined();
   });
 
@@ -98,15 +99,14 @@ describe('UpdateUsersService', () => {
 
   test('should throw an error if user is found by email', async () => {
     await usersRepository.create({
-      id: '2',
       name: 'John Doe 2',
       email: 'johndoe2@example.com',
       password: '123456',
-      featureGroupId: '1',
+      featureGroupId,
     });
 
     const userPayload = {
-      id: '1',
+      id: user.id,
       email: 'johndoe2@example.com',
       name: 'John Doe',
     };
@@ -124,9 +124,9 @@ describe('UpdateUsersService', () => {
 
   test('should throw an error if no feature group is found by id', async () => {
     const userPayload = {
-      id: '1',
-      featureGroupId: '2',
+      id: user.id,
       name: 'John Doe',
+      featureGroupId: '2',
     };
 
     jest.spyOn(featureGroupsRepository, 'findById');
@@ -142,86 +142,28 @@ describe('UpdateUsersService', () => {
     expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  test('should throw an error if no feature is found by id', async () => {
-    const userPayload = {
-      id: '1',
-      name: 'John Doe',
-      featureIds: ['2'],
-    };
-
-    jest.spyOn(featuresRepository, 'findById');
-
-    await expect(updateUsersService.execute(userPayload)).rejects.toThrow(
-      AppErrorTypes.features.notFound,
-    );
-
-    expect(featuresRepository.findById).toHaveBeenCalledWith(
-      userPayload.featureIds[0],
-    );
-
-    expect(featuresRepository.findById).toHaveBeenCalledTimes(1);
-  });
-
-  test('should throw an error if feature repeated', async () => {
-    const userPayload = {
-      id: '1',
-      name: 'John Doe',
-      featureGroupId: '1',
-      featureIds: ['1'],
-    };
-
-    jest.spyOn(featureGroupsRepository, 'findById');
-    jest.spyOn(featuresRepository, 'findById');
-
-    await expect(updateUsersService.execute(userPayload)).rejects.toThrow(
-      AppErrorTypes.features.repeatedFeatures,
-    );
-
-    expect(featureGroupsRepository.findById).toHaveBeenCalledWith(
-      userPayload.featureGroupId,
-    );
-
-    expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
-
-    expect(featuresRepository.findById).toHaveBeenCalledWith(
-      userPayload.featureIds[0],
-    );
-
-    expect(featuresRepository.findById).toHaveBeenCalledTimes(1);
-  });
-
   test('should be a update an user', async () => {
     const featureTwo = await featuresRepository.create({
-      id: '2',
       key: 'feature-key-2',
       name: 'Feature Name 2',
     });
 
-    const featureThree = await featuresRepository.create({
-      id: '3',
-      key: 'feature-key-3',
-      name: 'Feature Name 3',
-    });
-
-    await featureGroupsRepository.create({
-      id: '2',
+    const newFeatureGroup = await featureGroupsRepository.create({
       key: 'feature-group-key-2',
       name: 'Feature Group Name 2',
       features: [featureTwo],
     });
 
     const userPayload = {
-      id: '1',
+      id: user.id,
       name: 'John Doe Update',
       email: 'johndoeupdate@example.com',
       password: '123456789',
-      featureGroupId: '2',
-      featureIds: [featureThree.id],
+      featureGroupId: newFeatureGroup.id,
     };
 
     jest.spyOn(usersRepository, 'findByEmail');
     jest.spyOn(featureGroupsRepository, 'findById');
-    jest.spyOn(featuresRepository, 'findById');
     jest.spyOn(usersRepository, 'save');
 
     const newUser = await updateUsersService.execute(userPayload);
@@ -230,11 +172,6 @@ describe('UpdateUsersService', () => {
 
     expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
     expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
-
-    expect(featuresRepository.findById).toHaveBeenCalledWith(
-      userPayload.featureIds[0],
-    );
-    expect(featuresRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(featureGroupsRepository.findById).toHaveBeenCalledWith(
       userPayload.featureGroupId,
@@ -245,7 +182,5 @@ describe('UpdateUsersService', () => {
     expect(newUser.email).not.toEqual(user.email);
     expect(newUser.password).not.toEqual(user.password);
     expect(newUser.featureGroupId).not.toEqual(user.featureGroupId);
-    expect(newUser.standaloneFeatures).not.toEqual(user.standaloneFeatures);
-    expect(newUser.standaloneFeatures?.length).toEqual(1);
   });
 });

@@ -1,6 +1,6 @@
-import PaginationServiceParamsDTO from '@shared/dtos/pagination-service-params.dto';
-import EmailAndNameOptionalDTO from './email-and-name-optional.dto';
+import ListServiceParamsDto from '@shared/dtos/list-service-params.dto';
+import EmailAndNameOptionalDto from './email-and-name-optional.dto';
 
-export default interface ListUsersServiceParamsDTO
-  extends PaginationServiceParamsDTO,
-    EmailAndNameOptionalDTO {}
+export default interface ListUsersServiceParamsDto
+  extends ListServiceParamsDto,
+    EmailAndNameOptionalDto {}

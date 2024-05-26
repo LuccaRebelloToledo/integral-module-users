@@ -27,16 +27,9 @@ export default function ensureAuthorized(
 
     const user = await showUsersService.execute(id);
 
-    const combinedFeatures = [
-      ...user.featureGroup.features,
-      ...(user.standaloneFeatures ?? []),
-    ];
+    const features = user.featureGroup.features;
 
-    if (
-      !combinedFeatures.find((userFeature) =>
-        requiredFeatures.includes(userFeature.key),
-      )
-    ) {
+    if (!features.find((feature) => requiredFeatures.includes(feature.key))) {
       throw new AppError(
         AppErrorTypes.sessions.insufficientPrivilege,
         FORBIDDEN,

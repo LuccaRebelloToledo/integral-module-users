@@ -1,4 +1,4 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
@@ -7,24 +7,17 @@ import ShowUsersService from './show-users.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let usersRepository: UsersRepository;
-let featureGroupsRepository: FeatureGroupsRepository;
-let showUsersService: ShowUsersService;
-
 describe('ShowUsersService', () => {
+  let usersRepository: UsersRepository;
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let showUsersService: ShowUsersService;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
     featureGroupsRepository = new FeatureGroupsRepository();
     showUsersService = new ShowUsersService(usersRepository);
-
-    await featureGroupsRepository.create({
-      id: '1',
-      key: 'feature-group-key',
-      name: 'Feature Group Name',
-      features: [],
-    });
   });
 
   afterAll(async () => {
@@ -52,21 +45,24 @@ describe('ShowUsersService', () => {
   });
 
   test('should return a user if a user is found by id', async () => {
+    const featureGroup = await featureGroupsRepository.create({
+      key: 'feature-group-key',
+      name: 'Feature Group Name',
+      features: [],
+    });
+
     const createdUser = await usersRepository.create({
-      id: '1',
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      featureGroupId: '1',
+      featureGroupId: featureGroup.id,
     });
 
     jest.spyOn(usersRepository, 'findById');
 
-    const userId = '1';
+    const user = await showUsersService.execute(createdUser.id);
 
-    const user = await showUsersService.execute(userId);
-
-    expect(usersRepository.findById).toHaveBeenCalledWith(userId);
+    expect(usersRepository.findById).toHaveBeenCalledWith(createdUser.id);
     expect(usersRepository.findById).toHaveBeenCalledTimes(1);
 
     expect(user.id).toEqual(createdUser.id);

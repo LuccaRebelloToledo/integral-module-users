@@ -1,10 +1,14 @@
 import { inject, injectable } from 'tsyringe';
 
+import IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
+import IUsersRepository from '../repositories/users.repository.interface';
+import User from '../infra/typeorm/entities/user.entity';
+
 import AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
 import AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
 
-import HashProviderInterface from '../providers/hash-provider/models/hash.provider.interface';
-import UsersRepositoryInterface from '../repositories/users.repository.interface';
+import { sign } from 'jsonwebtoken';
+import authConfig from '@config/auth.config';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -13,19 +17,14 @@ import {
   UNAUTHORIZED,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
-import User from '../infra/typeorm/entities/user.entity';
-
-import { sign } from 'jsonwebtoken';
-import authConfig from '@config/auth.config';
-
 @injectable()
 export default class AuthenticateUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: UsersRepositoryInterface,
+    private usersRepository: IUsersRepository,
 
-    @inject('BCryptHashProvider')
-    private bcryptHashProvider: HashProviderInterface,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({
@@ -34,13 +33,9 @@ export default class AuthenticateUsersService {
   }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
     const user = await this.validateUser(email, password);
 
-    const sanitizedUser: Partial<User> = user;
-    delete sanitizedUser['password'];
-
     const token = this.generateToken(user);
 
     return {
-      user: sanitizedUser,
       token,
     };
   }
@@ -63,10 +58,7 @@ export default class AuthenticateUsersService {
   }
 
   private checkUserFeatures(user: User) {
-    if (
-      !user.featureGroup.features.length &&
-      !user.standaloneFeatures?.length
-    ) {
+    if (!user.featureGroup.features.length) {
       throw new AppError(
         AppErrorTypes.sessions.missingUserFeatureGroup,
         FORBIDDEN,
@@ -75,7 +67,7 @@ export default class AuthenticateUsersService {
   }
 
   private async checkPassword(password: string, user: User) {
-    const passwordMatch = await this.bcryptHashProvider.compareHash(
+    const passwordMatch = await this.hashProvider.compareHash(
       password,
       user.password,
     );

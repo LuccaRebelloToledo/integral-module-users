@@ -16,11 +16,11 @@ export const idParamSchema = Joi.object({
 
 const pageSchema = Joi.number().integer().positive().min(1).default(1);
 
-const limitSchema = Joi.number().integer().positive().min(1).default(5);
+const limitSchema = Joi.number().integer().positive().min(1).default(10);
 
 export const sortSchema = Joi.string()
   .trim()
-  .valid('createdAt', 'updatedAt')
+  .valid('createdAt', 'updatedAt', 'deletedAt')
   .default('createdAt');
 
 const orderSchema = Joi.string()
@@ -29,8 +29,9 @@ const orderSchema = Joi.string()
   .valid('ASC', 'DESC')
   .default('DESC');
 
-export const paginationParamsSchema = Joi.object({
+export const listParamsSchema = Joi.object({
   page: pageSchema,
   limit: limitSchema,
+  sort: sortSchema,
   order: orderSchema,
 });

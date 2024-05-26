@@ -1,4 +1,6 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
+
+import { container } from 'tsyringe';
 
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
@@ -8,14 +10,12 @@ import CreateFeatureGroupsService from './create-feature-groups.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { container } from 'tsyringe';
-
-let featureGroupsRepository: FeatureGroupsRepository;
-let featuresRepository: FeaturesRepository;
-let feature: Feature;
-let createFeatureGroupsService: CreateFeatureGroupsService;
-
 describe('CreateFeatureGroupsService', () => {
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let featuresRepository: FeaturesRepository;
+  let createFeatureGroupsService: CreateFeatureGroupsService;
+  let feature: Feature;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -26,14 +26,12 @@ describe('CreateFeatureGroupsService', () => {
     );
 
     await featureGroupsRepository.create({
-      id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
       features: [],
     });
 
     feature = await featuresRepository.create({
-      id: '1',
       key: 'feature-key',
       name: 'feature-name',
     });
@@ -122,7 +120,7 @@ describe('CreateFeatureGroupsService', () => {
     const payload = {
       key: 'feature-group-key-2',
       name: 'feature-group-name-2',
-      featureIds: ['1'],
+      featureIds: [feature.id],
     };
 
     jest.spyOn(featureGroupsRepository, 'create');
@@ -132,7 +130,6 @@ describe('CreateFeatureGroupsService', () => {
 
     expect(featureGroupsRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        id: expect.anything(),
         key: payload.key,
         name: payload.name,
         features: [feature],
@@ -143,8 +140,6 @@ describe('CreateFeatureGroupsService', () => {
     expect(featureGroupsRepository.save).toHaveBeenCalledTimes(1);
 
     expect(featureGroup).toHaveProperty('id');
-    expect(featureGroup).toHaveProperty('createdAt');
-    expect(featureGroup).toHaveProperty('updatedAt');
 
     expect(featureGroup.key).toEqual(payload.key);
     expect(featureGroup.name).toEqual(payload.name);

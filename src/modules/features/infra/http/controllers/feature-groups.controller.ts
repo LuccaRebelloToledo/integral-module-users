@@ -8,15 +8,12 @@ import {
 } from '@shared/infra/http/constants/http-status-code.constants';
 
 import ListFeatureGroupsService from '@modules/features/services/list-feature-groups.service';
-import ListFeatureGroupsByKeyOrNameService from '@modules/features/services/list-feature-groups-by-key-or-name.service';
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
 import CreateFeatureGroupsService from '@modules/features/services/create-feature-groups.service';
 import UpdateFeatureGroupsService from '@modules/features/services/update-feature-groups.service';
 import DeleteFeatureGroupsService from '@modules/features/services/delete-feature-groups.service';
 
-import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
-
-import FeatureGroupPaginationControllerParamsDTO from '@modules/features/dtos/feature-groups-pagination-controller-params.dto';
+import ListFeatureGroupsControllerParamsDto from '@modules/features/dtos/list-feature-groups-controller-params.dto';
 
 export default class FeatureGroupsController {
   public async list(request: Request, response: Response): Promise<Response> {
@@ -27,7 +24,7 @@ export default class FeatureGroupsController {
       sort,
       key,
       name,
-    }: FeatureGroupPaginationControllerParamsDTO = request.query;
+    }: ListFeatureGroupsControllerParamsDto = request.query;
 
     const listFeatureGroupsService = container.resolve(
       ListFeatureGroupsService,
@@ -45,32 +42,14 @@ export default class FeatureGroupsController {
     return response.json(featureGroups);
   }
 
-  public async listByKeyOrName(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
-    const { key, name }: ListByKeyOrNameQueryDTO = request.query;
-
-    const listFeatureGroupsByKeyOrNameService = container.resolve(
-      ListFeatureGroupsByKeyOrNameService,
-    );
-
-    const featureGroups = await listFeatureGroupsByKeyOrNameService.execute({
-      key,
-      name,
-    });
-
-    return response.json(featureGroups);
-  }
-
   public async show(request: Request, response: Response): Promise<Response> {
-    const { id: featureGroupId } = request.params;
+    const { id } = request.params;
 
     const showFeatureGroupsService = container.resolve(
       ShowFeatureGroupsService,
     );
 
-    const featureGroup = await showFeatureGroupsService.execute(featureGroupId);
+    const featureGroup = await showFeatureGroupsService.execute(id);
 
     return response.json(featureGroup);
   }
@@ -92,7 +71,7 @@ export default class FeatureGroupsController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const { id: featureGroupId } = request.params;
+    const { id } = request.params;
 
     const { key, name, featureIds } = request.body;
 
@@ -101,7 +80,7 @@ export default class FeatureGroupsController {
     );
 
     const featureGroup = await updateFeatureGroupsService.execute({
-      featureGroupId,
+      id,
       key,
       name,
       featureIds,
@@ -111,13 +90,13 @@ export default class FeatureGroupsController {
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
-    const { id: featureGroupId } = request.params;
+    const { id } = request.params;
 
     const deleteFeatureGroupsService = container.resolve(
       DeleteFeatureGroupsService,
     );
 
-    await deleteFeatureGroupsService.execute(featureGroupId);
+    await deleteFeatureGroupsService.execute(id);
 
     return response.status(NO_CONTENT).json();
   }

@@ -3,7 +3,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  BeforeInsert,
 } from 'typeorm';
+
+import generateNanoId from '@shared/utils/generate-nanoid.utils';
 
 export default abstract class BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 21 })
@@ -17,4 +20,9 @@ export default abstract class BaseEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
+
+  @BeforeInsert()
+  generateId() {
+    this.id = generateNanoId();
+  }
 }

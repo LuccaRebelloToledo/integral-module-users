@@ -1,17 +1,17 @@
 import { inject, injectable } from 'tsyringe';
 
-import FeaturesRepositoryInterface from '../repositories/features.repository.interface';
+import IFeaturesRepository from '../repositories/features.repository.interface';
+import Feature from '../infra/typeorm/entities/feature.entity';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
-import Feature from '../infra/typeorm/entities/feature.entity';
 @injectable()
 export default class ShowFeaturesService {
   constructor(
     @inject('FeaturesRepository')
-    private featuresRepository: FeaturesRepositoryInterface,
+    private featuresRepository: IFeaturesRepository,
   ) {}
 
   public async execute(featureId: string): Promise<Feature> {

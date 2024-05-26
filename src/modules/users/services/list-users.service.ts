@@ -1,23 +1,23 @@
 import { inject, injectable } from 'tsyringe';
 
-import UsersRepositoryInterface from '../repositories/users.repository.interface';
+import IUsersRepository from '../repositories/users.repository.interface';
+import User from '../infra/typeorm/entities/user.entity';
+
+import ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
+import ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
+
+import calculateSkip from '@shared/utils/calculate-skip.utils';
+import calculatePaginationDetails from '@shared/utils/calculate-pagination-details.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
-
 import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
-
-import ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
-import ListUsersServiceResponseDTO from '../dtos/list-users-service-response.dto';
-
-import { calculateSkip } from '@shared/utils/calculate-skip.utils';
-import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-details.utils';
 
 @injectable()
 export default class ListUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: UsersRepositoryInterface,
+    private usersRepository: IUsersRepository,
   ) {}
 
   public async execute({
@@ -27,7 +27,7 @@ export default class ListUsersService {
     order,
     name,
     email,
-  }: ListUsersServiceParamsDTO): Promise<ListUsersServiceResponseDTO> {
+  }: ListUsersServiceParamsDTO): Promise<ListServiceResponseDto<User>> {
     const skip = calculateSkip(page, limit);
 
     const { items, total } = await this.usersRepository.findAll({

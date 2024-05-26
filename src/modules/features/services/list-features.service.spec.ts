@@ -1,37 +1,33 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
 
 import ListFeaturesService from './list-features.service';
 
+import calculateSkip from '@shared/utils/calculate-skip.utils';
+
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { calculateSkip } from '@shared/utils/calculate-skip.utils';
-
-let featuresRepository: FeaturesRepository;
-let listFeaturesService: ListFeaturesService;
-
-const payload = {
-  page: 1,
-  limit: 5,
-  sort: 'createdAt',
-  order: 'DESC',
-  name: undefined,
-  email: undefined,
-};
-
-const skip = calculateSkip(payload.page, payload.limit);
-
-const payloadParsed = {
-  take: payload.limit,
-  skip: skip,
-  sort: 'createdAt',
-  order: 'DESC',
-  name: undefined,
-  email: undefined,
-};
-
 describe('ListFeaturesService', () => {
+  let featuresRepository: FeaturesRepository;
+  let listFeaturesService: ListFeaturesService;
+
+  const payload = {
+    page: 1,
+    limit: 5,
+    sort: 'createdAt',
+    order: 'DESC',
+  };
+
+  const skip = calculateSkip(payload.page, payload.limit);
+
+  const payloadParsed = {
+    take: payload.limit,
+    skip: skip,
+    sort: 'createdAt',
+    order: 'DESC',
+  };
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -62,13 +58,11 @@ describe('ListFeaturesService', () => {
 
   test('should be return a list of feature groups', async () => {
     const featureOne = await featuresRepository.create({
-      id: '1',
       key: 'feature-key-1',
       name: 'Feature Name 1',
     });
 
     const featureTwo = await featuresRepository.create({
-      id: '2',
       key: 'feature-key-2',
       name: 'Feature Name 2',
     });
@@ -85,7 +79,8 @@ describe('ListFeaturesService', () => {
     expect(pagination.current).toEqual(payload.page);
     expect(items).toHaveLength(2);
     expect(totalItems).toEqual(2);
-    expect(items[0].id).toEqual(featureOne.id);
-    expect(items[1].id).toEqual(featureTwo.id);
+
+    expect(items.map((item) => item.id)).toContain(featureOne.id);
+    expect(items.map((item) => item.id)).toContain(featureTwo.id);
   });
 });

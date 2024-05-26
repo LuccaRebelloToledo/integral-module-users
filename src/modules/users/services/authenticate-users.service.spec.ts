@@ -1,41 +1,41 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
+
+import { container } from 'tsyringe';
+
+import { verify } from 'jsonwebtoken';
+
+import authConfig from '@config/auth.config';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
-import BCryptHashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
-
-import AppErrorTypes from '@shared/errors/app-error-types';
+import HashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
 import AuthenticateUsersService from './authenticate-users.service';
 
-import { verify } from 'jsonwebtoken';
-import authConfig from '@config/auth.config';
-
-import { container } from 'tsyringe';
-
-let usersRepository: UsersRepository;
-let featuresRepository: FeaturesRepository;
-let featureGroupsRepository: FeatureGroupsRepository;
-let hashProvider: BCryptHashProvider;
-let authenticateUsersService: AuthenticateUsersService;
-let encryptedPassword: string;
+import AppErrorTypes from '@shared/errors/app-error-types';
 
 describe('AuthenticateUsersService', () => {
+  let usersRepository: UsersRepository;
+  let featuresRepository: FeaturesRepository;
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let hashProvider: HashProvider;
+  let authenticateUsersService: AuthenticateUsersService;
+  let encryptedPassword: string;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
     usersRepository = new UsersRepository();
     featuresRepository = new FeaturesRepository();
     featureGroupsRepository = new FeatureGroupsRepository();
-    hashProvider = new BCryptHashProvider();
+    hashProvider = new HashProvider();
     authenticateUsersService = new AuthenticateUsersService(
       usersRepository,
       hashProvider,
     );
 
-    await featureGroupsRepository.create({
-      id: '1',
+    const featureGroupOne = await featureGroupsRepository.create({
       key: 'feature-group-key',
       name: 'Feature Group Name',
       features: [],
@@ -44,32 +44,28 @@ describe('AuthenticateUsersService', () => {
     encryptedPassword = await hashProvider.generateHash('123456789');
 
     await usersRepository.create({
-      id: '1',
       name: 'John Doe Invalid',
       email: 'johndoe@example.com',
       password: encryptedPassword,
-      featureGroupId: '1',
+      featureGroupId: featureGroupOne.id,
     });
 
     const feature = await featuresRepository.create({
-      id: '1',
       key: 'feature-key',
       name: 'Feature Name',
     });
 
-    await featureGroupsRepository.create({
-      id: '2',
+    const featureGroupTwo = await featureGroupsRepository.create({
       key: 'feature-group-key-2',
       name: 'Feature Group Name 2',
       features: [feature],
     });
 
     await usersRepository.create({
-      id: '2',
       name: 'John Doe Valid',
       email: 'johndoe_valid@example.com',
       password: encryptedPassword,
-      featureGroupId: '2',
+      featureGroupId: featureGroupTwo.id,
     });
 
     container.reset();

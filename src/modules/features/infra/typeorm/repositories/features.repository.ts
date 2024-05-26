@@ -1,16 +1,15 @@
-import { getActiveDataSource } from '@shared/utils/get-active-data-source.utils';
+import getActiveDataSource from '@shared/utils/get-active-data-source.utils';
 
 import { ILike, Repository } from 'typeorm';
 
-import FeaturesRepositoryInterface from '@modules/features/repositories/features.repository.interface';
+import IFeaturesRepository from '@modules/features/repositories/features.repository.interface';
 import Feature from '../entities/feature.entity';
 
-import ListFeaturesRepositoryParamsDTO from '@modules/features/dtos/list-features-repository-params.dto';
-import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
-import FindFeaturesByKeyOrNameDTO from '@modules/features/dtos/find-features-by-key-or-name.dto';
-import CreateFeaturesDTO from '@modules/features/dtos/create-features.dto';
+import ListFeaturesRepositoryParamsDto from '@modules/features/dtos/list-features-repository-params.dto';
+import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
+import CreateFeaturesDto from '@modules/features/dtos/create-features.dto';
 
-export default class FeaturesRepository implements FeaturesRepositoryInterface {
+export default class FeaturesRepository implements IFeaturesRepository {
   private featuresRepository: Repository<Feature>;
 
   constructor() {
@@ -24,8 +23,8 @@ export default class FeaturesRepository implements FeaturesRepositoryInterface {
     order,
     key,
     name,
-  }: ListFeaturesRepositoryParamsDTO): Promise<
-    ListRepositoryResponseDTO<Feature>
+  }: ListFeaturesRepositoryParamsDto): Promise<
+    ListRepositoryResponseDto<Feature>
   > {
     const query = this.featuresRepository
       .createQueryBuilder('features')
@@ -49,38 +48,6 @@ export default class FeaturesRepository implements FeaturesRepositoryInterface {
     };
   }
 
-  public async findAllByUserId(userId: string): Promise<Feature[]> {
-    return await this.featuresRepository
-      .createQueryBuilder('features')
-      .select([
-        'features.id',
-        'features.key',
-        'features.name',
-        'features.createdAt',
-        'features.updatedAt',
-      ])
-      .innerJoin('features.userFeatures', 'user')
-      .where('user.id = :userId', { userId })
-      .getMany();
-  }
-
-  public async findAllFeaturesByFeatureGroupId(
-    featureGroupId: string,
-  ): Promise<Feature[]> {
-    return await this.featuresRepository
-      .createQueryBuilder('features')
-      .select([
-        'features.id',
-        'features.key',
-        'features.name',
-        'features.createdAt',
-        'features.updatedAt',
-      ])
-      .innerJoin('grouped_features', 'gf', 'features.id = gf.feature_id')
-      .where('gf.feature_group_id = :featureGroupId', { featureGroupId })
-      .getMany();
-  }
-
   public async findById(featureId: string): Promise<Feature | null> {
     return await this.featuresRepository.findOne({
       where: {
@@ -89,25 +56,8 @@ export default class FeaturesRepository implements FeaturesRepositoryInterface {
     });
   }
 
-  public async findByKeyOrName({
-    key,
-    name,
-  }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]> {
-    const query = this.featuresRepository.createQueryBuilder('features');
-
-    if (key) {
-      query.orWhere({ key: ILike(`%${key}%`) });
-    }
-
-    if (name) {
-      query.orWhere({ name: ILike(`%${name}%`) });
-    }
-
-    return await query.getMany();
-  }
-
-  public async create(featureData: CreateFeaturesDTO): Promise<Feature> {
-    const feature = this.featuresRepository.create(featureData);
+  public async create(featureDto: CreateFeaturesDto): Promise<Feature> {
+    const feature = this.featuresRepository.create(featureDto);
 
     return await this.save(feature);
   }
@@ -116,11 +66,11 @@ export default class FeaturesRepository implements FeaturesRepositoryInterface {
     return await this.featuresRepository.save(feature);
   }
 
-  public async delete(feature: Feature): Promise<void> {
-    await this.featuresRepository.delete(feature.id);
+  public async delete(id: string): Promise<void> {
+    await this.featuresRepository.delete(id);
   }
 
-  public async softDelete(feature: Feature): Promise<void> {
-    await this.featuresRepository.softDelete(feature.id);
+  public async softDelete(id: string): Promise<void> {
+    await this.featuresRepository.softDelete(id);
   }
 }

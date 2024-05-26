@@ -1,6 +1,3 @@
-import User from '../infra/typeorm/entities/user.entity';
-
-export default interface AuthenticateUsersResponseDTO {
-  user: Partial<User>;
+export default interface AuthenticateUsersResponseDto {
   token: string;
 }

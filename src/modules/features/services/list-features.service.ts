@@ -1,22 +1,23 @@
 import { inject, injectable } from 'tsyringe';
 
-import FeaturesRepositoryInterface from '../repositories/features.repository.interface';
+import IFeaturesRepository from '../repositories/features.repository.interface';
+import Feature from '../infra/typeorm/entities/feature.entity';
+
+import ListFeaturesServiceParamsDTO from '../dtos/list-features-service-params.dto';
+import ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
+
+import calculateSkip from '@shared/utils/calculate-skip.utils';
+import calculatePaginationDetails from '@shared/utils/calculate-pagination-details.utils';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constants';
 
-import ListFeaturesServiceParamsDTO from '../dtos/list-features-service-params.dto';
-import ListFeaturesServiceResponseDTO from '../dtos/list-features-service-response.dto';
-
-import { calculateSkip } from '@shared/utils/calculate-skip.utils';
-import { calculatePaginationDetails } from '@shared/utils/calculate-pagination-details.utils';
-
 @injectable()
 export default class ListFeaturesService {
   constructor(
     @inject('FeaturesRepository')
-    private featuresRepository: FeaturesRepositoryInterface,
+    private featuresRepository: IFeaturesRepository,
   ) {}
 
   public async execute({
@@ -26,7 +27,7 @@ export default class ListFeaturesService {
     order,
     key,
     name,
-  }: ListFeaturesServiceParamsDTO): Promise<ListFeaturesServiceResponseDTO> {
+  }: ListFeaturesServiceParamsDTO): Promise<ListServiceResponseDto<Feature>> {
     const skip = calculateSkip(page, limit);
 
     const { items, total } = await this.featuresRepository.findAll({

@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class UsersAndFeatures1715271638278 implements MigrationInterface {
-  name = 'UsersAndFeatures1715271638278';
+export class UsersAndFeatures1716752310542 implements MigrationInterface {
+  name = 'UsersAndFeatures1716752310542';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -23,15 +23,6 @@ export class UsersAndFeatures1715271638278 implements MigrationInterface {
       `CREATE INDEX "IDX_a4f94420409474b3379b00ae4c" ON "grouped_features" ("feature_id") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "user_features" ("feature_id" character varying(21) NOT NULL, "user_id" character varying(21) NOT NULL, CONSTRAINT "PK_4944ba05594ab50ad181de58f32" PRIMARY KEY ("feature_id", "user_id"))`,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_425a9588c92b262a12d58bde45" ON "user_features" ("feature_id") `,
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_93ba05009b2885ad70d531958d" ON "user_features" ("user_id") `,
-    );
-    await queryRunner.query(
       `ALTER TABLE "users" ADD CONSTRAINT "FK_a757a79bd3f802a3dcaac739c2a" FOREIGN KEY ("feature_group_id") REFERENCES "feature_groups"("id") ON DELETE SET NULL ON UPDATE CASCADE`,
     );
     await queryRunner.query(
@@ -40,21 +31,9 @@ export class UsersAndFeatures1715271638278 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "grouped_features" ADD CONSTRAINT "FK_a4f94420409474b3379b00ae4c5" FOREIGN KEY ("feature_id") REFERENCES "features"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
     );
-    await queryRunner.query(
-      `ALTER TABLE "user_features" ADD CONSTRAINT "FK_425a9588c92b262a12d58bde45b" FOREIGN KEY ("feature_id") REFERENCES "features"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_features" ADD CONSTRAINT "FK_93ba05009b2885ad70d531958d3" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE "user_features" DROP CONSTRAINT "FK_93ba05009b2885ad70d531958d3"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_features" DROP CONSTRAINT "FK_425a9588c92b262a12d58bde45b"`,
-    );
     await queryRunner.query(
       `ALTER TABLE "grouped_features" DROP CONSTRAINT "FK_a4f94420409474b3379b00ae4c5"`,
     );
@@ -64,13 +43,6 @@ export class UsersAndFeatures1715271638278 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "users" DROP CONSTRAINT "FK_a757a79bd3f802a3dcaac739c2a"`,
     );
-    await queryRunner.query(
-      `DROP INDEX "public"."IDX_93ba05009b2885ad70d531958d"`,
-    );
-    await queryRunner.query(
-      `DROP INDEX "public"."IDX_425a9588c92b262a12d58bde45"`,
-    );
-    await queryRunner.query(`DROP TABLE "user_features"`);
     await queryRunner.query(
       `DROP INDEX "public"."IDX_a4f94420409474b3379b00ae4c"`,
     );

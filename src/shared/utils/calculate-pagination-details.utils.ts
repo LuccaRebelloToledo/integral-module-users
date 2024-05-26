@@ -1,4 +1,4 @@
-export const calculatePaginationDetails = (
+const calculatePaginationDetails = (
   totalItems: number,
   page: number,
   limit: number,
@@ -23,3 +23,5 @@ export const calculatePaginationDetails = (
 
   return { previous, next, totalPages };
 };
+
+export default calculatePaginationDetails;

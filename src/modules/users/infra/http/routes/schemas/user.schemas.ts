@@ -2,11 +2,9 @@ import Joi from 'joi';
 
 import {
   idSchema,
-  paginationParamsSchema,
+  listParamsSchema,
   sortSchema,
 } from '@shared/infra/http/routes/schemas/global.schemas';
-
-import { featureIdsSchema } from '@modules/features/infra/http/routes/schemas/feature-group.schemas';
 
 const nameSchema = Joi.string().trim().max(100);
 const emailSchema = Joi.string().email().trim().lowercase().max(100);
@@ -18,29 +16,26 @@ export const signUpSchema = Joi.object({
   email: emailSchema.required(),
   name: nameSchema.required(),
   password: passwordSchema.required(),
-});
+}).required();
 
 export const signInSchema = Joi.object({
   email: emailSchema.required(),
   password: passwordSchema.required(),
-});
+}).required();
 
 // Users
 
-export const createUsersSchema = signUpSchema.keys({
-  featureGroupId: idSchema.required(),
-});
+export const createUsersSchema = signUpSchema.required();
 
 export const updateUsersSchema = Joi.object({
   name: nameSchema.required(),
   email: emailSchema.optional(),
   password: passwordSchema.optional(),
   featureGroupId: idSchema.optional(),
-  featureIds: featureIdsSchema.optional(),
 });
 
-export const userPaginationParamsSchema = paginationParamsSchema.keys({
-  sort: sortSchema.valid('name', 'email').optional(),
+export const listUsersParamsSchema = listParamsSchema.keys({
+  sort: sortSchema.valid('email', 'name').optional(),
   name: nameSchema.optional(),
-  email: nameSchema.lowercase().optional(),
+  email: emailSchema.optional(),
 });

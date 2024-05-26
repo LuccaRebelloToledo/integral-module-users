@@ -18,8 +18,6 @@ const AppErrorTypes = {
   },
   features: {
     notFound: 'The feature(s) was not found.',
-    repeatedFeatures:
-      'There are repeated features. Each feature should be unique.',
   },
   featureGroups: {
     notFound: 'The feature group(s) was not found.',

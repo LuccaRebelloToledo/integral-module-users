@@ -1,4 +1,6 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
+
+import { container } from 'tsyringe';
 
 import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
@@ -7,13 +9,12 @@ import DeleteUsersService from './delete-users.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { container } from 'tsyringe';
-
-let usersRepository: UsersRepository;
-let featureGroupsRepository: FeatureGroupsRepository;
-let deleteUsersService: DeleteUsersService;
-
 describe('DeleteUsersService', () => {
+  let usersRepository: UsersRepository;
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let deleteUsersService: DeleteUsersService;
+  let userId: string;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -21,20 +22,20 @@ describe('DeleteUsersService', () => {
     featureGroupsRepository = new FeatureGroupsRepository();
     deleteUsersService = new DeleteUsersService(usersRepository);
 
-    await featureGroupsRepository.create({
-      id: '1',
+    const featureGroup = await featureGroupsRepository.create({
       key: 'feature-group-key',
       name: 'Feature Group Name',
       features: [],
     });
 
-    await usersRepository.create({
-      id: '1',
+    const user = await usersRepository.create({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      featureGroupId: '1',
+      featureGroupId: featureGroup.id,
     });
+
+    userId = user.id;
 
     container.reset();
 
@@ -51,6 +52,7 @@ describe('DeleteUsersService', () => {
     expect(usersRepository).toBeDefined();
     expect(featureGroupsRepository).toBeDefined();
     expect(deleteUsersService).toBeDefined();
+    expect(userId).toBeDefined();
   });
 
   test('should throw an error if no user is found', async () => {
@@ -71,7 +73,7 @@ describe('DeleteUsersService', () => {
 
   test('should be delete a user', async () => {
     const userPayload = {
-      id: '1',
+      id: userId,
     };
 
     jest.spyOn(usersRepository, 'findById');

@@ -1,8 +1,7 @@
-export default interface BaseRepositoryInterface<T> {
-  findAll(paramsDto: unknown): Promise<unknown>;
+export default interface IBaseRepository<T> {
   findById(id: string): Promise<T | null>;
-  create(entityDataDto: unknown): Promise<T>;
-  save(entityData: T): Promise<T>;
-  delete(entityData: T): Promise<void>;
-  softDelete(entityData: T): Promise<void>;
+  create(entityDto: unknown): Promise<T>;
+  save(entity: T): Promise<T>;
+  delete(id: string): Promise<void>;
+  softDelete(id: string): Promise<void>;
 }

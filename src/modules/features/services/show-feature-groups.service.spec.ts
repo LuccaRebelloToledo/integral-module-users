@@ -1,4 +1,4 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
@@ -7,11 +7,11 @@ import ShowFeatureGroupsService from './show-feature-groups.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featureGroupsRepository: FeatureGroupsRepository;
-let featureGroup: FeatureGroup;
-let showFeatureGroupsService: ShowFeatureGroupsService;
-
 describe('ShowFeatureGroupsService', () => {
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let showFeatureGroupsService: ShowFeatureGroupsService;
+  let featureGroup: FeatureGroup;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -21,7 +21,6 @@ describe('ShowFeatureGroupsService', () => {
     );
 
     featureGroup = await featureGroupsRepository.create({
-      id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
       features: [],
@@ -56,7 +55,7 @@ describe('ShowFeatureGroupsService', () => {
 
   test('should return a feature group if a feature group is found by id', async () => {
     const payload = {
-      id: '1',
+      id: featureGroup.id,
     };
 
     jest.spyOn(featureGroupsRepository, 'findById');

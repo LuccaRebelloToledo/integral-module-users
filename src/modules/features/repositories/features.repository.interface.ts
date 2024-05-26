@@ -2,21 +2,14 @@ import BaseRepositoryInterface from '@shared/infra/typeorm/repositories/base-rep
 
 import Feature from '../infra/typeorm/entities/feature.entity';
 
-import ListFeaturesRepositoryParamsDTO from '../dtos/list-features-repository-params.dto';
-import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
-import FindFeaturesByKeyOrNameDTO from '../dtos/find-features-by-key-or-name.dto';
+import ListFeaturesRepositoryParamsDto from '../dtos/list-features-repository-params.dto';
+import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
 import CreateFeaturesDTO from '../dtos/create-features.dto';
 
-export default interface FeaturesRepositoryInterface
+export default interface IFeaturesRepository
   extends BaseRepositoryInterface<Feature> {
   findAll(
-    params: ListFeaturesRepositoryParamsDTO,
-  ): Promise<ListRepositoryResponseDTO<Feature>>;
-  findAllByUserId(userId: string): Promise<Feature[]>;
-  findAllFeaturesByFeatureGroupId(featureGroupId: string): Promise<Feature[]>;
-  findByKeyOrName({
-    key,
-    name,
-  }: FindFeaturesByKeyOrNameDTO): Promise<Feature[]>;
-  create(featureData: CreateFeaturesDTO): Promise<Feature>;
+    params: ListFeaturesRepositoryParamsDto,
+  ): Promise<ListRepositoryResponseDto<Feature>>;
+  create(featureDto: CreateFeaturesDTO): Promise<Feature>;
 }

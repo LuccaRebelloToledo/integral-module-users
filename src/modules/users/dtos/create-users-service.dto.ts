@@ -1,6 +1,5 @@
-export default interface CreateUsersServiceDTO {
+export default interface CreateUsersServiceDto {
   email: string;
   password: string;
   name: string;
-  featureGroupId?: string;
 }

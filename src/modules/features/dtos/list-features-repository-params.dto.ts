@@ -1,6 +1,6 @@
-import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
-import ListRepositoryParamsDTO from '@shared/dtos/list-repository-params.dto';
+import ListRepositoryParamsDto from '@shared/dtos/list-repository-params.dto';
+import FindByKeyOrNameDto from './find-by-key-or-name.dto';
 
-export default interface ListFeaturesRepositoryParamsDTO
-  extends ListRepositoryParamsDTO,
-    ListByKeyOrNameQueryDTO {}
+export default interface ListFeaturesRepositoryParamsDto
+  extends ListRepositoryParamsDto,
+    FindByKeyOrNameDto {}

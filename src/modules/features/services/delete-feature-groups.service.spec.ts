@@ -1,4 +1,6 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
+
+import { container } from 'tsyringe';
 
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 
@@ -6,12 +8,10 @@ import DeleteFeatureGroupsService from './delete-feature-groups.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-import { container } from 'tsyringe';
-
-let featureGroupsRepository: FeatureGroupsRepository;
-let deleteFeatureGroupsService: DeleteFeatureGroupsService;
-
 describe('DeleteFeatureGroupsService', () => {
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let deleteFeatureGroupsService: DeleteFeatureGroupsService;
+
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
@@ -19,13 +19,6 @@ describe('DeleteFeatureGroupsService', () => {
     deleteFeatureGroupsService = new DeleteFeatureGroupsService(
       featureGroupsRepository,
     );
-
-    await featureGroupsRepository.create({
-      id: '1',
-      key: 'feature-group-key',
-      name: 'feature-group-name',
-      features: [],
-    });
 
     container.reset();
 
@@ -60,8 +53,14 @@ describe('DeleteFeatureGroupsService', () => {
   });
 
   test('should be delete a feature group if a feature group is found by id', async () => {
+    const featureGroup = await featureGroupsRepository.create({
+      key: 'feature-group-key',
+      name: 'feature-group-name',
+      features: [],
+    });
+
     const payload = {
-      id: '1',
+      id: featureGroup.id,
     };
 
     jest.spyOn(featureGroupsRepository, 'findById');
@@ -72,11 +71,7 @@ describe('DeleteFeatureGroupsService', () => {
 
     expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);
 
-    expect(featureGroupsRepository.delete).toHaveBeenCalledWith(
-      expect.objectContaining({
-        id: payload.id,
-      }),
-    );
+    expect(featureGroupsRepository.delete).toHaveBeenCalledWith(payload.id);
 
     expect(featureGroupsRepository.delete).toHaveBeenCalledTimes(1);
   });

@@ -1,9 +1,10 @@
-import { env } from '@shared/infra/environments/environments';
+import env from '@shared/infra/environments/environments';
 
 import { CorsOptions } from 'cors';
 
-export const corsConfig: CorsOptions = {
+const corsConfig: CorsOptions = {
   origin: env.CORS_ORIGIN,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
+
+export default corsConfig;

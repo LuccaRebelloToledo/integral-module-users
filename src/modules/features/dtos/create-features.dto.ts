@@ -1,5 +1,4 @@
-export default interface CreateFeaturesDTO {
-  id: string;
+export default interface CreateFeaturesDto {
   key: string;
   name: string;
 }

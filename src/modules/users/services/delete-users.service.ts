@@ -1,21 +1,19 @@
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
-import UsersRepositoryInterface from '../repositories/users.repository.interface';
+import IUsersRepository from '../repositories/users.repository.interface';
 
-import ShowUsersService from './show-users.service';
+import getUserById from '../utils/get-user-by-id.util';
 
 @injectable()
 export default class DeleteUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: UsersRepositoryInterface,
+    private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute(userId: string): Promise<void> {
-    const showUsersService = container.resolve(ShowUsersService);
+  public async execute(id: string): Promise<void> {
+    const user = await getUserById(id);
 
-    const user = await showUsersService.execute(userId);
-
-    await this.usersRepository.delete(user);
+    await this.usersRepository.delete(user.id);
   }
 }

@@ -1,4 +1,4 @@
-export default interface ListRepositoryParamsDTO {
+export default interface ListRepositoryParamsDto {
   take: number;
   skip: number;
   sort: string;

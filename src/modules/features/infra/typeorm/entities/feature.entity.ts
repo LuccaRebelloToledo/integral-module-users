@@ -1,9 +1,8 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, ManyToMany } from 'typeorm';
 
 import BaseEntity from '@shared/infra/typeorm/entities/base-entity.entity';
 
 import FeatureGroup from './feature-group.entity';
-import User from '@modules/users/infra/typeorm/entities/user.entity';
 
 @Entity('features')
 export default class Feature extends BaseEntity {
@@ -18,17 +17,4 @@ export default class Feature extends BaseEntity {
     onDelete: 'CASCADE',
   })
   featureGroups: FeatureGroup[];
-
-  @ManyToMany(() => User, (user) => user.standaloneFeatures, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-    eager: false,
-    nullable: true,
-  })
-  @JoinTable({
-    name: 'user_features',
-    joinColumn: { name: 'feature_id' },
-    inverseJoinColumn: { name: 'user_id' },
-  })
-  userFeatures: User[];
 }

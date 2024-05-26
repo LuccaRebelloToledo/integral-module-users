@@ -1,6 +1,6 @@
-import ListByKeyOrNameQueryDTO from '@shared/dtos/list-by-key-or-name-query.dto';
-import PaginationServiceParamsDTO from '@shared/dtos/pagination-service-params.dto';
+import ListServiceParamsDto from '@shared/dtos/list-service-params.dto';
+import FindByKeyOrNameDto from './find-by-key-or-name.dto';
 
-export default interface ListFeatureGroupsServiceParamsDTO
-  extends PaginationServiceParamsDTO,
-    ListByKeyOrNameQueryDTO {}
+export default interface ListFeatureGroupsServiceParamsDto
+  extends ListServiceParamsDto,
+    FindByKeyOrNameDto {}

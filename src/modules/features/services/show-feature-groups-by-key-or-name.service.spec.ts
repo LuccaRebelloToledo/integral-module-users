@@ -1,26 +1,25 @@
-import { TestAppDataSource } from '@shared/infra/typeorm/data-sources/test-data-source';
+import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
-import ListFeatureGroupsByKeyOrNameService from './list-feature-groups-by-key-or-name.service';
+import ShowFeatureGroupsByKeyOrNameService from './show-feature-groups-by-key-or-name.service';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
-let featureGroupsRepository: FeatureGroupsRepository;
-let featureGroup: FeatureGroup;
-let listFeatureGroupsByKeyOrNameService: ListFeatureGroupsByKeyOrNameService;
+describe('ShowFeatureGroupsByKeyOrNameService', () => {
+  let featureGroupsRepository: FeatureGroupsRepository;
+  let showFeatureGroupsByKeyOrNameService: ShowFeatureGroupsByKeyOrNameService;
+  let featureGroup: FeatureGroup;
 
-describe('ListFeatureGroupsByKeyOrNameService', () => {
   beforeAll(async () => {
     await TestAppDataSource.initialize();
 
     featureGroupsRepository = new FeatureGroupsRepository();
-    listFeatureGroupsByKeyOrNameService =
-      new ListFeatureGroupsByKeyOrNameService(featureGroupsRepository);
+    showFeatureGroupsByKeyOrNameService =
+      new ShowFeatureGroupsByKeyOrNameService(featureGroupsRepository);
 
     featureGroup = await featureGroupsRepository.create({
-      id: '1',
       key: 'feature-group-key',
       name: 'feature-group-name',
       features: [],
@@ -33,7 +32,7 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
 
   test('should be defined', () => {
     expect(featureGroupsRepository).toBeDefined();
-    expect(listFeatureGroupsByKeyOrNameService).toBeDefined();
+    expect(showFeatureGroupsByKeyOrNameService).toBeDefined();
     expect(featureGroup).toBeDefined();
   });
 
@@ -46,7 +45,7 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
     jest.spyOn(featureGroupsRepository, 'findByKeyOrName');
 
     await expect(
-      listFeatureGroupsByKeyOrNameService.execute({
+      showFeatureGroupsByKeyOrNameService.execute({
         key: payload.key,
         name: payload.name,
       }),
@@ -68,7 +67,7 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
 
     jest.spyOn(featureGroupsRepository, 'findByKeyOrName');
 
-    const featureGroupFound = await listFeatureGroupsByKeyOrNameService.execute(
+    const foundFeatureGroup = await showFeatureGroupsByKeyOrNameService.execute(
       {
         key: payload.key,
         name: payload.name,
@@ -82,11 +81,8 @@ describe('ListFeatureGroupsByKeyOrNameService', () => {
 
     expect(featureGroupsRepository.findByKeyOrName).toHaveBeenCalledTimes(1);
 
-    expect(featureGroupFound[0].id).toEqual(featureGroup.id);
-    expect(featureGroupFound[0].name).toEqual(featureGroup.name);
-    expect(featureGroupFound[0].key).toEqual(featureGroup.key);
-
-    expect(featureGroupFound[0]).toHaveProperty('createdAt');
-    expect(featureGroupFound[0]).toHaveProperty('updatedAt');
+    expect(foundFeatureGroup.id).toEqual(featureGroup.id);
+    expect(foundFeatureGroup.name).toEqual(featureGroup.name);
+    expect(foundFeatureGroup.key).toEqual(featureGroup.key);
   });
 });

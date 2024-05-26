@@ -1,10 +1,12 @@
-import { compare, hash } from 'bcryptjs';
+import { compare, genSalt, hash } from 'bcryptjs';
 
-import HashProviderInterface from '../models/hash.provider.interface';
+import IHashProvider from '../models/hash.provider.interface';
 
-export default class BCryptHashProvider implements HashProviderInterface {
+export default class HashProvider implements IHashProvider {
   public async generateHash(payload: string): Promise<string> {
-    return await hash(payload, 8);
+    const salt = await genSalt();
+
+    return await hash(payload, salt);
   }
 
   public async compareHash(payload: string, hashed: string): Promise<boolean> {

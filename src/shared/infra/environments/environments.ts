@@ -4,6 +4,23 @@ import process from 'node:process';
 
 import { Joi } from 'celebrate';
 
+interface IEnvironments {
+  NODE_ENV: string;
+  CORS_ORIGIN: string;
+  JWT_SECRET: string;
+  JWT_EXPIRATION: string;
+  DSN: string;
+  PORT: number;
+  PG_HOST: string;
+  PG_PORT: number;
+  PG_USER: string;
+  PG_PASS: string;
+  PG_DB: string;
+  REDIS_HOST: string;
+  REDIS_PORT: number;
+  REDIS_PASS: string;
+}
+
 const environmentsSchema = Joi.object({
   NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
   CORS_ORIGIN: Joi.string().uri().allow('*').required(),
@@ -29,4 +46,6 @@ if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 
-export const env = envVars;
+const env: IEnvironments = envVars;
+
+export default env;

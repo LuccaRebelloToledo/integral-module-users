@@ -10,7 +10,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 
 import cors from 'cors';
-import { corsConfig } from '@config/cors.config';
+import corsConfig from '@config/cors.config';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '@config/swagger.json';
@@ -19,7 +19,7 @@ import routes from './routes';
 
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
-import { env } from '../environments/environments';
+import env from '../environments/environments';
 
 const app = express();
 
@@ -49,7 +49,7 @@ app.use(cors(corsConfig));
 
 app.use(express.json());
 
-app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(routes);
 

@@ -2,9 +2,9 @@ import 'reflect-metadata';
 
 import { DataSource } from 'typeorm';
 
-import { env } from '@shared/infra/environments/environments';
+import env from '@shared/infra/environments/environments';
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
   type: 'postgres',
   host: env.PG_HOST,
   port: Number(env.PG_PORT),
@@ -26,3 +26,5 @@ export const AppDataSource = new DataSource({
   migrationsRun: true,
   migrationsTransactionMode: 'all',
 });
+
+export default AppDataSource;

@@ -1,4 +1,4 @@
-import { AppDataSource } from '@shared/infra/typeorm/data-sources/data-source';
+import AppDataSource from '@shared/infra/typeorm/data-sources/data-source';
 
 import { server } from '@shared/infra/http/server';
 
@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/node';
 
 import { exit } from 'node:process';
 
-export const gracefulShutdown = async () => {
+const gracefulShutdown = async () => {
   try {
     console.error('GracefulShutdown is Started!');
 
@@ -43,3 +43,5 @@ export const gracefulShutdown = async () => {
     exit(1);
   }
 };
+
+export default gracefulShutdown;

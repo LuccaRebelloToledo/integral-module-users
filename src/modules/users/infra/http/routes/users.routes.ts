@@ -10,7 +10,7 @@ import { Segments, celebrate } from 'celebrate';
 import { idParamSchema } from '@shared/infra/http/routes/schemas/global.schemas';
 
 import {
-  userPaginationParamsSchema,
+  listUsersParamsSchema,
   createUsersSchema,
   updateUsersSchema,
 } from './schemas/user.schemas';
@@ -23,7 +23,7 @@ usersRouter.use(ensureAuthenticated);
 usersRouter.get(
   '/',
   celebrate({
-    [Segments.QUERY]: userPaginationParamsSchema,
+    [Segments.QUERY]: listUsersParamsSchema,
   }),
   ensureAuthorized(['full:users', 'list:users']),
   usersController.list,

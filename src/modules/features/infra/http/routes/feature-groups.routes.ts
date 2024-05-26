@@ -10,12 +10,10 @@ import { Segments, celebrate } from 'celebrate';
 import { idParamSchema } from '@shared/infra/http/routes/schemas/global.schemas';
 
 import {
-  featureGroupPaginationParamsSchema,
+  listFeatureGroupsParamsSchema,
   createFeatureGroupsSchema,
   updateFeatureGroupsSchema,
 } from './schemas/feature-group.schemas';
-
-import { listByKeyOrNameSchema } from './schemas/feature.schemas';
 
 const featureGroupsRouter = Router();
 const featureGroupsController = new FeatureGroupsController();
@@ -25,19 +23,10 @@ featureGroupsRouter.use(ensureAuthenticated);
 featureGroupsRouter.get(
   '/',
   celebrate({
-    [Segments.QUERY]: featureGroupPaginationParamsSchema,
+    [Segments.QUERY]: listFeatureGroupsParamsSchema,
   }),
   ensureAuthorized(['full:feature-groups', 'list:feature-groups']),
   featureGroupsController.list,
-);
-
-featureGroupsRouter.get(
-  '/key-or-name',
-  celebrate({
-    [Segments.QUERY]: listByKeyOrNameSchema,
-  }),
-  ensureAuthorized(['full:feature-groups', 'list-key-or-name:feature-groups']),
-  featureGroupsController.listByKeyOrName,
 );
 
 featureGroupsRouter.get(
