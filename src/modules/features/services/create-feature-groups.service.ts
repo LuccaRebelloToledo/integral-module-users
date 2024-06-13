@@ -5,7 +5,7 @@ import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
 import CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
 
-import getFeaturesByFeatureIds from '@shared/utils/get-features-by-feature-ids.utils';
+import getFeaturesByFeatureIds from '@shared/utils/get-features-by-feature-ids.util';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';

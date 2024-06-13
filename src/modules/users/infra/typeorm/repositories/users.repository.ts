@@ -1,4 +1,4 @@
-import getActiveDataSource from '@shared/utils/get-active-data-source.utils';
+import getActiveDataSource from '@shared/utils/get-active-data-source.util';
 
 import { ILike, Repository } from 'typeorm';
 
@@ -10,7 +10,7 @@ import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto
 import CreateUsersDto from '@modules/users/dtos/create-users.dto';
 
 export default class UsersRepository implements IUsersRepository {
-  private usersRepository: Repository<User>;
+  private readonly usersRepository: Repository<User>;
 
   constructor() {
     this.usersRepository = getActiveDataSource().getRepository(User);
@@ -26,7 +26,6 @@ export default class UsersRepository implements IUsersRepository {
   }: ListUsersRepositoryParamsDto): Promise<ListRepositoryResponseDto<User>> {
     const query = this.usersRepository
       .createQueryBuilder('users')
-      .leftJoinAndSelect('users.featureGroup', 'featureGroup')
       .take(take)
       .skip(skip)
       .orderBy(`users.${sort}`, order as 'ASC' | 'DESC');
@@ -39,11 +38,11 @@ export default class UsersRepository implements IUsersRepository {
       query.andWhere({ email: ILike(`%${email}%`) });
     }
 
-    const [items, total] = await query.getManyAndCount();
+    const [data, totalItems] = await query.getManyAndCount();
 
     return {
-      items,
-      total,
+      data,
+      totalItems,
     };
   }
 

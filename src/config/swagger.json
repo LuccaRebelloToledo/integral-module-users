@@ -1360,28 +1360,33 @@
           }
         }
       },
-      "Pagination": {
+      "Meta": {
         "type": "object",
         "properties": {
-          "previous": {
-            "oneOf": [{ "type": "string" }, { "type": "integer" }],
-            "example": "There is no previous page!",
-            "description": "Information about the previous page."
-          },
-          "current": {
+          "page": {
             "type": "integer",
             "example": 1,
             "description": "The current page."
           },
-          "next": {
-            "oneOf": [{ "type": "string" }, { "type": "integer" }],
-            "example": "There is no next page!",
-            "description": "Information about the next page."
+          "totalPages": {
+            "type": "integer",
+            "example": 1,
+            "description": "The total of pages."
           },
-          "total": {
-            "oneOf": [{ "type": "string" }, { "type": "integer" }],
-            "example": "You are already on the last page!",
-            "description": "Information about the total number of pages."
+          "totalItems": {
+            "type": "integer",
+            "example": 1,
+            "description": "The total of items."
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "example": false,
+            "description": "If have previous page."
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "example": true,
+            "description": "If have next page."
           }
         }
       },
@@ -1408,14 +1413,10 @@
       "Features": {
         "type": "object",
         "properties": {
-          "pagination": {
-            "$ref": "#/components/schemas/Pagination"
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
           },
-          "totalItems": {
-            "type": "integer",
-            "example": 1
-          },
-          "items": {
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Feature"
@@ -1452,14 +1453,10 @@
       "FeatureGroups": {
         "type": "object",
         "properties": {
-          "pagination": {
-            "$ref": "#/components/schemas/Pagination"
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
           },
-          "totalItems": {
-            "type": "integer",
-            "example": 1
-          },
-          "items": {
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FeatureGroup"
@@ -1543,14 +1540,10 @@
       "Users": {
         "type": "object",
         "properties": {
-          "pagination": {
-            "$ref": "#/components/schemas/Pagination"
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
           },
-          "totalItems": {
-            "type": "integer",
-            "example": 1
-          },
-          "items": {
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/User"

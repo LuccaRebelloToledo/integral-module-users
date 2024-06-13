@@ -4,7 +4,7 @@ import FeaturesRepository from '../infra/typeorm/repositories/features.repositor
 
 import ListFeaturesService from './list-features.service';
 
-import calculateSkip from '@shared/utils/calculate-skip.utils';
+import calculateSkip from '@shared/utils/calculate-skip.util';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
@@ -19,7 +19,7 @@ describe('ListFeaturesService', () => {
     order: 'DESC',
   };
 
-  const skip = calculateSkip(payload.page, payload.limit);
+  const skip = calculateSkip({ page: payload.page, limit: payload.limit });
 
   const payloadParsed = {
     take: payload.limit,
@@ -69,18 +69,17 @@ describe('ListFeaturesService', () => {
 
     jest.spyOn(featuresRepository, 'findAll');
 
-    const { pagination, totalItems, items } =
-      await listFeaturesService.execute(payload);
+    const { meta, data } = await listFeaturesService.execute(payload);
 
     expect(featuresRepository.findAll).toHaveBeenCalledWith(payloadParsed);
 
     expect(featuresRepository.findAll).toHaveBeenCalledTimes(1);
 
-    expect(pagination.current).toEqual(payload.page);
-    expect(items).toHaveLength(2);
-    expect(totalItems).toEqual(2);
+    expect(meta.page).toEqual(payload.page);
+    expect(meta.totalItems).toEqual(2);
+    expect(data).toHaveLength(2);
 
-    expect(items.map((item) => item.id)).toContain(featureOne.id);
-    expect(items.map((item) => item.id)).toContain(featureTwo.id);
+    expect(data.map((item) => item.id)).toContain(featureOne.id);
+    expect(data.map((item) => item.id)).toContain(featureTwo.id);
   });
 });

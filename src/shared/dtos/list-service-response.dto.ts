@@ -1,12 +1,6 @@
-interface PaginationInfoDto {
-  previous: number | string;
-  current: number;
-  next: number | string;
-  total: number | string;
-}
+import PageMetaDto from './page-meta.dto';
 
 export default interface ListServiceResponseDto<T> {
-  pagination: PaginationInfoDto;
-  totalItems: number;
-  items: T[];
+  meta: PageMetaDto;
+  data: T[];
 }

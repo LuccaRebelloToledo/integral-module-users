@@ -6,8 +6,8 @@ import User from '../infra/typeorm/entities/user.entity';
 import ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
 import ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
 
-import calculateSkip from '@shared/utils/calculate-skip.utils';
-import calculatePaginationDetails from '@shared/utils/calculate-pagination-details.utils';
+import calculateSkip from '@shared/utils/calculate-skip.util';
+import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -28,9 +28,9 @@ export default class ListUsersService {
     name,
     email,
   }: ListUsersServiceParamsDTO): Promise<ListServiceResponseDto<User>> {
-    const skip = calculateSkip(page, limit);
+    const skip = calculateSkip({ page, limit });
 
-    const { items, total } = await this.usersRepository.findAll({
+    const { data, totalItems } = await this.usersRepository.findAll({
       take: limit,
       skip,
       sort,
@@ -39,25 +39,19 @@ export default class ListUsersService {
       email,
     });
 
-    if (!items.length) {
+    if (!data.length) {
       throw new AppError(AppErrorTypes.users.notFound, NOT_FOUND);
     }
 
-    const { previous, next, totalPages } = calculatePaginationDetails(
-      total,
+    const meta = getPageMetaDetails({
       page,
       limit,
-    );
+      totalItems,
+    });
 
     return {
-      pagination: {
-        previous,
-        current: page,
-        next,
-        total: totalPages,
-      },
-      totalItems: total,
-      items,
+      meta,
+      data,
     };
   }
 }

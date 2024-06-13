@@ -4,7 +4,7 @@ import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-group
 
 import ListFeatureGroupsService from './list-feature-groups.service';
 
-import calculateSkip from '@shared/utils/calculate-skip.utils';
+import calculateSkip from '@shared/utils/calculate-skip.util';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 
@@ -19,7 +19,7 @@ describe('ListFeatureGroupsService', () => {
     order: 'DESC',
   };
 
-  const skip = calculateSkip(payload.page, payload.limit);
+  const skip = calculateSkip({ page: payload.page, limit: payload.limit });
 
   const payloadParsed = {
     take: payload.limit,
@@ -73,18 +73,17 @@ describe('ListFeatureGroupsService', () => {
 
     jest.spyOn(featureGroupsRepository, 'findAll');
 
-    const { pagination, totalItems, items } =
-      await listFeatureGroupsService.execute(payload);
+    const { meta, data } = await listFeatureGroupsService.execute(payload);
 
     expect(featureGroupsRepository.findAll).toHaveBeenCalledWith(payloadParsed);
 
     expect(featureGroupsRepository.findAll).toHaveBeenCalledTimes(1);
 
-    expect(pagination.current).toEqual(payload.page);
-    expect(items).toHaveLength(2);
-    expect(totalItems).toEqual(2);
+    expect(meta.page).toEqual(payload.page);
+    expect(meta.totalItems).toEqual(2);
+    expect(data).toHaveLength(2);
 
-    expect(items.map((item) => item.id)).toContain(featureGroupOne.id);
-    expect(items.map((item) => item.id)).toContain(featureGroupTwo.id);
+    expect(data.map((item) => item.id)).toContain(featureGroupOne.id);
+    expect(data.map((item) => item.id)).toContain(featureGroupTwo.id);
   });
 });

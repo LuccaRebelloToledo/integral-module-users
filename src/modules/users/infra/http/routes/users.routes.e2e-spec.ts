@@ -99,17 +99,16 @@ describe('e2e - Users', () => {
     expect(response.status).toBe(OK);
     expect(response.body).toEqual(
       expect.objectContaining({
-        pagination: expect.any(Object),
-        totalItems: expect.any(Number),
-        items: expect.any(Object),
+        meta: expect.any(Object),
+        data: expect.any(Object),
       }),
     );
 
-    const { totalItems, items } = response.body;
+    const { meta, data } = response.body;
 
-    expect(totalItems).toBe(1);
-    expect(items.length).toBe(1);
-    expect(items[0]).toEqual(expect.objectContaining({ email: user.email }));
+    expect(meta.totalItems).toBe(1);
+    expect(data.length).toBe(1);
+    expect(data[0]).toEqual(expect.objectContaining({ email: user.email }));
   });
 
   test('should be show a user', async () => {

@@ -1,4 +1,4 @@
-import getActiveDataSource from '@shared/utils/get-active-data-source.utils';
+import getActiveDataSource from '@shared/utils/get-active-data-source.util';
 
 import { ILike, Repository } from 'typeorm';
 
@@ -13,7 +13,7 @@ import CreateFeatureGroupsDto from '@modules/features/dtos/create-feature-groups
 export default class FeatureGroupsRepository
   implements IFeatureGroupsRepository
 {
-  private featureGroupsRepository: Repository<FeatureGroup>;
+  private readonly featureGroupsRepository: Repository<FeatureGroup>;
 
   constructor() {
     this.featureGroupsRepository =
@@ -44,11 +44,11 @@ export default class FeatureGroupsRepository
       query.andWhere({ name: ILike(`%${name}%`) });
     }
 
-    const [items, total] = await query.getManyAndCount();
+    const [data, totalItems] = await query.getManyAndCount();
 
     return {
-      items,
-      total,
+      data,
+      totalItems,
     };
   }
 

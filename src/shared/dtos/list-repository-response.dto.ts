@@ -1,4 +1,4 @@
 export default interface ListRepositoryResponseDto<T> {
-  items: T[];
-  total: number;
+  data: T[];
+  totalItems: number;
 }

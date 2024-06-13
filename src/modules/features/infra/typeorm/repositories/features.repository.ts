@@ -1,4 +1,4 @@
-import getActiveDataSource from '@shared/utils/get-active-data-source.utils';
+import getActiveDataSource from '@shared/utils/get-active-data-source.util';
 
 import { ILike, Repository } from 'typeorm';
 
@@ -10,7 +10,7 @@ import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto
 import CreateFeaturesDto from '@modules/features/dtos/create-features.dto';
 
 export default class FeaturesRepository implements IFeaturesRepository {
-  private featuresRepository: Repository<Feature>;
+  private readonly featuresRepository: Repository<Feature>;
 
   constructor() {
     this.featuresRepository = getActiveDataSource().getRepository(Feature);
@@ -40,11 +40,11 @@ export default class FeaturesRepository implements IFeaturesRepository {
       query.andWhere({ name: ILike(`%${name}%`) });
     }
 
-    const [items, total] = await query.getManyAndCount();
+    const [data, totalItems] = await query.getManyAndCount();
 
     return {
-      items,
-      total,
+      data,
+      totalItems,
     };
   }
 

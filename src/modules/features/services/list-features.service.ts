@@ -6,8 +6,8 @@ import Feature from '../infra/typeorm/entities/feature.entity';
 import ListFeaturesServiceParamsDTO from '../dtos/list-features-service-params.dto';
 import ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
 
-import calculateSkip from '@shared/utils/calculate-skip.utils';
-import calculatePaginationDetails from '@shared/utils/calculate-pagination-details.utils';
+import calculateSkip from '@shared/utils/calculate-skip.util';
+import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -28,9 +28,9 @@ export default class ListFeaturesService {
     key,
     name,
   }: ListFeaturesServiceParamsDTO): Promise<ListServiceResponseDto<Feature>> {
-    const skip = calculateSkip(page, limit);
+    const skip = calculateSkip({ page, limit });
 
-    const { items, total } = await this.featuresRepository.findAll({
+    const { data, totalItems } = await this.featuresRepository.findAll({
       take: limit,
       skip,
       sort,
@@ -39,25 +39,19 @@ export default class ListFeaturesService {
       name,
     });
 
-    if (!items.length) {
+    if (!data.length) {
       throw new AppError(AppErrorTypes.features.notFound, NOT_FOUND);
     }
 
-    const { previous, next, totalPages } = calculatePaginationDetails(
-      total,
+    const meta = getPageMetaDetails({
       page,
       limit,
-    );
+      totalItems,
+    });
 
     return {
-      pagination: {
-        previous,
-        current: page,
-        next,
-        total: totalPages,
-      },
-      totalItems: total,
-      items,
+      meta,
+      data,
     };
   }
 }
