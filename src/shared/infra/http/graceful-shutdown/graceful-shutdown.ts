@@ -26,9 +26,6 @@ const gracefulShutdown = async () => {
         await AppDataSource.destroy();
 
         console.info('Database connection is closed!');
-
-        console.info('GracefulShutdown is finished!');
-        exit(0);
       }
 
       console.info('GracefulShutdown is finished!');

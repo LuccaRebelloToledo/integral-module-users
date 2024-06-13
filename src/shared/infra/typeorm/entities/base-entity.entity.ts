@@ -6,7 +6,7 @@ import {
   BeforeInsert,
 } from 'typeorm';
 
-import generateNanoId from '@shared/utils/generate-nanoid.utils';
+import generateNanoId from '@shared/utils/generate-nanoid.util';
 
 export default abstract class BaseEntity {
   @PrimaryColumn({ type: 'varchar', length: 21 })
