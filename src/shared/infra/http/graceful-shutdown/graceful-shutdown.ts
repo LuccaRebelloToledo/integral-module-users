@@ -10,27 +10,30 @@ const gracefulShutdown = async () => {
   try {
     console.error('GracefulShutdown is Started!');
 
-    server.closeIdleConnections();
-    console.info('Server is closing idle connections!');
+    if (server) {
+      server.closeIdleConnections();
 
-    server.close(async (err) => {
-      if (err) {
-        console.error(`Server is closed with error! ${err.message}`);
-        Sentry.captureException(err);
-        exit(1);
-      }
+      console.info('Server is closing idle connections!');
 
-      console.info('Server is closed!');
+      server.close(async (err) => {
+        if (err) {
+          console.error(`Server is closed with error! ${err.message}`);
+          Sentry.captureException(err);
+          exit(1);
+        }
 
-      if (AppDataSource.isInitialized) {
-        await AppDataSource.destroy();
+        console.info('Server is closed!');
+      });
+    }
 
-        console.info('Database connection is closed!');
-      }
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
 
-      console.info('GracefulShutdown is finished!');
-      exit(0);
-    });
+      console.info('Database connection is closed!');
+    }
+
+    console.info('GracefulShutdown is finished!');
+    exit(0);
   } catch (error) {
     if (error instanceof Error) {
       console.error(`Error during graceful shutdown!', ${error.message}`);
