@@ -21,7 +21,11 @@ const AppDataSource = new DataSource({
     },
     alwaysEnabled: true,
   },
-  entities: [`./**/modules/**/infra/typeorm/entities/*.entity.{ts, js}`],
+  entities: [
+    env.NODE_ENV === 'production'
+      ? 'dist/modules/**/infra/typeorm/entities/*.entity.js'
+      : 'src/modules/**/infra/typeorm/entities/*.entity.ts',
+  ],
   migrations: [`${__dirname}/../migrations/*.{ts, js}`],
   migrationsRun: true,
   migrationsTransactionMode: 'all',
