@@ -13,29 +13,37 @@ export default function ensureAuthenticated(
   _response: Response,
   next: NextFunction,
 ): void {
-  const token = request.headers.authorization;
+  try {
+    const token = request.headers.authorization;
 
-  if (!token) {
-    throw new AppError(AppErrorTypes.sessions.tokenNotFound, UNAUTHORIZED);
+    if (!token) {
+      throw new AppError(AppErrorTypes.sessions.tokenNotFound, UNAUTHORIZED);
+    }
+
+    const sanitizedToken = token.split(' ')[1];
+
+    const decoded = verify(sanitizedToken, authConfig.jwt.secret);
+
+    if (!decoded) {
+      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
+    }
+
+    const { sub } = decoded as JwtPayload;
+
+    if (!sub) {
+      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
+    }
+
+    request.user = {
+      id: sub,
+    };
+
+    return next();
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
+    throw new AppError((error as Error).message, UNAUTHORIZED);
   }
-
-  const sanitizedToken = token.split(' ')[1];
-
-  const decoded = verify(sanitizedToken, authConfig.jwt.secret);
-
-  if (!decoded) {
-    throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
-  }
-
-  const { sub } = decoded as JwtPayload;
-
-  if (!sub) {
-    throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
-  }
-
-  request.user = {
-    id: sub,
-  };
-
-  return next();
 }
