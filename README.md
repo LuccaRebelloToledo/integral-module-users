@@ -20,7 +20,7 @@ $ npm install
 $ npm run build
 
 # Fill in the environment variables in a .env file
-# Refer to .env.example for the required variables
+# Refer to .env.template for the required variables
 
 # Run docker-compose
 $ docker-compose up -d
