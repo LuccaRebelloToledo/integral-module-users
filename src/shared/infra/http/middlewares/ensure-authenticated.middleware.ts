@@ -13,7 +13,6 @@ export default function ensureAuthenticated(
   _response: Response,
   next: NextFunction,
 ): void {
-  try {
     const token = request.headers.authorization;
 
     if (!token) {
@@ -39,11 +38,4 @@ export default function ensureAuthenticated(
     };
 
     next();
-  } catch (error) {
-    if (error instanceof AppError) {
-      throw error;
-    }
-
-    throw new AppError((error as Error).message, UNAUTHORIZED);
-  }
 }
