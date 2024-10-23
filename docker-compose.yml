@@ -6,21 +6,12 @@ services:
       POSTGRESQL_DATABASE: ${PG_DB}
       POSTGRESQL_USERNAME: ${PG_USER}
       POSTGRESQL_PASSWORD: ${PG_PASS}
+      POSTGRESQL_POSTGRES_PASSWORD: ${PG_PASS}
+      POSTGRESQL_TIMEZONE: ${TZ}
     ports:
       - '5432:5432'
     volumes:
       - postgres_data:/bitnami/postgresql
 
-  redis:
-    container_name: redis
-    image: bitnami/redis:latest
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASS}
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis_data:/bitnami/redis
-
 volumes:
   postgres_data:
-  redis_data:

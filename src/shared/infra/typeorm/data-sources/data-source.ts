@@ -12,15 +12,6 @@ const AppDataSource = new DataSource({
   password: env.PG_PASS,
   database: env.PG_DB,
   useUTC: true,
-  cache: {
-    type: 'ioredis',
-    options: {
-      host: env.REDIS_HOST,
-      port: Number(env.REDIS_PORT),
-      password: env.REDIS_PASS,
-    },
-    alwaysEnabled: true,
-  },
   entities: [
     env.NODE_ENV === 'production'
       ? 'dist/modules/**/infra/typeorm/entities/*.entity.js'
