@@ -2,9 +2,9 @@ import { container, inject, injectable } from 'tsyringe';
 
 import type CreateUsersServiceDTO from '../dtos/create-users-service.dto';
 
-import type IUsersRepository from '../repositories/users.repository.interface';
-import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
 import type User from '../infra/typeorm/entities/user.entity';
+import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
+import type IUsersRepository from '../repositories/users.repository.interface';
 
 import ShowFeatureGroupsByKeyOrNameService from '@modules/features/services/show-feature-groups-by-key-or-name.service';
 
@@ -16,20 +16,20 @@ import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constant
 export default class CreateUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private readonly usersRepository: IUsersRepository,
 
     @inject('HashProvider')
-    private hashProvider: IHashProvider,
+    private readonly hashProvider: IHashProvider,
   ) {}
 
   public async execute({
     name,
     email,
     password,
-  }: CreateUsersServiceDTO): Promise<Partial<User>> {
-    const userExistsByEmail = await this.usersRepository.findByEmail(email);
+  }: CreateUsersServiceDTO): Promise<User> {
+    const existingUserByEmail = await this.usersRepository.findByEmail(email);
 
-    if (userExistsByEmail) {
+    if (existingUserByEmail) {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse, CONFLICT);
     }
 
@@ -43,17 +43,11 @@ export default class CreateUsersService {
 
     const encryptedPassword = await this.hashProvider.generateHash(password);
 
-    const user = await this.usersRepository.create({
+    return await this.usersRepository.create({
       name,
       email,
       password: encryptedPassword,
       featureGroupId: featureGroup.id,
     });
-
-    const sanitizedUser: Partial<User> = user;
-
-    sanitizedUser.password = undefined;
-
-    return sanitizedUser;
   }
 }

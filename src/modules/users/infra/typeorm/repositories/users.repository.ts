@@ -5,9 +5,9 @@ import { ILike, type Repository } from 'typeorm';
 import type IUsersRepository from '@modules/users/repositories/users.repository.interface';
 import User from '../entities/user.entity';
 
+import type CreateUsersDto from '@modules/users/dtos/create-users.dto';
 import type ListUsersRepositoryParamsDto from '@modules/users/dtos/list-users-repository-params.dto';
 import type ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
-import type CreateUsersDto from '@modules/users/dtos/create-users.dto';
 
 export default class UsersRepository implements IUsersRepository {
   private readonly usersRepository: Repository<User>;
@@ -60,7 +60,6 @@ export default class UsersRepository implements IUsersRepository {
       .createQueryBuilder('users')
       .leftJoinAndSelect('users.featureGroup', 'featureGroup')
       .leftJoinAndSelect('featureGroup.features', 'features')
-      .addSelect('users.password')
       .where({ email })
       .getOne();
   }

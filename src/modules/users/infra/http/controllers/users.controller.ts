@@ -2,16 +2,18 @@ import type { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
+import { instanceToPlain } from 'class-transformer';
+
 import {
   CREATED,
   NO_CONTENT,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
+import CreateUsersService from '@modules/users/services/create-users.service';
+import DeleteUsersService from '@modules/users/services/delete-users.service';
 import ListUsersService from '@modules/users/services/list-users.service';
 import ShowUsersService from '@modules/users/services/show-users.service';
-import CreateUsersService from '@modules/users/services/create-users.service';
 import UpdateUsersService from '@modules/users/services/update-users.service';
-import DeleteUsersService from '@modules/users/services/delete-users.service';
 
 import type ListUsersControllerParamsDto from '@modules/users/dtos/list-users-controller-params.dto';
 
@@ -37,7 +39,7 @@ export default class UsersController {
       email,
     });
 
-    return response.json(users);
+    return response.json(instanceToPlain(users));
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
@@ -47,7 +49,7 @@ export default class UsersController {
 
     const user = await showUsersService.execute(id);
 
-    return response.json(user);
+    return response.json(instanceToPlain(user));
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
@@ -61,7 +63,7 @@ export default class UsersController {
       password,
     });
 
-    return response.status(CREATED).json(user);
+    return response.status(CREATED).json(instanceToPlain(user));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -79,7 +81,7 @@ export default class UsersController {
       featureGroupId,
     });
 
-    return response.json(user);
+    return response.json(instanceToPlain(user));
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
