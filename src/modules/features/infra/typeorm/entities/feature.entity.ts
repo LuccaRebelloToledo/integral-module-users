@@ -12,9 +12,13 @@ export default class Feature extends BaseEntity {
   @Column({ type: 'varchar', length: 50, unique: true })
   name: string;
 
-  @ManyToMany(() => FeatureGroup, (featureGroup) => featureGroup.features, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
+  @ManyToMany(
+    () => FeatureGroup,
+    (featureGroup) => featureGroup.features,
+    {
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+  )
   featureGroups: FeatureGroup[];
 }

@@ -13,11 +13,15 @@ export default class FeatureGroup extends BaseEntity {
   @Column({ type: 'varchar', length: 50, unique: true })
   name: string;
 
-  @ManyToMany(() => Feature, (feature) => feature.featureGroups, {
-    cascade: true,
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
+  @ManyToMany(
+    () => Feature,
+    (feature) => feature.featureGroups,
+    {
+      cascade: true,
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinTable({
     name: 'grouped_features',
     joinColumn: { name: 'feature_group_id' },
@@ -25,8 +29,12 @@ export default class FeatureGroup extends BaseEntity {
   })
   features: Feature[];
 
-  @OneToMany(() => User, (user) => user.featureGroup, {
-    cascade: true,
-  })
+  @OneToMany(
+    () => User,
+    (user) => user.featureGroup,
+    {
+      cascade: true,
+    },
+  )
   users: User[];
 }

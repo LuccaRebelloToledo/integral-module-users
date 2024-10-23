@@ -17,10 +17,14 @@ export default class User extends BaseEntity {
   @Column({ type: 'varchar', length: 21, name: 'feature_group_id' })
   featureGroupId: string;
 
-  @ManyToOne(() => FeatureGroup, (featureGroup) => featureGroup.users, {
-    onUpdate: 'CASCADE',
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(
+    () => FeatureGroup,
+    (featureGroup) => featureGroup.users,
+    {
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    },
+  )
   @JoinColumn({ name: 'feature_group_id' })
   featureGroup: FeatureGroup;
 }
