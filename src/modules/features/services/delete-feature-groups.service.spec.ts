@@ -67,7 +67,7 @@ describe('DeleteFeatureGroupsService', () => {
     jest.spyOn(featureGroupsRepository, 'delete');
 
     await deleteFeatureGroupsService.execute(payload.id);
-    
+
     expect(featureGroupsRepository.findById).toHaveBeenCalledWith(payload.id);
 
     expect(featureGroupsRepository.findById).toHaveBeenCalledTimes(1);

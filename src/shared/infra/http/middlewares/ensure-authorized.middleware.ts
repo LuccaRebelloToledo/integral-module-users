@@ -9,7 +9,11 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { FORBIDDEN } from '../constants/http-status-code.constants';
 
-type IAuthLevelMiddleware = (request: Request, response: Response, next: NextFunction) => void
+type IAuthLevelMiddleware = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => void;
 
 export default function ensureAuthorized(
   requiredFeatures: Array<string>,
