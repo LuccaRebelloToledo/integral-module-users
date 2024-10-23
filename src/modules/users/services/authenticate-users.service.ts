@@ -1,14 +1,14 @@
 import { inject, injectable } from 'tsyringe';
 
+import type User from '../infra/typeorm/entities/user.entity';
 import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
 import type IUsersRepository from '../repositories/users.repository.interface';
-import type User from '../infra/typeorm/entities/user.entity';
 
-import type AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
 import type AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
+import type AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
 
-import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';
+import { sign } from 'jsonwebtoken';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -21,10 +21,10 @@ import {
 export default class AuthenticateUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private readonly usersRepository: IUsersRepository,
 
     @inject('HashProvider')
-    private hashProvider: IHashProvider,
+    private readonly hashProvider: IHashProvider,
   ) {}
 
   public async execute({

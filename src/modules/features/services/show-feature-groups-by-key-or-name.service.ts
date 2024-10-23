@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
 import type FindByKeyOrNameDto from '../dtos/find-by-key-or-name.dto';
 
@@ -13,7 +13,7 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 export default class ShowFeatureGroupsByKeyOrNameService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: IFeatureGroupsRepository,
+    private readonly featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
   public async execute({

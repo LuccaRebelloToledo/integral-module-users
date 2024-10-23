@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 
-import type IUsersRepository from '../repositories/users.repository.interface';
 import type User from '../infra/typeorm/entities/user.entity';
+import type IUsersRepository from '../repositories/users.repository.interface';
 
-import type ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
 import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
+import type ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
@@ -17,7 +17,7 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 export default class ListUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private readonly usersRepository: IUsersRepository,
   ) {}
 
   public async execute({

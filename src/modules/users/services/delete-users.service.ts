@@ -8,7 +8,7 @@ import getUserById from '../utils/get-user-by-id.util';
 export default class DeleteUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private readonly usersRepository: IUsersRepository,
   ) {}
 
   public async execute(id: string): Promise<void> {

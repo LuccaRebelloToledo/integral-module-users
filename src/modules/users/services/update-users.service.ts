@@ -1,8 +1,8 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import type IUsersRepository from '../repositories/users.repository.interface';
 import type User from '../infra/typeorm/entities/user.entity';
 import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
+import type IUsersRepository from '../repositories/users.repository.interface';
 
 import type UpdateUsersDTO from '../dtos/update-users.dto';
 
@@ -18,10 +18,10 @@ import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constant
 export default class UpdateUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private readonly usersRepository: IUsersRepository,
 
     @inject('HashProvider')
-    private hashProvider: IHashProvider,
+    private readonly hashProvider: IHashProvider,
   ) {}
 
   public async execute({
@@ -53,9 +53,9 @@ export default class UpdateUsersService {
   }
 
   private async updateEmail(user: User, email: string) {
-    const userWithEmail = await this.usersRepository.findByEmail(email);
+    const existingUserByEmail = await this.usersRepository.findByEmail(email);
 
-    if (userWithEmail) {
+    if (existingUserByEmail) {
       throw new AppError(AppErrorTypes.users.emailAlreadyInUse, CONFLICT);
     }
 

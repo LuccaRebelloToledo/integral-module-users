@@ -8,7 +8,7 @@ import ShowFeatureGroupsService from './show-feature-groups.service';
 export default class DeleteFeatureGroupsService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: IFeatureGroupsRepository,
+    private readonly featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
   public async execute(id: string): Promise<void> {

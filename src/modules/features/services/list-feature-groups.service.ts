@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 
-import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
-import type ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
 import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
+import type ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
@@ -17,7 +17,7 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 export default class ListFeatureGroupsService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: IFeatureGroupsRepository,
+    private readonly featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
   public async execute({

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import type IUsersRepository from '../repositories/users.repository.interface';
 import type User from '../infra/typeorm/entities/user.entity';
+import type IUsersRepository from '../repositories/users.repository.interface';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
@@ -11,7 +11,7 @@ import { NOT_FOUND } from '@shared/infra/http/constants/http-status-code.constan
 export default class ShowUsersService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private readonly usersRepository: IUsersRepository,
   ) {}
 
   public async execute(userId: string): Promise<User> {

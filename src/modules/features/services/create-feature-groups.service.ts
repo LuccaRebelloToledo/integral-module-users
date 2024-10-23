@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
 import type CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
 
@@ -15,7 +15,7 @@ import { CONFLICT } from '@shared/infra/http/constants/http-status-code.constant
 export default class CreateFeatureGroupsService {
   constructor(
     @inject('FeatureGroupsRepository')
-    private featureGroupsRepository: IFeatureGroupsRepository,
+    private readonly featureGroupsRepository: IFeatureGroupsRepository,
   ) {}
 
   public async execute({
