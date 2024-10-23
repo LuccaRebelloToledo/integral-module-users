@@ -1,8 +1,8 @@
-FROM node:lts-alpine as build
+FROM node:lts AS build
 
 WORKDIR /build
 
-COPY package*.json .
+COPY package.json .
 RUN npm install
 
 COPY src/ src/
@@ -11,7 +11,7 @@ COPY tsconfig.build.json tsconfig.build.json
 
 RUN npm run build
 
-FROM node:lts-alpine as production
+FROM node:lts-alpine AS production
 
 WORKDIR /app
 
