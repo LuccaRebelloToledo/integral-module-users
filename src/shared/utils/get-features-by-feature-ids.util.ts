@@ -2,7 +2,7 @@ import { container } from 'tsyringe';
 
 import ShowFeaturesService from '@modules/features/services/show-features.service';
 
-import Feature from '@modules/features/infra/typeorm/entities/feature.entity';
+import type Feature from '@modules/features/infra/typeorm/entities/feature.entity';
 
 const getFeaturesByFeatureIds = async (
   featureIds: string[],

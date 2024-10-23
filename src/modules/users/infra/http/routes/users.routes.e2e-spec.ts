@@ -13,7 +13,7 @@ import {
   OK,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
-import User from '../../typeorm/entities/user.entity';
+import type User from '../../typeorm/entities/user.entity';
 
 describe('e2e - Users', () => {
   let featuresRepository: FeaturesRepository;

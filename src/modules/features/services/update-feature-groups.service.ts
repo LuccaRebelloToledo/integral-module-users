@@ -1,9 +1,9 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
+import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
-import UpdateFeatureGroupsServiceDTO from '../dtos/update-feature-groups-service.dto';
+import type UpdateFeatureGroupsServiceDTO from '../dtos/update-feature-groups-service.dto';
 
 import ShowFeatureGroupsService from './show-feature-groups.service';
 

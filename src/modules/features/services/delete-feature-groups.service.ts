@@ -1,6 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
 import ShowFeatureGroupsService from './show-feature-groups.service';
 

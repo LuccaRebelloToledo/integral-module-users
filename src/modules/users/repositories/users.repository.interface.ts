@@ -1,10 +1,10 @@
-import IBaseRepository from '@shared/infra/typeorm/repositories/base-repository.interface';
+import type IBaseRepository from '@shared/infra/typeorm/repositories/base-repository.interface';
 
-import User from '../infra/typeorm/entities/user.entity';
+import type User from '../infra/typeorm/entities/user.entity';
 
-import ListUsersRepositoryParamsDTO from '../dtos/list-users-repository-params.dto';
-import ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
-import CreateUsersDTO from '../dtos/create-users.dto';
+import type ListUsersRepositoryParamsDTO from '../dtos/list-users-repository-params.dto';
+import type ListRepositoryResponseDTO from '@shared/dtos/list-repository-response.dto';
+import type CreateUsersDTO from '../dtos/create-users.dto';
 
 export default interface IUsersRepository extends IBaseRepository<User> {
   findAll(

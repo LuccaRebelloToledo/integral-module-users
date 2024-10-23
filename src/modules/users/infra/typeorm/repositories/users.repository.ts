@@ -1,13 +1,13 @@
 import getActiveDataSource from '@shared/utils/get-active-data-source.util';
 
-import { ILike, Repository } from 'typeorm';
+import { ILike, type Repository } from 'typeorm';
 
-import IUsersRepository from '@modules/users/repositories/users.repository.interface';
+import type IUsersRepository from '@modules/users/repositories/users.repository.interface';
 import User from '../entities/user.entity';
 
-import ListUsersRepositoryParamsDto from '@modules/users/dtos/list-users-repository-params.dto';
-import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
-import CreateUsersDto from '@modules/users/dtos/create-users.dto';
+import type ListUsersRepositoryParamsDto from '@modules/users/dtos/list-users-repository-params.dto';
+import type ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
+import type CreateUsersDto from '@modules/users/dtos/create-users.dto';
 
 export default class UsersRepository implements IUsersRepository {
   private readonly usersRepository: Repository<User>;

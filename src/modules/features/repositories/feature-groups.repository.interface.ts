@@ -1,11 +1,11 @@
-import BaseRepositoryInterface from '@shared/infra/typeorm/repositories/base-repository.interface';
+import type BaseRepositoryInterface from '@shared/infra/typeorm/repositories/base-repository.interface';
 
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
-import ListFeatureGroupsRepositoryParamsDto from '../dtos/list-feature-groups-repository-params.dto';
-import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
-import FindByKeyOrNameDto from '../dtos/find-by-key-or-name.dto';
-import CreateFeatureGroupsDto from '../dtos/create-feature-groups.dto';
+import type ListFeatureGroupsRepositoryParamsDto from '../dtos/list-feature-groups-repository-params.dto';
+import type ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
+import type FindByKeyOrNameDto from '../dtos/find-by-key-or-name.dto';
+import type CreateFeatureGroupsDto from '../dtos/create-feature-groups.dto';
 
 export default interface IFeatureGroupsRepository
   extends BaseRepositoryInterface<FeatureGroup> {

@@ -5,8 +5,8 @@ import { container } from 'tsyringe';
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
 import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
 
-import Feature from '../infra/typeorm/entities/feature.entity';
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type Feature from '../infra/typeorm/entities/feature.entity';
+import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
 import UpdateFeatureGroupsService from './update-feature-groups.service';
 

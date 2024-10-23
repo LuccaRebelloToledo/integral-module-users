@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -9,9 +9,7 @@ import AppErrorTypes from '@shared/errors/app-error-types';
 
 import { FORBIDDEN } from '../constants/http-status-code.constants';
 
-interface IAuthLevelMiddleware {
-  (request: Request, response: Response, next: NextFunction): void;
-}
+type IAuthLevelMiddleware = (request: Request, response: Response, next: NextFunction) => void
 
 export default function ensureAuthorized(
   requiredFeatures: Array<string>,

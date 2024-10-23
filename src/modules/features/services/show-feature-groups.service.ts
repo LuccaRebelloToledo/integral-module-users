@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
+import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';

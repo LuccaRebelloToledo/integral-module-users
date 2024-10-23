@@ -1,11 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 
-import IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
-import IUsersRepository from '../repositories/users.repository.interface';
-import User from '../infra/typeorm/entities/user.entity';
+import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
+import type IUsersRepository from '../repositories/users.repository.interface';
+import type User from '../infra/typeorm/entities/user.entity';
 
-import AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
-import AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
+import type AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
+import type AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
 
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';

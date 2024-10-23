@@ -1,6 +1,6 @@
-import { Express } from 'express';
+import type { Express } from 'express';
 
-import { Server, IncomingMessage, ServerResponse } from 'node:http';
+import type { Server, IncomingMessage, ServerResponse } from 'node:http';
 
 import env from '../environments/environments';
 

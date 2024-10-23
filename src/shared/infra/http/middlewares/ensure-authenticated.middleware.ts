@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 
-import { JwtPayload, verify } from 'jsonwebtoken';
+import { type JwtPayload, verify } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';
 
 import AppError from '@shared/errors/app-error';
@@ -38,7 +38,7 @@ export default function ensureAuthenticated(
       id: sub,
     };
 
-    return next();
+    next();
   } catch (error) {
     if (error instanceof AppError) {
       throw error;

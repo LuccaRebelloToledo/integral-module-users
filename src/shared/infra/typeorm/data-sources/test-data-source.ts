@@ -8,7 +8,7 @@ const TestAppDataSource = new DataSource({
   dropSchema: true,
   synchronize: true,
   logging: false,
-  entities: [`./**/modules/**/infra/typeorm/entities/*.entity.{ts, js}`],
+  entities: ['./**/modules/**/infra/typeorm/entities/*.entity.{ts, js}'],
 });
 
 export default TestAppDataSource;

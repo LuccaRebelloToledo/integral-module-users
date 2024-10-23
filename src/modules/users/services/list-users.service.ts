@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 
-import IUsersRepository from '../repositories/users.repository.interface';
-import User from '../infra/typeorm/entities/user.entity';
+import type IUsersRepository from '../repositories/users.repository.interface';
+import type User from '../infra/typeorm/entities/user.entity';
 
-import ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
-import ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
+import type ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
+import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';

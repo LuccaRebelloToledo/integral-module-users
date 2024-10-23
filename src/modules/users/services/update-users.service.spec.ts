@@ -9,7 +9,7 @@ import HashProvider from '../providers/hash-provider/implementations/bcrypt-hash
 
 import UpdateUsersService from './update-users.service';
 
-import User from '../infra/typeorm/entities/user.entity';
+import type User from '../infra/typeorm/entities/user.entity';
 
 import AppErrorTypes from '@shared/errors/app-error-types';
 

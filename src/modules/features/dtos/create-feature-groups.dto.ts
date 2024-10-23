@@ -1,4 +1,4 @@
-import Feature from '../infra/typeorm/entities/feature.entity';
+import type Feature from '../infra/typeorm/entities/feature.entity';
 
 export default class CreateFeatureGroupsDto {
   key: string;

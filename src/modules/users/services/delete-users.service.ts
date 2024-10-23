@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import IUsersRepository from '../repositories/users.repository.interface';
+import type IUsersRepository from '../repositories/users.repository.interface';
 
 import getUserById from '../utils/get-user-by-id.util';
 

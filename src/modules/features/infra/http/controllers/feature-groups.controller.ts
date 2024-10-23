@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -13,7 +13,7 @@ import CreateFeatureGroupsService from '@modules/features/services/create-featur
 import UpdateFeatureGroupsService from '@modules/features/services/update-feature-groups.service';
 import DeleteFeatureGroupsService from '@modules/features/services/delete-feature-groups.service';
 
-import ListFeatureGroupsControllerParamsDto from '@modules/features/dtos/list-feature-groups-controller-params.dto';
+import type ListFeatureGroupsControllerParamsDto from '@modules/features/dtos/list-feature-groups-controller-params.dto';
 
 export default class FeatureGroupsController {
   public async list(request: Request, response: Response): Promise<Response> {

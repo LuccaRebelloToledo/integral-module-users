@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import IUsersRepository from '../repositories/users.repository.interface';
-import User from '../infra/typeorm/entities/user.entity';
+import type IUsersRepository from '../repositories/users.repository.interface';
+import type User from '../infra/typeorm/entities/user.entity';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';

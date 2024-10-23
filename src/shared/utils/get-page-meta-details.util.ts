@@ -1,4 +1,4 @@
-import PageMetaDto from '@shared/dtos/page-meta.dto';
+import type PageMetaDto from '@shared/dtos/page-meta.dto';
 
 interface MetaDetailsDto {
   page: number;

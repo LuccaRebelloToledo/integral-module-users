@@ -1,7 +1,7 @@
 import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeatureGroupsRepository from '../infra/typeorm/repositories/feature-groups.repository';
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
 import ShowFeatureGroupsService from './show-feature-groups.service';
 

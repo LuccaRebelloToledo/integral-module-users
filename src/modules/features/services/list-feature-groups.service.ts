@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 
-import IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
-import FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
+import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
+import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 
-import ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
-import ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
+import type ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
+import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';

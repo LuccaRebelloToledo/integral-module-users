@@ -1,14 +1,14 @@
 import getActiveDataSource from '@shared/utils/get-active-data-source.util';
 
-import { ILike, Repository } from 'typeorm';
+import { ILike, type Repository } from 'typeorm';
 
-import IFeatureGroupsRepository from '@modules/features/repositories/feature-groups.repository.interface';
+import type IFeatureGroupsRepository from '@modules/features/repositories/feature-groups.repository.interface';
 import FeatureGroup from '../entities/feature-group.entity';
 
-import ListFeatureGroupsRepositoryParamsDto from '@modules/features/dtos/list-feature-groups-repository-params.dto';
-import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
-import FindByKeyOrNameDto from '@modules/features/dtos/find-by-key-or-name.dto';
-import CreateFeatureGroupsDto from '@modules/features/dtos/create-feature-groups.dto';
+import type ListFeatureGroupsRepositoryParamsDto from '@modules/features/dtos/list-feature-groups-repository-params.dto';
+import type ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
+import type FindByKeyOrNameDto from '@modules/features/dtos/find-by-key-or-name.dto';
+import type CreateFeatureGroupsDto from '@modules/features/dtos/create-feature-groups.dto';
 
 export default class FeatureGroupsRepository
   implements IFeatureGroupsRepository

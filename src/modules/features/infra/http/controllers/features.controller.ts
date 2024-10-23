@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
 import ListFeaturesService from '@modules/features/services/list-features.service';
 
-import ListFeaturesControllerParamsDto from '@modules/features/dtos/list-features-controller-params.dto';
+import type ListFeaturesControllerParamsDto from '@modules/features/dtos/list-features-controller-params.dto';
 
 export default class FeaturesController {
   public async list(request: Request, response: Response): Promise<Response> {

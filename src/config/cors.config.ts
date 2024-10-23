@@ -1,6 +1,6 @@
 import env from '@shared/infra/environments/environments';
 
-import { CorsOptions } from 'cors';
+import type { CorsOptions } from 'cors';
 
 const corsConfig: CorsOptions = {
   origin: env.CORS_ORIGIN,

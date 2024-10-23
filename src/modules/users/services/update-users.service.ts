@@ -1,10 +1,10 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import IUsersRepository from '../repositories/users.repository.interface';
-import User from '../infra/typeorm/entities/user.entity';
-import IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
+import type IUsersRepository from '../repositories/users.repository.interface';
+import type User from '../infra/typeorm/entities/user.entity';
+import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
 
-import UpdateUsersDTO from '../dtos/update-users.dto';
+import type UpdateUsersDTO from '../dtos/update-users.dto';
 
 import getUserById from '../utils/get-user-by-id.util';
 

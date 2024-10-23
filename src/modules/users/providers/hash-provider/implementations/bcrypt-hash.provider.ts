@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from 'bcryptjs';
 
-import IHashProvider from '../models/hash.provider.interface';
+import type IHashProvider from '../models/hash.provider.interface';
 
 export default class HashProvider implements IHashProvider {
   public async generateHash(payload: string): Promise<string> {

@@ -1,13 +1,13 @@
 import getActiveDataSource from '@shared/utils/get-active-data-source.util';
 
-import { ILike, Repository } from 'typeorm';
+import { ILike, type Repository } from 'typeorm';
 
-import IFeaturesRepository from '@modules/features/repositories/features.repository.interface';
+import type IFeaturesRepository from '@modules/features/repositories/features.repository.interface';
 import Feature from '../entities/feature.entity';
 
-import ListFeaturesRepositoryParamsDto from '@modules/features/dtos/list-features-repository-params.dto';
-import ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
-import CreateFeaturesDto from '@modules/features/dtos/create-features.dto';
+import type ListFeaturesRepositoryParamsDto from '@modules/features/dtos/list-features-repository-params.dto';
+import type ListRepositoryResponseDto from '@shared/dtos/list-repository-response.dto';
+import type CreateFeaturesDto from '@modules/features/dtos/create-features.dto';
 
 export default class FeaturesRepository implements IFeaturesRepository {
   private readonly featuresRepository: Repository<Feature>;

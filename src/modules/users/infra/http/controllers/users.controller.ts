@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
 
@@ -13,7 +13,7 @@ import CreateUsersService from '@modules/users/services/create-users.service';
 import UpdateUsersService from '@modules/users/services/update-users.service';
 import DeleteUsersService from '@modules/users/services/delete-users.service';
 
-import ListUsersControllerParamsDto from '@modules/users/dtos/list-users-controller-params.dto';
+import type ListUsersControllerParamsDto from '@modules/users/dtos/list-users-controller-params.dto';
 
 export default class UsersController {
   public async list(request: Request, response: Response): Promise<Response> {

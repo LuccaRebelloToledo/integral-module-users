@@ -1,10 +1,10 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import CreateUsersServiceDTO from '../dtos/create-users-service.dto';
+import type CreateUsersServiceDTO from '../dtos/create-users-service.dto';
 
-import IUsersRepository from '../repositories/users.repository.interface';
-import IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
-import User from '../infra/typeorm/entities/user.entity';
+import type IUsersRepository from '../repositories/users.repository.interface';
+import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
+import type User from '../infra/typeorm/entities/user.entity';
 
 import ShowFeatureGroupsByKeyOrNameService from '@modules/features/services/show-feature-groups-by-key-or-name.service';
 
@@ -52,7 +52,7 @@ export default class CreateUsersService {
 
     const sanitizedUser: Partial<User> = user;
 
-    delete sanitizedUser['password'];
+    sanitizedUser.password = undefined;
 
     return sanitizedUser;
   }

@@ -1,7 +1,7 @@
 import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
 import FeaturesRepository from '../infra/typeorm/repositories/features.repository';
-import Feature from '../infra/typeorm/entities/feature.entity';
+import type Feature from '../infra/typeorm/entities/feature.entity';
 
 import ShowFeaturesService from './show-features.service';
 
