@@ -1,10 +1,11 @@
+import './sentry/instrument';
+
 import '@shared/container';
 
 import express from 'express';
 import 'express-async-errors';
 
 import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 import compression from 'compression';
 import helmet from 'helmet';
@@ -19,25 +20,7 @@ import routes from './routes';
 
 import globalErrorHandler from './middlewares/global-error-handler.middleware';
 
-import env from '../environments/environments';
-
 const app = express();
-
-Sentry.init({
-  dsn: env.DSN,
-  environment: env.NODE_ENV,
-  integrations: [
-    new Sentry.Integrations.Http({ tracing: true }),
-    new Sentry.Integrations.Express({ app }),
-    nodeProfilingIntegration(),
-  ],
-  tracesSampleRate: 1.0,
-  profilesSampleRate: 1.0,
-});
-
-app.use(Sentry.Handlers.requestHandler());
-
-app.use(Sentry.Handlers.tracingHandler());
 
 app.use(compression());
 app.use(
@@ -53,7 +36,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(routes);
 
-app.use(Sentry.Handlers.errorHandler());
+Sentry.setupExpressErrorHandler(app);
 
 app.use(globalErrorHandler);
 
