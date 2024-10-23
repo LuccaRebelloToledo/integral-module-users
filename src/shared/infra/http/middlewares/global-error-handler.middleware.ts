@@ -5,22 +5,24 @@ import * as Sentry from '@sentry/node';
 import http from 'node:http';
 import {
   BAD_REQUEST,
+  UNAUTHORIZED,
   INTERNAL_SERVER_ERROR,
 } from '../constants/http-status-code.constants';
 
-import AppError from '@shared/errors/app-error';
-
 import { isCelebrateError } from 'celebrate';
 
-import EscapeHtml from 'escape-html';
+import AppError from '@shared/errors/app-error';
+
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 export default function globalErrorHandler(
   err: Error,
   request: Request,
   response: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction,
 ): Response {
+  console.error(err);
+
   const errorData = {
     error: err,
     message: err.message,
@@ -35,46 +37,66 @@ export default function globalErrorHandler(
     statusMessage: request.statusMessage,
   };
 
-  console.error(err);
+  try {
+    decodeURIComponent(request.path);
 
-  if (isCelebrateError(err)) {
-    const validation: Record<string, unknown> = {};
+    if (isCelebrateError(err)) {
+      const entry = err.details.entries().next().value;
+      const joiError = entry ? entry[1].details[0].message : err.message;
 
-    for (const [segment, joiError] of err.details.entries()) {
-      validation[segment!] = {
-        source: segment,
-        keys: JSON.stringify(
-          joiError.details.map((detail) => EscapeHtml(detail.path.join('.'))),
-        ),
-        message: joiError.message,
-      };
+      return response.status(BAD_REQUEST).json({
+        statusCode: BAD_REQUEST,
+        error: http.STATUS_CODES[BAD_REQUEST],
+        message: joiError,
+      });
     }
 
-    return response.status(BAD_REQUEST).json({
-      statusCode: BAD_REQUEST,
-      error: http.STATUS_CODES[BAD_REQUEST!],
-      message: err.message,
-      validation,
+    if (err instanceof AppError) {
+      const statusCode = Number(err.statusCode);
+
+      return response.status(statusCode).json({
+        statusCode,
+        error: http.STATUS_CODES[statusCode],
+        message: err.message,
+      });
+    }
+
+    if (err instanceof JsonWebTokenError) {
+      const statusCode = UNAUTHORIZED;
+
+      return response.status(statusCode).json({
+        statusCode,
+        error: http.STATUS_CODES[statusCode],
+        message: err.inner.message,
+      });
+    }
+
+    Sentry.captureException(err, {
+      extra: errorData,
+    });
+
+    return response.status(INTERNAL_SERVER_ERROR).json({
+      statusCode: INTERNAL_SERVER_ERROR,
+      error: http.STATUS_CODES[INTERNAL_SERVER_ERROR],
+      message: 'Something is wrong!',
+    });
+  } catch (err) {
+    if (err instanceof URIError) {
+      return response.status(BAD_REQUEST).json({
+        statusCode: BAD_REQUEST,
+        error: http.STATUS_CODES[BAD_REQUEST],
+        message: 'Malformed URI. Please check the URL and try again.',
+      });
+    }
+
+    Sentry.captureException(err, {
+      extra: errorData,
+    });
+
+    return response.status(INTERNAL_SERVER_ERROR).json({
+      statusCode: INTERNAL_SERVER_ERROR,
+      error: http.STATUS_CODES[INTERNAL_SERVER_ERROR],
+      message: 'Something is wrong!',
     });
   }
-
-  if (err instanceof AppError) {
-    const statusCode = Number(err.statusCode);
-
-    return response.status(statusCode).json({
-      statusCode: statusCode,
-      error: http.STATUS_CODES[statusCode!],
-      message: err.message,
-    });
-  }
-
-  Sentry.captureException(err, {
-    extra: errorData,
-  });
-
-  return response.status(INTERNAL_SERVER_ERROR).json({
-    statusCode: INTERNAL_SERVER_ERROR,
-    error: http.STATUS_CODES[INTERNAL_SERVER_ERROR!],
-    message: 'Something is wrong!',
-  });
 }
