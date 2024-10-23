@@ -16,7 +16,7 @@ type IAuthLevelMiddleware = (
 ) => void;
 
 export default function ensureAuthorized(
-  requiredFeatures: Array<string>,
+  requiredFeatures: string[],
 ): IAuthLevelMiddleware {
   async function authorize(
     request: Request,
@@ -38,7 +38,7 @@ export default function ensureAuthorized(
       );
     }
 
-    return next();
+    next();
   }
 
   return authorize;
