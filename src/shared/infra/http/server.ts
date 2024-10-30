@@ -1,19 +1,24 @@
 import type { Express } from 'express';
 
-import type { Server, IncomingMessage, ServerResponse } from 'node:http';
+import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 
-import env from '../environments/environments';
+import 'dotenv/config';
+import { env } from 'node:process';
+import { environmentsSchema } from '../environments/environments';
 
 import * as Sentry from '@sentry/node';
 
 import gracefulShutdown from './graceful-shutdown/graceful-shutdown';
 
-const port = env.PORT ?? 4000;
 export let server: Server<typeof IncomingMessage, typeof ServerResponse>;
 
 const initializeServer = async (app: Express): Promise<void> => {
-  server = app.listen(port, () => {
-    console.log(`HTTP Server listening on port ${port} !`);
+  await environmentsSchema.validateAsync(env);
+
+  const PORT = env.PORT;
+
+  server = app.listen(PORT, () => {
+    console.log(`HTTP Server listening on port ${PORT} !`);
   });
 
   process.on('SIGTERM', async () => {

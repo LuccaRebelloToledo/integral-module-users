@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { DataSource } from 'typeorm';
 
-import env from '@shared/infra/environments/environments';
+import { env } from 'node:process';
 
 const AppDataSource = new DataSource({
   type: 'postgres',
@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
   username: env.PG_USER,
   password: env.PG_PASS,
   database: env.PG_DB,
-  useUTC: true,
+  installExtensions: true,
   entities: [
     env.NODE_ENV === 'production'
       ? 'dist/modules/**/infra/typeorm/entities/*.entity.js'

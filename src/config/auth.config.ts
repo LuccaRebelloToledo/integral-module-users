@@ -1,8 +1,9 @@
-import env from '@shared/infra/environments/environments';
+import { env } from 'node:process';
 
 export default {
   jwt: {
     secret: env.JWT_SECRET,
-    expiresIn: env.JWT_EXPIRATION,
+    accessExpiresIn: '1m',
+    refreshExpiresIn: '1h',
   },
 };

@@ -1,4 +1,4 @@
-import env from '@shared/infra/environments/environments';
+import { env } from 'node:process';
 
 import AppDataSource from '@shared/infra/typeorm/data-sources/data-source';
 import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';

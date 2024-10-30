@@ -1,7 +1,7 @@
+import { env } from 'node:process';
+
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
-
-import env from '@shared/infra/environments/environments';
 
 Sentry.init({
   dsn: env.DSN,
