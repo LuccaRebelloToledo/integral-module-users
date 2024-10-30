@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import { DataSource } from 'typeorm';
 
+import 'dotenv/config';
 import { env } from 'node:process';
 
 const AppDataSource = new DataSource({

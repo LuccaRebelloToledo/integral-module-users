@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { env } from 'node:process';
 
 import AppDataSource from '@shared/infra/typeorm/data-sources/data-source';
