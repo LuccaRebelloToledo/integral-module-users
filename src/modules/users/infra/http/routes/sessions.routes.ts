@@ -4,7 +4,11 @@ import SessionsController from '../controllers/sessions.controller';
 
 import { Segments, celebrate } from 'celebrate';
 
-import { signUpSchema, signInSchema } from './schemas/user.schemas';
+import {
+  refreshTokenSchema,
+  signInSchema,
+  signUpSchema,
+} from './schemas/user.schemas';
 
 const sessionsRouter = Router();
 const sessionsController = new SessionsController();
@@ -23,6 +27,14 @@ sessionsRouter.post(
     [Segments.BODY]: signInSchema,
   }),
   sessionsController.signIn,
+);
+
+sessionsRouter.post(
+  '/refresh-token',
+  celebrate({
+    [Segments.BODY]: refreshTokenSchema,
+  }),
+  sessionsController.refreshToken,
 );
 
 export default sessionsRouter;

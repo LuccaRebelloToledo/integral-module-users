@@ -4,8 +4,9 @@ import { container } from 'tsyringe';
 
 import { NO_CONTENT } from '@shared/infra/http/constants/http-status-code.constants';
 
-import CreateUsersService from '@modules/users/services/create-users.service';
 import AuthenticateUsersService from '@modules/users/services/authenticate-users.service';
+import CreateUsersService from '@modules/users/services/create-users.service';
+import RefreshTokenUsersService from '@modules/users/services/refresh-token-users.service';
 
 export default class SessionsController {
   public async signUp(request: Request, response: Response): Promise<Response> {
@@ -25,11 +26,26 @@ export default class SessionsController {
       AuthenticateUsersService,
     );
 
-    const token = await authenticateUsersService.execute({
+    const tokens = await authenticateUsersService.execute({
       email,
       password,
     });
 
-    return response.json(token);
+    return response.json(tokens);
+  }
+
+  public async refreshToken(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { refreshToken } = request.body;
+
+    const refreshTokenUsersService = container.resolve(
+      RefreshTokenUsersService,
+    );
+
+    const tokens = await refreshTokenUsersService.execute(refreshToken);
+
+    return response.json(tokens);
   }
 }

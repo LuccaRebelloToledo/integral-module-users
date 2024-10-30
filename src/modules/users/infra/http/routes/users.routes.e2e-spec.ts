@@ -4,8 +4,8 @@ import app from '@shared/infra/http/app';
 
 import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
+import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 
 import {
   CREATED,
@@ -19,7 +19,7 @@ describe('e2e - Users', () => {
   let featuresRepository: FeaturesRepository;
   let featureGroupsRepository: FeatureGroupsRepository;
 
-  let token: string;
+  let accessToken: string;
   let user: User;
 
   const USER_PATH = '/users';
@@ -54,9 +54,9 @@ describe('e2e - Users', () => {
       password: 'Lucca@123',
     });
 
-    const { token: userToken } = response.body;
+    const { accessToken: token } = response.body;
 
-    token = userToken;
+    accessToken = token;
   });
 
   afterAll(async () => {
@@ -67,13 +67,13 @@ describe('e2e - Users', () => {
     expect(app).toBeDefined();
     expect(featuresRepository).toBeDefined();
     expect(featureGroupsRepository).toBeDefined();
-    expect(token).toBeDefined();
+    expect(accessToken).toBeDefined();
   });
 
   test('should be create a user', async () => {
     const response = await request(app)
       .post(`${USER_PATH}`)
-      .set('Authorization', token)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'User Test 2',
         email: 'lucca2@test.com',
@@ -83,15 +83,13 @@ describe('e2e - Users', () => {
     expect(response.status).toBe(CREATED);
     expect(response.body).toBeDefined();
 
-    console.log(response.body);
-
     user = response.body;
   });
 
   test('should be list a users', async () => {
     const response = await request(app)
       .get(`${USER_PATH}`)
-      .set('Authorization', token)
+      .set('Authorization', `Bearer ${accessToken}`)
       .query({
         email: user.email,
       });
@@ -114,7 +112,7 @@ describe('e2e - Users', () => {
   test('should be show a user', async () => {
     const response = await request(app)
       .get(`${USER_PATH}/${user.id}`)
-      .set('Authorization', token);
+      .set('Authorization', `Bearer ${accessToken}`);
 
     expect(response.status).toBe(OK);
     expect(response.body).toBeDefined();
@@ -126,7 +124,7 @@ describe('e2e - Users', () => {
   test('should be update a user', async () => {
     const response = await request(app)
       .put(`${USER_PATH}/${user.id}`)
-      .set('Authorization', token)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'Lucca Toledo',
       });
@@ -145,7 +143,7 @@ describe('e2e - Users', () => {
   test('should be delete a user', async () => {
     const response = await request(app)
       .delete(`${USER_PATH}/${user.id}`)
-      .set('Authorization', token);
+      .set('Authorization', `Bearer ${accessToken}`);
 
     expect(response.status).toBe(NO_CONTENT);
     expect(response.body).toEqual({});

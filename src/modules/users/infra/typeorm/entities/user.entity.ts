@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
 
 import FeatureGroup from '@modules/features/infra/typeorm/entities/feature-group.entity';
 import BaseEntity from '@shared/infra/typeorm/entities/base-entity.entity';
+import UserToken from './user-token.entity';
 
 @Entity('users')
 export default class User extends BaseEntity {
@@ -30,4 +31,11 @@ export default class User extends BaseEntity {
   )
   @JoinColumn({ name: 'feature_group_id' })
   featureGroup: FeatureGroup;
+
+  @OneToMany(
+    () => UserToken,
+    (tokens) => tokens.user,
+    { cascade: false },
+  )
+  tokens: UserToken[];
 }

@@ -9,6 +9,7 @@ import {
 const nameSchema = Joi.string().trim().max(100);
 const emailSchema = Joi.string().email().trim().lowercase().max(100);
 const passwordSchema = Joi.string().trim();
+const tokenSchema = Joi.string().trim();
 
 // Sessions
 
@@ -16,12 +17,16 @@ export const signUpSchema = Joi.object({
   email: emailSchema.required(),
   name: nameSchema.required(),
   password: passwordSchema.required(),
-}).required();
+});
 
 export const signInSchema = Joi.object({
   email: emailSchema.required(),
   password: passwordSchema.required(),
-}).required();
+});
+
+export const refreshTokenSchema = Joi.object({
+  refreshToken: tokenSchema.required(),
+});
 
 // Users
 

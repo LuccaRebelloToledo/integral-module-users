@@ -10,11 +10,11 @@ import * as Sentry from '@sentry/node';
 import compression from 'compression';
 import helmet from 'helmet';
 
-import cors from 'cors';
 import corsConfig from '@config/cors.config';
+import cors from 'cors';
 
-import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '@config/swagger.json';
+import swaggerUi from 'swagger-ui-express';
 
 import routes from './routes';
 

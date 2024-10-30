@@ -10,4 +10,4 @@ export const environmentsSchema = Joi.object({
   PG_USER: Joi.string().required(),
   PG_PASS: Joi.string().required(),
   PG_DB: Joi.string().required(),
-});
+}).unknown(true);

@@ -6,9 +6,10 @@ import { verify } from 'jsonwebtoken';
 
 import authConfig from '@config/auth.config';
 
-import UsersRepository from '../infra/typeorm/repositories/users.repository';
-import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
+import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
+import UserTokensRepository from '../infra/typeorm/repositories/user-tokens.repository';
+import UsersRepository from '../infra/typeorm/repositories/users.repository';
 import HashProvider from '../providers/hash-provider/implementations/bcrypt-hash.provider';
 
 import AuthenticateUsersService from './authenticate-users.service';
@@ -20,6 +21,7 @@ describe('AuthenticateUsersService', () => {
   let featuresRepository: FeaturesRepository;
   let featureGroupsRepository: FeatureGroupsRepository;
   let hashProvider: HashProvider;
+  let userTokensRepository: UserTokensRepository;
   let authenticateUsersService: AuthenticateUsersService;
   let encryptedPassword: string;
 
@@ -30,9 +32,11 @@ describe('AuthenticateUsersService', () => {
     featuresRepository = new FeaturesRepository();
     featureGroupsRepository = new FeatureGroupsRepository();
     hashProvider = new HashProvider();
+    userTokensRepository = new UserTokensRepository();
     authenticateUsersService = new AuthenticateUsersService(
       usersRepository,
       hashProvider,
+      userTokensRepository,
     );
 
     const featureGroupOne = await featureGroupsRepository.create({
@@ -147,16 +151,15 @@ describe('AuthenticateUsersService', () => {
       password: '123456789',
     };
 
-    const result = await authenticateUsersService.execute(userPayload);
-    const token = result.token;
+    const { accessToken, refreshToken } =
+      await authenticateUsersService.execute(userPayload);
 
-    expect(token).toBeDefined();
-    expect(token.length).toBeGreaterThan(0);
-    expect(token.split(' ')[0]).toBe('Bearer');
+    expect(accessToken).toBeDefined();
+    expect(accessToken.length).toBeGreaterThan(0);
+    expect(refreshToken).toBeDefined();
+    expect(refreshToken.length).toBeGreaterThan(0);
 
-    const sanitizedToken = token.split(' ')[1];
-
-    const decoded = verify(sanitizedToken, authConfig.jwt.secret);
+    const decoded = verify(accessToken, authConfig.jwt.secret);
     expect(decoded).toBeDefined();
     expect(decoded).toHaveProperty('sub');
   });

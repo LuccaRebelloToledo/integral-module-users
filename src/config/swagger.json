@@ -95,7 +95,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -104,6 +104,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -215,7 +218,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -224,6 +227,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -306,7 +312,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -315,6 +321,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -414,7 +423,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -423,6 +432,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -513,7 +525,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -522,6 +534,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -615,7 +630,7 @@
             "description": "The Feature Group was successfully deleted."
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -624,6 +639,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -735,7 +753,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -744,6 +762,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -826,7 +847,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -835,6 +856,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -931,7 +955,7 @@
             }
           },
           "401": {
-            "description": "The requested token was not found.",
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
             "content": {
               "application/json": {
                 "schema": {
@@ -940,6 +964,9 @@
                 "examples": {
                   "invalid-token": {
                     "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
                   }
                 }
               }
@@ -1307,6 +1334,86 @@
           }
         }
       }
+    },
+    "/sessions/refresh-token": {
+      "post": {
+        "tags": ["sessions"],
+        "summary": "This endpoint allows a user to refresh their token.",
+        "operationId": "refreshToken",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "description": "The user needs to provide your refresh token to refresh the token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successful and token has been refreshed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseSchema"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The provided token is invalid or missing. Please provide a valid token and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "invalid-token": {
+                    "$ref": "#/components/examples/invalid-token"
+                  },
+                  "token-not-found": {
+                    "$ref": "#/components/examples/token-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The user was not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "user-not-found": {
+                    "$ref": "#/components/examples/user-not-found"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected error occurred on the server while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionSchema"
+                },
+                "examples": {
+                  "internal-server-error": {
+                    "$ref": "#/components/examples/internal-server-error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1633,14 +1740,27 @@
           }
         }
       },
+      "RefreshTokenSchema": {
+        "type": "object",
+        "required": ["refreshToken", "password"],
+        "properties": {
+          "refreshToken": {
+            "$ref": "#/components/schemas/Token"
+          }
+        }
+      },
       "Token": {
         "type": "string",
-        "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        "format": "JWT",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
       },
       "SignInResponseSchema": {
         "type": "object",
         "properties": {
-          "token": {
+          "accessToken": {
+            "$ref": "#/components/schemas/Token"
+          },
+          "refreshToken": {
             "$ref": "#/components/schemas/Token"
           }
         }

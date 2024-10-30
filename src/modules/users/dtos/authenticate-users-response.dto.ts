@@ -1,3 +1,4 @@
 export default interface AuthenticateUsersResponseDto {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }

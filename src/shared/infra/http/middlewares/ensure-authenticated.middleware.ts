@@ -13,29 +13,29 @@ export default function ensureAuthenticated(
   _response: Response,
   next: NextFunction,
 ): void {
-    const token = request.headers.authorization;
+  const token = request.headers.authorization;
 
-    if (!token) {
-      throw new AppError(AppErrorTypes.sessions.tokenNotFound, UNAUTHORIZED);
-    }
+  if (!token) {
+    throw new AppError(AppErrorTypes.sessions.tokenNotFound, UNAUTHORIZED);
+  }
 
-    const sanitizedToken = token.split(' ')[1];
+  const sanitizedToken = token.split(' ')[1];
 
-    const decoded = verify(sanitizedToken, authConfig.jwt.secret);
+  const decoded = verify(sanitizedToken, authConfig.jwt.secret);
 
-    if (!decoded) {
-      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
-    }
+  if (!decoded) {
+    throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
+  }
 
-    const { sub } = decoded as JwtPayload;
+  const { sub } = decoded as JwtPayload;
 
-    if (!sub) {
-      throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
-    }
+  if (!sub) {
+    throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
+  }
 
-    request.user = {
-      id: sub,
-    };
+  request.user = {
+    id: sub,
+  };
 
-    next();
+  next();
 }

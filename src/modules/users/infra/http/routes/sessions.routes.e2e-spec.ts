@@ -4,8 +4,8 @@ import app from '@shared/infra/http/app';
 
 import TestAppDataSource from '@shared/infra/typeorm/data-sources/test-data-source';
 
-import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 import FeatureGroupsRepository from '@modules/features/infra/typeorm/repositories/feature-groups.repository';
+import FeaturesRepository from '@modules/features/infra/typeorm/repositories/features.repository';
 
 import {
   NO_CONTENT,
@@ -66,8 +66,37 @@ describe('e2e - Sessions', () => {
     expect(response.status).toBe(OK);
     expect(response.body).toEqual(
       expect.objectContaining({
-        token: expect.any(String),
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
       }),
     );
+  });
+
+  test('should be refresh the token', async () => {
+    const response = await request(app).post(`${SESSIONS_PATH}/sign-in`).send({
+      email: 'lucca@test.com',
+      password: 'Lucca@123',
+    });
+
+    const {
+      body: { accessToken, refreshToken },
+    } = response;
+
+    expect(response.status).toBe(OK);
+    expect(accessToken).toBeDefined();
+    expect(refreshToken).toBeDefined();
+
+    const responseRefreshToken = await request(app)
+      .post(`${SESSIONS_PATH}/refresh-token`)
+      .send({
+        refreshToken,
+      });
+
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+      responseRefreshToken.body;
+
+    expect(responseRefreshToken.status).toBe(OK);
+    expect(newAccessToken).toBeDefined();
+    expect(newRefreshToken).toBeDefined();
   });
 });

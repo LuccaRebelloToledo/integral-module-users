@@ -1,19 +1,19 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 import * as Sentry from '@sentry/node';
 
 import http from 'node:http';
 import {
   BAD_REQUEST,
-  UNAUTHORIZED,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
 } from '../constants/http-status-code.constants';
 
 import { isCelebrateError } from 'celebrate';
 
 import AppError from '@shared/errors/app-error';
 
-import { JsonWebTokenError } from 'jsonwebtoken';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 export default function globalErrorHandler(
   err: Error,
@@ -61,13 +61,13 @@ export default function globalErrorHandler(
       });
     }
 
-    if (err instanceof JsonWebTokenError) {
+    if (err instanceof JsonWebTokenError || err instanceof TokenExpiredError) {
       const statusCode = UNAUTHORIZED;
 
       return response.status(statusCode).json({
         statusCode,
         error: http.STATUS_CODES[statusCode],
-        message: err.inner.message,
+        message: err.message,
       });
     }
 
