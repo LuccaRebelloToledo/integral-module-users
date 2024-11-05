@@ -9,11 +9,9 @@ import {
   UNAUTHORIZED,
 } from '../constants/http-status-code.constants';
 
-import { isCelebrateError } from 'celebrate';
-
 import AppError from '@shared/errors/app-error';
-
-import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { isCelebrateError } from 'celebrate';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 export default function globalErrorHandler(
   err: Error,
@@ -61,7 +59,7 @@ export default function globalErrorHandler(
       });
     }
 
-    if (err instanceof JsonWebTokenError || err instanceof TokenExpiredError) {
+    if (err instanceof JsonWebTokenError) {
       const statusCode = UNAUTHORIZED;
 
       return response.status(statusCode).json({
