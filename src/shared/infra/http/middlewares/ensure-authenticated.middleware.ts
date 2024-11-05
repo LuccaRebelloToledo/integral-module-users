@@ -1,11 +1,12 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
-import { type JwtPayload, verify } from 'jsonwebtoken';
 import authConfig from '@config/auth.config';
+import { type JwtPayload, verify } from 'jsonwebtoken';
 
 import AppError from '@shared/errors/app-error';
 import AppErrorTypes from '@shared/errors/app-error-types';
 
+import { EJwtTypes } from '@modules/users/enums/jwt.enums';
 import { UNAUTHORIZED } from '../constants/http-status-code.constants';
 
 export default function ensureAuthenticated(
@@ -27,9 +28,9 @@ export default function ensureAuthenticated(
     throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
   }
 
-  const { sub } = decoded as JwtPayload;
+  const { sub, type } = decoded as JwtPayload;
 
-  if (!sub) {
+  if (!sub || !type || type !== EJwtTypes.ACCESS) {
     throw new AppError(AppErrorTypes.sessions.invalidToken, UNAUTHORIZED);
   }
 
