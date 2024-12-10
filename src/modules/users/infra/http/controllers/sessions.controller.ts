@@ -10,26 +10,23 @@ import RefreshTokenUsersService from '@modules/users/services/refresh-token-user
 
 export default class SessionsController {
   public async signUp(request: Request, response: Response): Promise<Response> {
-    const { name, email, password } = request.body;
+    const userData = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
 
-    await createUsersService.execute({ name, email, password });
+    await createUsersService.execute(userData);
 
     return response.status(NO_CONTENT).json();
   }
 
   public async signIn(request: Request, response: Response): Promise<Response> {
-    const { email, password } = request.body;
+    const userData = request.body;
 
     const authenticateUsersService = container.resolve(
       AuthenticateUsersService,
     );
 
-    const tokens = await authenticateUsersService.execute({
-      email,
-      password,
-    });
+    const tokens = await authenticateUsersService.execute(userData);
 
     return response.json(tokens);
   }

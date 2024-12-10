@@ -53,15 +53,11 @@ export default class UsersController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { name, email, password } = request.body;
+    const userData = request.body;
 
     const createUsersService = container.resolve(CreateUsersService);
 
-    const user = await createUsersService.execute({
-      name,
-      email,
-      password,
-    });
+    const user = await createUsersService.execute(userData);
 
     return response.status(CREATED).json(instanceToPlain(user));
   }
@@ -69,16 +65,13 @@ export default class UsersController {
   public async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    const { name, email, password, featureGroupId } = request.body;
+    const userData = request.body;
 
     const updateUsersService = container.resolve(UpdateUsersService);
 
     const user = await updateUsersService.execute({
       id,
-      name,
-      email,
-      password,
-      featureGroupId,
+      ...userData,
     });
 
     return response.json(instanceToPlain(user));
