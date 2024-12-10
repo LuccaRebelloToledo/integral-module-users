@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import type IUserTokensRepository from '../repositories/user-tokens.repository.interface';
 
-import type AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
+import type AuthenticateUsersResponseDto from '../dtos/authenticate-users-response.dto';
 
 import authConfig from '@config/auth.config';
 import { type JwtPayload, verify } from 'jsonwebtoken';
@@ -24,7 +24,7 @@ export default class RefreshTokenUsersService {
 
   public async execute(
     refreshToken: string,
-  ): Promise<AuthenticateUsersResponseDTO> {
+  ): Promise<AuthenticateUsersResponseDto> {
     const decoded = verify(refreshToken, authConfig.jwt.secret);
 
     if (!decoded) {

@@ -4,7 +4,7 @@ import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
 import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
-import type ListFeatureGroupsServiceParamsDTO from '../dtos/list-feature-groups-service-params.dto';
+import type ListFeatureGroupsServiceParamsDto from '../dtos/list-feature-groups-service-params.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
@@ -27,7 +27,7 @@ export default class ListFeatureGroupsService {
     order,
     key,
     name,
-  }: ListFeatureGroupsServiceParamsDTO): Promise<
+  }: ListFeatureGroupsServiceParamsDto): Promise<
     ListServiceResponseDto<FeatureGroup>
   > {
     const skip = calculateSkip({ page, limit });

@@ -1,6 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import type CreateUsersServiceDTO from '../dtos/create-users-service.dto';
+import type CreateUsersServiceDto from '../dtos/create-users-service.dto';
 
 import type User from '../infra/typeorm/entities/user.entity';
 import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
@@ -26,7 +26,7 @@ export default class CreateUsersService {
     name,
     email,
     password,
-  }: CreateUsersServiceDTO): Promise<User> {
+  }: CreateUsersServiceDto): Promise<User> {
     const existingUserByEmail = await this.usersRepository.findByEmail(email);
 
     if (existingUserByEmail) {

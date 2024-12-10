@@ -5,8 +5,8 @@ import type IHashProvider from '../providers/hash-provider/models/hash.provider.
 import type IUserTokensRepository from '../repositories/user-tokens.repository.interface';
 import type IUsersRepository from '../repositories/users.repository.interface';
 
-import type AuthenticateUsersResponseDTO from '../dtos/authenticate-users-response.dto';
-import type AuthenticateUsersDTO from '../dtos/authenticate-users.dto';
+import type AuthenticateUsersResponseDto from '../dtos/authenticate-users-response.dto';
+import type AuthenticateUsersDto from '../dtos/authenticate-users.dto';
 
 import generateAccessAndRefreshTokens from '../utils/generate-access-and-refresh-tokens.util';
 
@@ -33,7 +33,7 @@ export default class AuthenticateUsersService {
   public async execute({
     email,
     password,
-  }: AuthenticateUsersDTO): Promise<AuthenticateUsersResponseDTO> {
+  }: AuthenticateUsersDto): Promise<AuthenticateUsersResponseDto> {
     const user = await this.validateUser(email, password);
 
     const userId = user.id;

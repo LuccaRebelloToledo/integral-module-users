@@ -4,7 +4,7 @@ import type User from '../infra/typeorm/entities/user.entity';
 import type IUsersRepository from '../repositories/users.repository.interface';
 
 import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
-import type ListUsersServiceParamsDTO from '../dtos/list-users-service-params.dto';
+import type ListUsersServiceParamsDto from '../dtos/list-users-service-params.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
@@ -27,7 +27,7 @@ export default class ListUsersService {
     order,
     name,
     email,
-  }: ListUsersServiceParamsDTO): Promise<ListServiceResponseDto<User>> {
+  }: ListUsersServiceParamsDto): Promise<ListServiceResponseDto<User>> {
     const skip = calculateSkip({ page, limit });
 
     const { data, totalItems } = await this.usersRepository.findAll({

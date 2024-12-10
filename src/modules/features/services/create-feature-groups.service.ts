@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import type FeatureGroup from '../infra/typeorm/entities/feature-group.entity';
 import type IFeatureGroupsRepository from '../repositories/feature-groups.repository.interface';
 
-import type CreateFeatureGroupsServiceDTO from '../dtos/create-feature-groups-service.dto';
+import type CreateFeatureGroupsServiceDto from '../dtos/create-feature-groups-service.dto';
 
 import getFeaturesByFeatureIds from '@shared/utils/get-features-by-feature-ids.util';
 
@@ -22,7 +22,7 @@ export default class CreateFeatureGroupsService {
     key,
     name,
     featureIds,
-  }: CreateFeatureGroupsServiceDTO): Promise<FeatureGroup> {
+  }: CreateFeatureGroupsServiceDto): Promise<FeatureGroup> {
     await this.checkFeatureGroupExists(key, name);
 
     const features = await getFeaturesByFeatureIds(featureIds);

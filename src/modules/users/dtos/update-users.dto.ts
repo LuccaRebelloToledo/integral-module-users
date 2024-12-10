@@ -1,5 +1,5 @@
-import type CreateUsersDTO from './create-users.dto';
+import type CreateUsersDto from './create-users.dto';
 
-export default interface UpdateUsersDto extends Partial<CreateUsersDTO> {
+export default interface UpdateUsersDto extends Partial<CreateUsersDto> {
   id: string;
 }

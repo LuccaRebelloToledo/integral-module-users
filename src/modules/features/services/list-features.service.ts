@@ -4,7 +4,7 @@ import type Feature from '../infra/typeorm/entities/feature.entity';
 import type IFeaturesRepository from '../repositories/features.repository.interface';
 
 import type ListServiceResponseDto from '@shared/dtos/list-service-response.dto';
-import type ListFeaturesServiceParamsDTO from '../dtos/list-features-service-params.dto';
+import type ListFeaturesServiceParamsDto from '../dtos/list-features-service-params.dto';
 
 import calculateSkip from '@shared/utils/calculate-skip.util';
 import getPageMetaDetails from '@shared/utils/get-page-meta-details.util';
@@ -27,7 +27,7 @@ export default class ListFeaturesService {
     order,
     key,
     name,
-  }: ListFeaturesServiceParamsDTO): Promise<ListServiceResponseDto<Feature>> {
+  }: ListFeaturesServiceParamsDto): Promise<ListServiceResponseDto<Feature>> {
     const skip = calculateSkip({ page, limit });
 
     const { data, totalItems } = await this.featuresRepository.findAll({

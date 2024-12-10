@@ -4,7 +4,7 @@ import type User from '../infra/typeorm/entities/user.entity';
 import type IHashProvider from '../providers/hash-provider/models/hash.provider.interface';
 import type IUsersRepository from '../repositories/users.repository.interface';
 
-import type UpdateUsersDTO from '../dtos/update-users.dto';
+import type UpdateUsersDto from '../dtos/update-users.dto';
 
 import getUserById from '../utils/get-user-by-id.util';
 
@@ -30,7 +30,7 @@ export default class UpdateUsersService {
     email,
     password,
     featureGroupId,
-  }: UpdateUsersDTO): Promise<User> {
+  }: UpdateUsersDto): Promise<User> {
     const user = await getUserById(id);
 
     if (name) {
