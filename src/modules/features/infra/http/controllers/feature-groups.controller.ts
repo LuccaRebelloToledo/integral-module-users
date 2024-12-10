@@ -7,11 +7,11 @@ import {
   NO_CONTENT,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
+import CreateFeatureGroupsService from '@modules/features/services/create-feature-groups.service';
+import DeleteFeatureGroupsService from '@modules/features/services/delete-feature-groups.service';
 import ListFeatureGroupsService from '@modules/features/services/list-feature-groups.service';
 import ShowFeatureGroupsService from '@modules/features/services/show-feature-groups.service';
-import CreateFeatureGroupsService from '@modules/features/services/create-feature-groups.service';
 import UpdateFeatureGroupsService from '@modules/features/services/update-feature-groups.service';
-import DeleteFeatureGroupsService from '@modules/features/services/delete-feature-groups.service';
 
 import type ListFeatureGroupsControllerParamsDto from '@modules/features/dtos/list-feature-groups-controller-params.dto';
 
@@ -55,17 +55,14 @@ export default class FeatureGroupsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { key, name, featureIds } = request.body;
+    const featureGroupData = request.body;
 
     const createFeatureGroupsService = container.resolve(
       CreateFeatureGroupsService,
     );
 
-    const featureGroup = await createFeatureGroupsService.execute({
-      key,
-      name,
-      featureIds,
-    });
+    const featureGroup =
+      await createFeatureGroupsService.execute(featureGroupData);
 
     return response.status(CREATED).json(featureGroup);
   }
@@ -73,7 +70,7 @@ export default class FeatureGroupsController {
   public async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    const { key, name, featureIds } = request.body;
+    const featureGroupData = request.body;
 
     const updateFeatureGroupsService = container.resolve(
       UpdateFeatureGroupsService,
@@ -81,9 +78,7 @@ export default class FeatureGroupsController {
 
     const featureGroup = await updateFeatureGroupsService.execute({
       id,
-      key,
-      name,
-      featureIds,
+      ...featureGroupData,
     });
 
     return response.json(featureGroup);
