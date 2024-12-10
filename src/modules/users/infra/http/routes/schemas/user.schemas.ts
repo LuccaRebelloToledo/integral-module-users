@@ -30,7 +30,7 @@ export const refreshTokenSchema = Joi.object({
 
 // Users
 
-export const createUsersSchema = signUpSchema.required();
+export const createUsersSchema = signUpSchema;
 
 export const updateUsersSchema = Joi.object({
   name: nameSchema.required(),

@@ -7,6 +7,6 @@ export const keySchema = stringSchema.lowercase().max(50);
 export const nameSchema = keySchema;
 
 export const listFeaturesParamsSchema = listParamsSchema.keys({
-  key: keySchema.optional(),
-  name: nameSchema.optional(),
+  key: keySchema,
+  name: nameSchema,
 });
