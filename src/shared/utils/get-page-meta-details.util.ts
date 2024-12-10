@@ -1,10 +1,5 @@
+import type MetaDetailsDto from '@shared/dtos/meta-details.dto';
 import type PageMetaDto from '@shared/dtos/page-meta.dto';
-
-interface MetaDetailsDto {
-  page: number;
-  limit: number;
-  totalItems: number;
-}
 
 const getPageMetaDetails = ({
   page,
