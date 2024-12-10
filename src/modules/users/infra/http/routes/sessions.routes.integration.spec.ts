@@ -12,7 +12,7 @@ import {
   OK,
 } from '@shared/infra/http/constants/http-status-code.constants';
 
-describe('e2e - Sessions', () => {
+describe('Integration - Sessions', () => {
   let featuresRepository: FeaturesRepository;
   let featureGroupsRepository: FeatureGroupsRepository;
 

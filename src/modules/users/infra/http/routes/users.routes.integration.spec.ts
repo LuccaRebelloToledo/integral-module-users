@@ -15,7 +15,7 @@ import {
 
 import type User from '../../typeorm/entities/user.entity';
 
-describe('e2e - Users', () => {
+describe('Integration - Users', () => {
   let featuresRepository: FeaturesRepository;
   let featureGroupsRepository: FeatureGroupsRepository;
 
