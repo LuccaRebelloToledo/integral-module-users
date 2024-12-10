@@ -27,6 +27,7 @@ export default class User extends BaseEntity {
     {
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
+      orphanedRowAction: 'nullify',
     },
   )
   @JoinColumn({ name: 'feature_group_id' })
