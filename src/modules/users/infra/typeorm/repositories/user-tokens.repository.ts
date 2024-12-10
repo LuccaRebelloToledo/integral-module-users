@@ -20,10 +20,8 @@ export default class UserTokensRepository implements IUserTokensRepository {
     });
   }
 
-  public async create(
-    createUserTokensDto: CreateUserTokensDto,
-  ): Promise<UserToken> {
-    const userToken = this.userTokensRepository.create(createUserTokensDto);
+  public async create(userTokensData: CreateUserTokensDto): Promise<UserToken> {
+    const userToken = this.userTokensRepository.create(userTokensData);
 
     return await this.save(userToken);
   }
