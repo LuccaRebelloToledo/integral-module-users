@@ -61,7 +61,7 @@
           {
             "in": "query",
             "name": "sort",
-            "description": "The field to sort by. The available fields are: 'createdAt', 'updatedAt', 'deletedAt', 'key' and 'name'.",
+            "description": "The field to sort by. The available fields are: 'createdAt', 'updatedAt', 'deletedAt'.",
             "type": "string"
           },
           {
@@ -184,7 +184,7 @@
           {
             "in": "query",
             "name": "sort",
-            "description": "The field to sort by. The available fields are: 'createdAt', 'updatedAt', 'deletedAt', 'key' and 'name'.",
+            "description": "The field to sort by. The available fields are: 'createdAt', 'updatedAt', 'deletedAt'.",
             "type": "string"
           },
           {
@@ -719,7 +719,7 @@
           {
             "in": "query",
             "name": "sort",
-            "description": "The field to sort by. The available fields are: 'createdAt', 'updatedAt', 'deletedAt', 'email' and 'name'.",
+            "description": "The field to sort by. The available fields are: 'createdAt', 'updatedAt', 'deletedAt'.",
             "type": "string"
           },
           {
