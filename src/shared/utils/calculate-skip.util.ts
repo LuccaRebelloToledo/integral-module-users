@@ -1,9 +1,6 @@
-interface calculateSkipDto {
-  page: number;
-  limit: number;
-}
+import type CalculateSkipDto from '@shared/dtos/calculate-skip.dto';
 
-const calculateSkip = ({ page, limit }: calculateSkipDto): number => {
+const calculateSkip = ({ page, limit }: CalculateSkipDto): number => {
   return (page - 1) * limit;
 };
 
