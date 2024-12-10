@@ -1,14 +1,17 @@
 import Joi from 'joi';
 
-const stringSchema = Joi.string().trim();
+import { stringSchema } from '../http/routes/schemas/global.schemas';
+
+const nodeEnvSchema = stringSchema.valid('production', 'development', 'test');
+const uriSchema = stringSchema.uri();
 const portSchema = Joi.number().port();
 
 export const environmentsSchema = Joi.object({
-  NODE_ENV: stringSchema.valid('production', 'development', 'test').required(),
+  NODE_ENV: nodeEnvSchema.required(),
   JWT_SECRET: stringSchema.required(),
   JWT_ACCESS_EXPIRATION: stringSchema.required(),
   JWT_REFRESH_EXPIRATION: stringSchema.required(),
-  DSN: stringSchema.uri().required(),
+  DSN: uriSchema.required(),
   PORT: portSchema.required(),
   PG_HOST: stringSchema.required(),
   PG_PORT: portSchema.required(),

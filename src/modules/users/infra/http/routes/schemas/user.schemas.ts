@@ -3,13 +3,13 @@ import Joi from 'joi';
 import {
   idSchema,
   listParamsSchema,
-  sortSchema,
+  stringSchema,
 } from '@shared/infra/http/routes/schemas/global.schemas';
 
-const nameSchema = Joi.string().trim().max(100);
-const emailSchema = Joi.string().email().trim().lowercase().max(100);
-const passwordSchema = Joi.string().trim();
-const tokenSchema = Joi.string().trim();
+const nameSchema = stringSchema.max(100);
+const emailSchema = stringSchema.email().lowercase().max(100);
+const passwordSchema = stringSchema;
+const tokenSchema = stringSchema;
 
 // Sessions
 
@@ -34,13 +34,12 @@ export const createUsersSchema = signUpSchema.required();
 
 export const updateUsersSchema = Joi.object({
   name: nameSchema.required(),
-  email: emailSchema.optional(),
-  password: passwordSchema.optional(),
-  featureGroupId: idSchema.optional(),
+  email: emailSchema,
+  password: passwordSchema,
+  featureGroupId: idSchema,
 });
 
 export const listUsersParamsSchema = listParamsSchema.keys({
-  sort: sortSchema.valid('email', 'name').optional(),
-  name: nameSchema.optional(),
-  email: emailSchema.optional(),
+  name: nameSchema,
+  email: emailSchema,
 });
