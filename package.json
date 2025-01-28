@@ -23,8 +23,8 @@
     "prepare": "husky || true"
   },
   "dependencies": {
-    "@sentry/node": "^8.43.0",
-    "@sentry/profiling-node": "^8.43.0",
+    "@sentry/node": "^8.52.0",
+    "@sentry/profiling-node": "^8.52.0",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.3.0",
     "celebrate": "^15.0.3",
