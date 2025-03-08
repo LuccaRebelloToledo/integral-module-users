@@ -1,6 +1,4 @@
 {
   "lang": "en-US",
-  "types": {
-    "setup": "For project configurations"
-  }
+  "max-len": 300
 }
